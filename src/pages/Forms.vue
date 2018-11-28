@@ -2,7 +2,7 @@
   <v-ons-page>
 
     <v-ons-list>
-      <v-ons-list-header>Text input</v-ons-list-header>
+      <v-ons-list-header>Faire un relevé</v-ons-list-header>
       <v-ons-list-item :modifier="md ? 'nodivider' : ''">
         <div class="left">
           <v-ons-icon icon="md-face" class="list-item__icon"></v-ons-icon>

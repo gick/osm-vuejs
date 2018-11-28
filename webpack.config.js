@@ -101,7 +101,8 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
-    noInfo: true
+    noInfo: false,
+    disableHostCheck: true
   },
   performance: {
     hints: false

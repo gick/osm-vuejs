@@ -20,11 +20,17 @@ import Buttons from './Buttons.vue';
 import Carousel from './Carousel.vue';
 import InfiniteScroll from './InfiniteScroll.vue';
 import Progress from './Progress.vue';
+import SimplePage from './SimplePage.vue'
 
 export default {
   data () {
     return {
       pages: [
+        {
+          component: SimplePage,
+          label: 'Simple Page',
+          desc: 'Just to test adding a simple page.'
+        },
         {
           component: PullHook,
           label: 'Pull Hook',
