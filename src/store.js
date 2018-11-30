@@ -45,7 +45,20 @@ export default {
         }
       }
     },
+    completion: {
+      strict: true,
+      namespaced: true,
+      state: {
+        rate: 0
+      },
+      mutations: {
+        set(state, rate) {
+          state.rate = state.rate+rate;
+        }
+      }
+    }
 
+    ,
     tabbar: {
       strict: true,
       namespaced: true,

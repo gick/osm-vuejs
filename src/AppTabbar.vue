@@ -10,7 +10,6 @@
     </custom-toolbar>
 
     <v-ons-tabbar position="auto"
-      swipeable
       :modifier="md ? 'autogrow white-content' : ''"
       :on-swipe="md ? onSwipe : null"
       :tabbar-style="swipeTheme"
@@ -22,9 +21,9 @@
 </template>
 
 <script>
-import Camera from './pages/Camera.vue';
+import Map from './pages/Map.vue';
 import Home from './pages/Home.vue';
-import Forms from './pages/Forms.vue';
+import Arboretum from './pages/Arboretum.vue';
 import Animations from './pages/Animations.vue';
 
 // Just a linear interpolation formula
@@ -44,28 +43,28 @@ export default {
       topPosition: 0,
       tabs: [
         {
-          label: this.md ? null : 'Camera',
-          icon: 'ion-camera, material:md-camera',
-          page: Camera,
+          label: 'Carte',
+          icon: 'ion-map',
+          page: Map,
           theme: red,
           style: this.md ? { maxWidth: '60px' } : {},
           top: -105 // Toolbar + Tabbar heights
         },
         {
-          label: 'Home',
-          icon: this.md ? null : 'ion-home',
+          label: 'Mission',
+          icon: 'ion-home',
           page: Home,
           theme: red
         },
         {
-          label: 'Forms',
-          icon: this.md ? null : 'ion-edit',
-          page: Forms,
+          label: 'Arboretum',
+          icon: 'ion-leaf',
+          page: Arboretum,
           theme: blue
         },
         {
-          label: 'Anim',
-          icon: this.md ? null : 'ion-film-marker',
+          label: 'Relevés',
+          icon: 'ion-edit',
           page: Animations,
           theme: purple
         }

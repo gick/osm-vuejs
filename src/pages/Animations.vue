@@ -20,7 +20,7 @@ const transitionPage = {
         {{ animation }}
       </custom-toolbar>
       <p style="text-align: center">
-        Use the VOnsBackButton
+        La page relevé est à faire
       </p>
     </v-ons-page>
     `
@@ -29,17 +29,11 @@ const transitionPage = {
 export default {
   data() {
     return {
-      animations: ['none', 'default', 'slide-ios', 'slide-md', 'lift-ios', 'lift-md', 'fade-ios', 'fade-md']
+      animations: ['Relevé 1', 'Relevé 2']
     };
   },
   methods: {
     transition(name) {
-      this.$store.commit('navigator/options', {
-        // Sets animations
-        animation: name,
-        // Resets default options
-        callback: () => this.$store.commit('navigator/options', {})
-      });
 
       this.$store.commit('navigator/push', {
         extends: transitionPage,

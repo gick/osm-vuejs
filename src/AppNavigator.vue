@@ -2,7 +2,7 @@
   <v-ons-navigator swipeable swipe-target-width="50px"
     :page-stack="pageStack"
     :pop-page="storePop"
-    :options="options"
+    :options="{animation:'slide-ios'}"
     @postpush="showPopTip"
     :class="{ 'border-radius': borderRadius }"
   ></v-ons-navigator>
