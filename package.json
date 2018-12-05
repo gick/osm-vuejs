@@ -14,9 +14,11 @@
   "dependencies": {
     "gh-pages": "^1.2.0",
     "onsenui": "^2.10.2",
+    "v-autocomplete": "^1.8.2",
     "vue": "^2.5.3",
     "vue-onsenui": "^2.6.1",
     "vue2-leaflet": "^1.2.3",
+    "vuejs-auto-complete": "^0.9.0",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

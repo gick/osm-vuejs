@@ -12,14 +12,20 @@
           <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>
         </div>
         <div class="center">
-          <v-ons-input placeholder="Nom de l'espèce" float v-model="genre"></v-ons-input>
+          <autocomplete
+            :source="source"
+            inputClass="inputClass"
+            results-display="name"
+            placeholder="Nom de l'espece"
+            v-model="specieIndex"
+          ></autocomplete>
         </div>
       </v-ons-list-item>
       <v-ons-list-item>
         <div class="left">
           <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>
         </div>
-        <v-ons-input placeholder="Nom du genre" float v-model="specie"></v-ons-input>
+        <v-ons-input placeholder="Nom du genre" float v-model="genus"></v-ons-input>
       </v-ons-list-item>
     </v-ons-list>
     <section style="margin: 16px">
@@ -29,21 +35,39 @@
   </v-ons-page>
 </template>
 <script>
+import Autocomplete from "vuejs-auto-complete";
+import genusList from '../js/genus.js'
 export default {
   data() {
-    return { genre: "", specie: "" };
+    return { source:genusList,genus: "", specieIndex: 0 };
+  },
+  components: {
+    Autocomplete
   },
   computed: {
     completed() {
-      return this.genre.length + this.specie.length;
+      if(this.genus.length){
+        return true
+      }
+      if(this.specieIndex){
+        return true
+      }
     }
   },
   methods: {
     complete() {
-      this.$store.commit("releve/setGenusSpecie",{genus:this.genre,specie:this.specie})
+      this.$store.commit("releve/setGenusSpecie", {
+        genus: this.genre,
+        specie: this.source[this.specieIndex-1]
+      });
       this.$store.commit("completion/set", 10);
       this.$store.commit("navigator/pop");
     }
   }
 };
 </script>
+<style>
+.inputDiv{
+  color:red
+}
+</style>
