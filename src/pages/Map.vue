@@ -10,7 +10,11 @@
         @update:center="centerUpdate"
         @click="onMapClick"
         @update:zoom="zoomUpdate"
-      >
+      > 
+      <l-circle @click="circleClick(index)" v-for="(circle,index) in circles" custom="10"
+        :lat-lng="circle.center"
+        :radius="circle.radius"/>
+
         <l-tile-layer :url="url" :attribution="attribution"/>
       </l-map>
     </div>
@@ -19,11 +23,12 @@
 </template>
 
 <script>
-import { LMap, LTileLayer, LMarker, LPopup, LTooltip } from "vue2-leaflet";
+import { LMap, LTileLayer,LCircle, LMarker, LPopup, LTooltip } from "vue2-leaflet";
 import SimplePage from "./SimplePage.vue";
 
 export default {
   components: {
+    LCircle,
     LMap,
     LTileLayer,
     LMarker,
@@ -32,6 +37,11 @@ export default {
   },
   data() {
     return {
+      circle:{
+        center:[47.41322, -1.219482],
+        radius:3000
+      },
+      circles:[],
       map: null,
       circleClicked: false,
       zoom: 18,
@@ -61,36 +71,44 @@ export default {
         .then(result=>{console.log(result)})
     },
     circleClick(evt) {
+      console.log(evt)
       this.circleClicked = true;
       this.$ons.notification
-        .confirm("Voulez vous supprimer votre relevé?")
+        .alert("Un releve est déja présent ici!")
         .then(response => {
-          if (response) {
-            this.map.removeLayer(evt.target);
-          }
           this.$nextTick(() => {
             this.circleClicked = false;
           });
         });
     },
     onMapClick(evt) {
+      console.log(evt)
       if (this.circleClicked) {
         return;
       }
+      var newCircle={
+        center:[evt.latlng.lat, evt.latlng.lng],
+        color: "red",
+        fillColor: "#f03",  
+        fillOpacity: 0.5,
+        radius: 10
+      }
+      this.circles.push(newCircle)
       console.log("clicked on map");
-      var circle = L.circle([evt.latlng.lat, evt.latlng.lng], {
+   /*   var circle = L.circle([evt.latlng.lat, evt.latlng.lng], {
         color: "red",
         fillColor: "#f03",
         fillOpacity: 0.5,
         radius: 10
       })
         .addTo(this.map)
-        .on("click", this.circleClick);
+        .on("click", this.circleClick);*/
 
       this.$ons.notification
         .confirm("Voulez vous réaliser un nouveau relevé?")
         .then(response => {
           if (response) {
+            this.$store.commit("releve/add",{newCircle})
             this.$store.commit("navigator/push", {
               extends: SimplePage,
               data() {
@@ -103,7 +121,7 @@ export default {
               }
             });
           } else {
-            this.map.removeLayer(circle);
+            this.circles.pop();
           }
         });
     },

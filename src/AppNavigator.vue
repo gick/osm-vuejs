@@ -10,7 +10,6 @@
 
 <script>
 import AppSplitter from './AppSplitter.vue';
-
 export default {
   beforeCreate() {
     this.$store.commit('navigator/push', AppSplitter);

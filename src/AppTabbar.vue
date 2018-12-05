@@ -15,7 +15,6 @@
       :tabbar-style="swipeTheme"
       :tabs="tabs"
       :index.sync="index"
-      @postchange="showTip($event, 'Tip: Try swiping pages!')"
     ></v-ons-tabbar>
   </v-ons-page>
 </template>
@@ -24,7 +23,7 @@
 import Map from './pages/Map.vue';
 import Home from './pages/Home.vue';
 import Arboretum from './pages/Arboretum.vue';
-import Animations from './pages/Animations.vue';
+import Releve from './pages/Releves.vue';
 
 // Just a linear interpolation formula
 const lerp = (x0, x1, t) => parseInt((1 - t) * x0 + t * x1, 10);
@@ -41,37 +40,8 @@ export default {
       colors: red,
       animationOptions: {},
       topPosition: 0,
-      tabs: [
-        {
-          label: 'Carte',
-          icon: 'ion-map',
-          page: Map,
-          theme: red,
-          style: this.md ? { maxWidth: '60px' } : {},
-          top: -105 // Toolbar + Tabbar heights
-        },
-        {
-          label: 'Mission',
-          icon: 'ion-home',
-          page: Home,
-          theme: red
-        },
-        {
-          label: 'Arboretum',
-          icon: 'ion-leaf',
-          page: Arboretum,
-          theme: blue
-        },
-        {
-          label: 'Relevés',
-          icon: 'ion-edit',
-          page: Animations,
-          theme: purple
-        }
-      ]
     };
   },
-
   methods: {
     onSwipe(index, animationOptions) {
       // Apply the same transition as ons-tabbar
@@ -98,6 +68,39 @@ export default {
   },
 
   computed: {
+        tabs(){
+      return [
+        {
+          label: 'Carte',
+          icon: 'ion-map',
+          active:false,
+          page: Map,
+          theme: red,
+          style: this.md ? { maxWidth: '60px' } : {},
+          top: -105 // Toolbar + Tabbar heights
+        },
+        {
+          label: 'Mission',
+          icon: 'ion-home',
+          page: Home,
+          theme: red
+        },
+        {
+          label: 'Arboretum',
+          icon: 'ion-leaf',
+          page: Arboretum,
+          theme: blue
+        },
+        {
+          label: 'Relevés',
+          icon: 'ion-edit',
+          page: Releve,
+          theme: purple,
+          badge:this.$store.state.releve.releves.length ? this.$store.state.releve.releves.length : null
+        }
+      ]
+    },
+
     index: {
       get() {
         return this.$store.state.tabbar.index;

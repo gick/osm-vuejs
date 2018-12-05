@@ -40,6 +40,7 @@ export default {
   },
   methods: {
     complete() {
+      this.$store.commit("releve/setGenusSpecie",{genus:this.genre,specie:this.specie})
       this.$store.commit("completion/set", 10);
       this.$store.commit("navigator/pop");
     }
