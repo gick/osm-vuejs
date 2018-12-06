@@ -6,7 +6,7 @@
         :zoom="zoom"
         :center="center"
         :options="mapOptions"
-        style="height: 90vh"
+        style="height: 70vh"
         @update:center="centerUpdate"
         @click="onMapClick"
         @update:zoom="zoomUpdate"
@@ -15,6 +15,7 @@
           @click="circleClick(index)"
           v-for="(circle,index) in circles"
           custom="10"
+          v-bind:key="index"
           :lat-lng="circle.center"
           :radius="circle.radius"
           :color="circle.color ? 'red' : 'blue'"
@@ -22,6 +23,7 @@
 
         <l-tile-layer :url="url" :attribution="attribution"/>
       </l-map>
+      <v-ons-button @click="fetchOSM">Get OSM Data</v-ons-button>
     </div>
   </v-ons-page>
 </template>
@@ -69,14 +71,6 @@ export default {
   created() {
     this.$nextTick(() => {
       this.map = this.$refs.map.mapObject; // work as expected
-      axios.get("http://localhost:8000/trees").then(
-        function(results) {
-          for (let circle of results.data) {
-            circle.radius = 5;
-            this.circles.push(circle);
-          }
-        }.bind(this)
-      );
     });
   },
   methods: {
