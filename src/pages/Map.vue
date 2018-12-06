@@ -18,12 +18,11 @@
           v-bind:key="index"
           :lat-lng="circle.center"
           :radius="circle.radius"
-          :color="'red'"
+          :color="circle.color  ? 'red' : 'blue'"
         />
 
         <l-tile-layer :url="url" :attribution="attribution"/>
       </l-map>
-      <v-ons-button @click="fetchOSM">Get OSM Data {{circles[0]}}</v-ons-button>
     </div>
   </v-ons-page>
 </template>
@@ -71,6 +70,15 @@ export default {
   created() {
     this.$nextTick(() => {
       this.map = this.$refs.map.mapObject; // work as expected
+            axios.get("http://osm.reveries-project.fr:8000/trees").then(
+        function(results) {
+          for (let circle of results.data) {
+            circle.radius = 5;
+            this.circles.push(circle);
+          }
+        }.bind(this)
+      );
+
     });
   },
   methods: {
