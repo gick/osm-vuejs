@@ -6,24 +6,35 @@
         :zoom="zoom"
         :center="center"
         :options="mapOptions"
-        style="height: 30em"
+        style="height: 90vh"
         @update:center="centerUpdate"
         @click="onMapClick"
         @update:zoom="zoomUpdate"
-      > 
-      <l-circle @click="circleClick(index)" v-for="(circle,index) in circles" custom="10"
-        :lat-lng="circle.center"
-        :radius="circle.radius"/>
+      >
+        <l-circle
+          @click="circleClick(index)"
+          v-for="(circle,index) in circles"
+          custom="10"
+          :lat-lng="circle.center"
+          :radius="circle.radius"
+          :color="circle.color ? 'red' : 'blue'"
+        />
 
         <l-tile-layer :url="url" :attribution="attribution"/>
       </l-map>
     </div>
-    <v-ons-button @click="fetchOSM">Charger les données OSM</v-ons-button>
   </v-ons-page>
 </template>
 
 <script>
-import { LMap, LTileLayer,LCircle, LMarker, LPopup, LTooltip } from "vue2-leaflet";
+import {
+  LMap,
+  LTileLayer,
+  LCircle,
+  LMarker,
+  LPopup,
+  LTooltip
+} from "vue2-leaflet";
 import SimplePage from "./SimplePage.vue";
 
 export default {
@@ -37,15 +48,11 @@ export default {
   },
   data() {
     return {
-      circle:{
-        center:[47.41322, -1.219482],
-        radius:3000
-      },
-      circles:[],
+      circles: [],
       map: null,
       circleClicked: false,
       zoom: 18,
-      center: L.latLng(47.41322, -1.219482),
+      center: L.latLng(48.08497, -0.75763),
       url: "//proxy-ign.openstreetmap.fr/94GjiyqD/bdortho/{z}/{x}/{y}.jpg",
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
@@ -62,16 +69,29 @@ export default {
   created() {
     this.$nextTick(() => {
       this.map = this.$refs.map.mapObject; // work as expected
+      axios.get("http://localhost:8000/trees").then(
+        function(results) {
+          for (let circle of results.data) {
+            circle.radius = 5;
+            this.circles.push(circle);
+          }
+        }.bind(this)
+      );
     });
   },
   methods: {
-    fetchOSM(){
-      console.log(axios)
-      axios.get('http://localhost:8000/trees')
-        .then(result=>{console.log(result)})
+    fetchOSM() {
+      axios.get("http://localhost:8000/trees").then(
+        function(results) {
+          for (let circle of results.data) {
+            circle.radius = 5;
+            this.circles.push(circle);
+          }
+        }.bind(this)
+      );
     },
     circleClick(evt) {
-      console.log(evt)
+      console.log(evt);
       this.circleClicked = true;
       this.$ons.notification
         .alert("Un releve est déja présent ici!")
@@ -82,20 +102,20 @@ export default {
         });
     },
     onMapClick(evt) {
-      console.log(evt)
+      console.log(evt);
       if (this.circleClicked) {
         return;
       }
-      var newCircle={
-        center:[evt.latlng.lat, evt.latlng.lng],
+      var newCircle = {
+        center: [evt.latlng.lat, evt.latlng.lng],
         color: "red",
-        fillColor: "#f03",  
+        fillColor: "#f03",
         fillOpacity: 0.5,
         radius: 10
-      }
-      this.circles.push(newCircle)
+      };
+      this.circles.push(newCircle);
       console.log("clicked on map");
-   /*   var circle = L.circle([evt.latlng.lat, evt.latlng.lng], {
+      /*   var circle = L.circle([evt.latlng.lat, evt.latlng.lng], {
         color: "red",
         fillColor: "#f03",
         fillOpacity: 0.5,
@@ -108,7 +128,7 @@ export default {
         .confirm("Voulez vous réaliser un nouveau relevé?")
         .then(response => {
           if (response) {
-            this.$store.commit("releve/add",{newCircle})
+            this.$store.commit("releve/add", { newCircle });
             this.$store.commit("navigator/push", {
               extends: SimplePage,
               data() {
