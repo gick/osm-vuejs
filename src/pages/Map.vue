@@ -6,7 +6,7 @@
         :zoom="zoom"
         :center="center"
         :options="mapOptions"
-        style="height: 70vh"
+        style="height: 60vh"
         @update:center="centerUpdate"
         @click="onMapClick"
         @update:zoom="zoomUpdate"
@@ -18,12 +18,12 @@
           v-bind:key="index"
           :lat-lng="circle.center"
           :radius="circle.radius"
-          :color="circle.color ? 'red' : 'blue'"
+          :color="'red'"
         />
 
         <l-tile-layer :url="url" :attribution="attribution"/>
       </l-map>
-      <v-ons-button @click="fetchOSM">Get OSM Data</v-ons-button>
+      <v-ons-button @click="fetchOSM">Get OSM Data {{circles[0]}}</v-ons-button>
     </div>
   </v-ons-page>
 </template>
@@ -78,7 +78,7 @@ export default {
       axios.get("http://localhost:8000/trees").then(
         function(results) {
           for (let circle of results.data) {
-            circle.radius = 5;
+            circle.radius = 15;
             this.circles.push(circle);
           }
         }.bind(this)
