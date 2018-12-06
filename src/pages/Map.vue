@@ -75,10 +75,10 @@ export default {
   },
   methods: {
     fetchOSM() {
-      axios.get("http://localhost:8000/trees").then(
+      axios.get("http://osm.reveries-project.fr:8000/trees").then(
         function(results) {
           for (let circle of results.data) {
-            circle.radius = 15;
+            circle.radius = 5;
             this.circles.push(circle);
           }
         }.bind(this)
