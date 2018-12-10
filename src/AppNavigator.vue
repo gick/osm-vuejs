@@ -10,9 +10,11 @@
 
 <script>
 import AppSplitter from './AppSplitter.vue';
+import Carousel from './pages/Carousel.vue'
 export default {
   beforeCreate() {
-    this.$store.commit('navigator/push', AppSplitter);
+        this.$store.commit('navigator/push', AppSplitter);
+   // this.$store.commit('navigator/push', Carousel);
   },
   data() {
     return {

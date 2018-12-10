@@ -20,6 +20,7 @@
           <v-ons-progress-bar :value="completionRate" secondary-value="100"></v-ons-progress-bar>
         </p>
       </div>
+      <v-ons-button @click="authenticate">Authen</v-ons-button>
     </v-ons-card>
 
 <!--
@@ -31,6 +32,7 @@
 </template>
 
 <script>
+var osmAuth = require('osm-auth');
 import PullHook from "./PullHook.vue";
 import Dialogs from "./Dialogs.vue";
 import Buttons from "./Buttons.vue";
@@ -89,6 +91,21 @@ export default {
     }
   },
   methods: {
+    authenticate(){
+        var auth = osmAuth({
+            oauth_secret: '9WfJnwQxDvvYagx1Ut0tZBsOZ0ZCzAvOje3u1TV0',
+            oauth_consumer_key: 'WLwXbm6XFMG7WrVnE8enIF6GzyefYIN6oUJSxG65',
+            auto:true,
+        });
+            auth.authenticate(function() {
+              console.log(auth.authenticated())
+                auth.xhr({
+                method: 'GET',
+                path: '/api/0.6/user/details'
+            }, (err,result)=>{console.log(result)});
+            });
+
+    },
     updateCompletion() {
       this.$store.commit("completion/set", 10);
     },
