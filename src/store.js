@@ -80,8 +80,24 @@ export default {
         }
       }
     }
+    ,
+    user: {
+      strict: true,
+      namespaced: true,
+      state: {
+        name: null,
+        id:null,
+      },
+      mutations: {
+        set(state, user) {
+          state.name = user.name
+          state.id = user.id
+        }
+      }
+    }
 
     ,
+
     tabbar: {
       strict: true,
       namespaced: true,

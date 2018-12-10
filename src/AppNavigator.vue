@@ -1,6 +1,6 @@
 <template>
   <v-ons-navigator swipeable swipe-target-width="50px"
-    :page-stack="pageStack"
+    :page-stack="$store.state.navigator.stack"
     :pop-page="storePop"
     :options="{animation:'slide-ios'}"
     @postpush="showPopTip"
@@ -9,12 +9,29 @@
 </template>
 
 <script>
+var osmAuth = require('osm-auth');
 import AppSplitter from './AppSplitter.vue';
 import Carousel from './pages/Carousel.vue'
 export default {
   beforeCreate() {
         this.$store.commit('navigator/push', AppSplitter);
-   // this.$store.commit('navigator/push', Carousel);
+                var auth = osmAuth({
+            oauth_secret: 'QnKSNBa7ZTYJfWy4fQIruPO6V2Zedt1v9GjgV5j0',
+            oauth_consumer_key: 'WfwC8YRVCgBvjI22d5FkEjGv5T77PisNqLBvtXuO',
+            auto:true
+        });
+            auth.authenticate(function() {
+                auth.xhr({
+                method: 'GET',
+                path: '/api/0.6/user/details'
+            }, (err,res)=>{var user =res.getElementsByTagName('user')[0]
+              let userObject={name:user.getAttribute('display_name'),id:user.getAttribute('id')}
+            this.$store.commit('user/set',userObject)
+            
+            });
+            }.bind(this));
+
+
   },
   data() {
     return {

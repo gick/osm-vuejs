@@ -1,12 +1,27 @@
 <template>
-  <v-ons-page>
+  <v-ons-page> 
+    <v-ons-fab style="background-color:red" @click="logout" v-show="$store.state.user.id" position="bottom right">
+      <v-ons-icon icon="ion-close"></v-ons-icon>
+    </v-ons-fab>
+
     <p class="intro">Ceci est un prototype d'interface pour les missions.
       <br>
       <br>
     </p>
-    <v-ons-card @click="updateCompletion">
-      <div class="title">Mission en cours</div>
+      <v-ons-card v-show="!$store.state.user.id">
+      <div  class="title">Authentifiez vous!</div>
+      <div class="content">
+        <p>Bienvenue dans AlbiziApp</p>
+        <p>Merci de vous authentifier. </p>
+              <v-ons-button @click="authenticate">Authenticate</v-ons-button>
+
+      </div>
+    </v-ons-card>
+
+    <v-ons-card v-show="$store.state.user.id">
+      <div  class="title">Mission en cours</div>
       <div v-if="completionRate<100" class="content">
+        <p>Bonjour {{$store.state.user.name}}</p>
         <p>Votre mission actuelle est d'effectuer 10 relevés. Pour cela, utiliser la carte accessible via la barre de menu.</p>
         <p>
           Vous avez effectué {{completionRate/10}} relevé.
@@ -20,10 +35,10 @@
           <v-ons-progress-bar :value="completionRate" secondary-value="100"></v-ons-progress-bar>
         </p>
       </div>
-      <v-ons-button @click="authenticate">Authen</v-ons-button>
     </v-ons-card>
+    <!--  <v-ons-button @click="logout">Logout</v-ons-button>
+      <p v-show='username'>Bonjour user {{username}}</p>
 
-<!--
     <v-ons-card v-for="page of pages" :key="page.label" @click="push(page.component, page.label)">
       <div class="title">{{ page.label }}</div>
       <div class="content">{{ page.desc }}</div>
@@ -44,6 +59,7 @@ import SimplePage from "./SimplePage.vue";
 export default {
   data() {
     return {
+      username:'',
       pages: [
         {
           component: SimplePage,
@@ -93,18 +109,30 @@ export default {
   methods: {
     authenticate(){
         var auth = osmAuth({
-            oauth_secret: '9WfJnwQxDvvYagx1Ut0tZBsOZ0ZCzAvOje3u1TV0',
-            oauth_consumer_key: 'WLwXbm6XFMG7WrVnE8enIF6GzyefYIN6oUJSxG65',
+            oauth_secret: 'QnKSNBa7ZTYJfWy4fQIruPO6V2Zedt1v9GjgV5j0',
+            oauth_consumer_key: 'WfwC8YRVCgBvjI22d5FkEjGv5T77PisNqLBvtXuO',
             auto:true,
         });
             auth.authenticate(function() {
-              console.log(auth.authenticated())
                 auth.xhr({
                 method: 'GET',
                 path: '/api/0.6/user/details'
-            }, (err,result)=>{console.log(result)});
+            }, (err,res)=>{var user =res.getElementsByTagName('user')[0]
+              let userObject={name:user.getAttribute('display_name'),id:user.getAttribute('id')}
+            this.$store.commit('user/set',userObject)
+            
             });
+            }.bind(this));
 
+    },
+    logout(){
+        var auth = osmAuth({
+            oauth_secret: 'QnKSNBa7ZTYJfWy4fQIruPO6V2Zedt1v9GjgV5j0',
+            oauth_consumer_key: 'WfwC8YRVCgBvjI22d5FkEjGv5T77PisNqLBvtXuO',
+            auto:true,
+        });
+    auth.logout()
+    this.$store.commit('user/set',{name:null,id:null})
     },
     updateCompletion() {
       this.$store.commit("completion/set", 10);
