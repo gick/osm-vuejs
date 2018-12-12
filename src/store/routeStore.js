@@ -1,3 +1,6 @@
+import { cpus } from "os";
+var osmAuth = require("osm-auth");
+
 export default {
   modules: {
     navigator: {
@@ -92,9 +95,46 @@ export default {
         set(state, user) {
           state.name = user.name
           state.id = user.id
+        }},
+      actions:{
+        logout({commit}) {
+          var auth = osmAuth({
+            oauth_secret: 'QnKSNBa7ZTYJfWy4fQIruPO6V2Zedt1v9GjgV5j0',
+            oauth_consumer_key: 'WfwC8YRVCgBvjI22d5FkEjGv5T77PisNqLBvtXuO',
+            auto: true
+          });
+          auth.logout();
+          commit("set", { name: null, id: null });
+        },
+    
+        login({commit}){
+          var auth = osmAuth({
+            oauth_secret: 'QnKSNBa7ZTYJfWy4fQIruPO6V2Zedt1v9GjgV5j0',
+            oauth_consumer_key: 'WfwC8YRVCgBvjI22d5FkEjGv5T77PisNqLBvtXuO',
+            auto: true
+          });
+          auth.authenticate(
+            function() {
+              auth.xhr(
+                {
+                  method: "GET",
+                  path: "/api/0.6/user/details"
+                },
+                (err, res) => {
+                  var user = res.getElementsByTagName("user")[0];
+                  let userObject = {
+                    name: user.getAttribute("display_name"),
+                    id: user.getAttribute("id")
+                  };
+                  commit("set", userObject);
+                }
+              );
+            }.bind(this)
+          );
         }
       }
-    }
+      }
+    
 
     ,
 

@@ -8,7 +8,7 @@ import Vuex from 'vuex';
 import VueOnsen from 'vue-onsenui'; // For UMD
 // import VueOnsen from 'vue-onsenui/esm'; // For ESM
 // import * as OnsenComponents from './onsen-components'; // For ESM
-import storeLike from './store.js';
+import storeLike from './store/routeStore';
 import CustomToolbar from './partials/CustomToolbar.vue';
 import AppNavigator from './AppNavigator.vue';
 
