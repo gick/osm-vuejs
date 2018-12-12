@@ -16,9 +16,9 @@ export default {
   beforeCreate() {
         this.$store.commit('navigator/push', AppSplitter);
                 var auth = osmAuth({
-            oauth_secret: 'QnKSNBa7ZTYJfWy4fQIruPO6V2Zedt1v9GjgV5j0',
-            oauth_consumer_key: 'WfwC8YRVCgBvjI22d5FkEjGv5T77PisNqLBvtXuO',
-            auto:true
+            oauth_secret: 'ycJOK6xrlW0tPXb280k1VLkH4zGlsaGyTPm4vGvr',
+            oauth_consumer_key: '1zPARMhKbBJfy6lZa9Jt3SvXOM4D3bxr1s3pMly0',
+            auto:true,
         });
             auth.authenticate(function() {
                 auth.xhr({
