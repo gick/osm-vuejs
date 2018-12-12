@@ -109,8 +109,8 @@ export default {
   methods: {
     authenticate(){
         var auth = osmAuth({
-            oauth_secret: '9WfJnwQxDvvYagx1Ut0tZBsOZ0ZCzAvOje3u1TV0',
-            oauth_consumer_key: 'WLwXbm6XFMG7WrVnE8enIF6GzyefYIN6oUJSxG65',
+            oauth_secret: 'ycJOK6xrlW0tPXb280k1VLkH4zGlsaGyTPm4vGvr',
+            oauth_consumer_key: '1zPARMhKbBJfy6lZa9Jt3SvXOM4D3bxr1s3pMly0',
             auto:true,
         });
             auth.authenticate(function() {
@@ -127,8 +127,8 @@ export default {
     },
     logout(){
         var auth = osmAuth({
-            oauth_secret: 'QnKSNBa7ZTYJfWy4fQIruPO6V2Zedt1v9GjgV5j0',
-            oauth_consumer_key: 'WfwC8YRVCgBvjI22d5FkEjGv5T77PisNqLBvtXuO',
+            oauth_secret: 'ycJOK6xrlW0tPXb280k1VLkH4zGlsaGyTPm4vGvr',
+            oauth_consumer_key: '1zPARMhKbBJfy6lZa9Jt3SvXOM4D3bxr1s3pMly0',
             auto:true,
         });
     auth.logout()
