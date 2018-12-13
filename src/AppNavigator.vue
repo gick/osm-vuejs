@@ -15,23 +15,7 @@ import Carousel from './pages/Carousel.vue'
 export default {
   beforeCreate() {
         this.$store.commit('navigator/push', AppSplitter);
-                var auth = osmAuth({
-            oauth_secret: 'ycJOK6xrlW0tPXb280k1VLkH4zGlsaGyTPm4vGvr',
-            oauth_consumer_key: '1zPARMhKbBJfy6lZa9Jt3SvXOM4D3bxr1s3pMly0',
-            auto:true,
-        });
-            auth.authenticate(function() {
-                auth.xhr({
-                method: 'GET',
-                path: '/api/0.6/user/details'
-            }, (err,res)=>{var user =res.getElementsByTagName('user')[0]
-              let userObject={name:user.getAttribute('display_name'),id:user.getAttribute('id')}
-            this.$store.commit('user/set',userObject)
-            
-            });
-            }.bind(this));
-
-
+        this.$store.dispatch('user/login')
   },
   data() {
     return {

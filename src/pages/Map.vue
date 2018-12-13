@@ -13,13 +13,32 @@
       >
         <l-circle
           @click="circleClick(index)"
-          v-for="(circle,index) in circles"
+          custom="10"
+          v-if="newCircle"
+          :lat-lng="newCircle.center"
+          :radius="8"
+          :color="'red'"
+        />
+
+        <l-circle
+          @click="circleClick(index)"
+          v-for="(circle,index) in osmCircles"
           custom="10"
           v-bind:key="index"
           :lat-lng="circle.center"
-          :radius="circle.radius"
-          :color="circle.color  ? 'red' : 'blue'"
+          :radius="5"
+          :color="'blue'"
         />
+        <l-circle
+          @click="circleClick(index)"
+          v-for="(circle,index) in observations"
+          custom="10"
+          v-bind:key="index+osmCircles.length"
+          :lat-lng="circle.coordinates"
+          :radius="8"
+          :color="'red'"
+        />
+
 
         <l-tile-layer :url="url" :attribution="attribution"/>
       </l-map>
@@ -49,7 +68,8 @@ export default {
   },
   data() {
     return {
-      circles: [],
+      newCircle:null,
+      osmCircles:[],
       map: null,
       circleClicked: false,
       zoom: 18,
@@ -67,6 +87,11 @@ export default {
       }
     };
   },
+  computed:{
+    observations(){
+      return this.$store.state.releve.releves
+    }
+  },
   created() {
     this.$nextTick(() => {
       this.map = this.$refs.map.mapObject; // work as expected
@@ -74,7 +99,7 @@ export default {
         function(results) {
           for (let circle of results.data) {
             circle.radius = 5;
-            this.circles.push(circle);
+            this.osmCircles.push(circle);
           }
         }.bind(this)
       );
@@ -82,16 +107,6 @@ export default {
     });
   },
   methods: {
-    fetchOSM() {
-      axios.get("http://osm.reveries-project.fr:8000/trees").then(
-        function(results) {
-          for (let circle of results.data) {
-            circle.radius = 5;
-            this.circles.push(circle);
-          }
-        }.bind(this)
-      );
-    },
     circleClick(evt) {
       console.log(evt);
       this.circleClicked = true;
@@ -108,14 +123,13 @@ export default {
       if (this.circleClicked) {
         return;
       }
-      var newCircle = {
+      this.newCircle = {
         center: [evt.latlng.lat, evt.latlng.lng],
         color: "red",
         fillColor: "#f03",
         fillOpacity: 0.5,
         radius: 10
       };
-      this.circles.push(newCircle);
       console.log("clicked on map");
       /*   var circle = L.circle([evt.latlng.lat, evt.latlng.lng], {
         color: "red",
@@ -130,11 +144,15 @@ export default {
         .confirm("Voulez vous réaliser un nouveau relevé?")
         .then(response => {
           if (response) {
-            this.$store.commit("releve/add", { newCircle });
+            let coordinates=[this.newCircle.center[0],this.newCircle.center[1]]
+            this.newCircle=null
+
+            //this.$store.commit("releve/add", { coordinates:coordinates });
             this.$store.commit("navigator/push", {
               extends: SimplePage,
               data() {
                 return {
+                  coordinates:coordinates ,
                   toolbarInfo: {
                     backLabel: "Home",
                     title: "key"
@@ -143,7 +161,7 @@ export default {
               }
             });
           } else {
-            this.circles.pop();
+            this.newCircle=null;
           }
         });
     },

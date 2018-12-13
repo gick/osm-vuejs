@@ -30,44 +30,47 @@
     </v-ons-list>
     <section style="margin: 16px">
       <v-ons-button :disabled="!completed" @click="complete" style="margin: 6px 0">Envoyer</v-ons-button>
-      <v-ons-button modifier="outline" style="margin: 6px 0">Annuler</v-ons-button>
+      <v-ons-button modifier="outline" @click='cancel' style="margin: 6px 0">Annuler</v-ons-button>
     </section>
   </v-ons-page>
 </template>
 <script>
 import Autocomplete from "vuejs-auto-complete";
-import genusList from '../js/genus.js'
+import genusList from "../js/genus.js";
 export default {
   data() {
-    return { source:genusList,genus: "", specieIndex: 0 };
+    return { source: genusList, genus: "", specieIndex: 0 };
   },
   components: {
     Autocomplete
   },
   computed: {
     completed() {
-      if(this.genus.length){
-        return true
+      if (this.genus.length) {
+        return true;
       }
-      if(this.specieIndex){
-        return true
+      if (this.specieIndex) {
+        return true;
       }
     }
   },
   methods: {
     complete() {
-      this.$store.commit("releve/setGenusSpecie", {
-        genus: this.genre,
-        specie: this.source[this.specieIndex-1]
-      });
+      let specie=this.source[this.specieIndex - 1]
+      this.$store.dispatch("releve/setObservation", {coordinates:this.coordinates,
+      genus:this.genus,
+      specie:specie ? specie.name:''});
       this.$store.commit("completion/set", 10);
       this.$store.commit("navigator/pop");
+    },
+    cancel(){
+      this.$store.commit('navigator/pop')
     }
   }
 };
 </script>
 <style>
-.inputDiv{
-  color:red
+.inputDiv {
+  color: red;
 }
 </style>
