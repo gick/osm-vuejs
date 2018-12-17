@@ -3,7 +3,7 @@
     <v-ons-splitter>
       <v-ons-splitter-side swipeable side="right" collapse=""
         width="260px"
-        :swipe-target-width="md && 25"
+        :swipe-target-width="'25px'"
         :animation="md ? 'overlay' : 'reveal'"
         :open.sync="isOpen"
       >

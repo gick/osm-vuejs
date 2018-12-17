@@ -107,10 +107,6 @@ export default {
     }
   },
   methods: {
-    setSession(){
-      axios.get('http://osm.reveries-project.fr:8000/observation')
-      .then(function(res){console.log(res)})
-    },
     authenticate(){
         this.$store.dispatch('user/login')
     },

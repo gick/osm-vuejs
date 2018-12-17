@@ -76,8 +76,6 @@ export default {
           active:false,
           page: Map,
           theme: red,
-          style: this.md ? { maxWidth: '60px' } : {},
-          top: -105 // Toolbar + Tabbar heights
         },
         {
           label: 'Mission',

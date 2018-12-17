@@ -4,9 +4,8 @@
       <v-ons-list-header>Liste des relevés</v-ons-list-header>
       <v-ons-list-item v-for="(releve,index) in releves" :key="index"
         modifier="chevron"
-        @click="transition(releve)"
-      >
-        <p>{{releve.specie }}</p>
+        @click="transition(releve)">
+        <p>{{releve.specie }} {{releve.genus}} </p>
       </v-ons-list-item>
     </v-ons-list>
   </v-ons-page>

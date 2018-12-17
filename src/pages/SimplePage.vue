@@ -27,22 +27,56 @@
         </div>
         <v-ons-input placeholder="Nom du genre" float v-model="genus"></v-ons-input>
       </v-ons-list-item>
+      <v-ons-list-item>
+        <div class="left">
+          <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>
+        </div>
+        <v-ons-input placeholder="Nom commun" float v-model="common"></v-ons-input>
+      </v-ons-list-item>
+      <v-ons-list-item>
+        <picture-input
+          ref="pictureInput"
+          @change="onChange"
+          width="600"
+          :crop="false"
+          :removable="true"
+          height="600"
+          margin="16"
+          accept="image/*"
+          capture="camera"
+          size="10"
+          buttonClass="btn"
+          :customStrings="{
+        upload: '<h1>Bummer!</h1>',
+        drag: 'Prendre photo'
+      }"
+        ></picture-input>
+      </v-ons-list-item>
     </v-ons-list>
     <section style="margin: 16px">
       <v-ons-button :disabled="!completed" @click="complete" style="margin: 6px 0">Envoyer</v-ons-button>
-      <v-ons-button modifier="outline" @click='cancel' style="margin: 6px 0">Annuler</v-ons-button>
+      <v-ons-button modifier="outline" @click="cancel" style="margin: 6px 0">Annuler</v-ons-button>
     </section>
   </v-ons-page>
 </template>
 <script>
+import PictureInput from "vue-picture-input";
 import Autocomplete from "vuejs-auto-complete";
+import imageCompression from "browser-image-compression";
 import genusList from "../js/genus.js";
 export default {
   data() {
-    return { source: genusList, genus: "", specieIndex: 0 };
+    return {
+      image: null,
+      common: "",
+      source: genusList,
+      genus: "",
+      specieIndex: 0
+    };
   },
   components: {
-    Autocomplete
+    Autocomplete,
+    PictureInput
   },
   computed: {
     completed() {
@@ -55,16 +89,49 @@ export default {
     }
   },
   methods: {
+    onChange() {
+      var that=this
+      //this.image = this.$refs.pictureInput.image;
+     // console.log(this.image.length)
+      var imageFile = this.$refs.pictureInput.file;
+      console.log("originalFile instanceof Blob", imageFile instanceof Blob); // true
+      console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
+
+      var maxSizeMB = 0.1;
+      var maxWidthOrHeight = 600; // compressedFile will scale down by ratio to a point that width or height is smaller than maxWidthOrHeight
+      imageCompression(imageFile, maxSizeMB, maxWidthOrHeight) // maxSizeMB, maxWidthOrHeight are optional
+        .then(function(compressedFile) {
+          console.log(
+            "compressedFile instanceof Blob",
+            compressedFile instanceof Blob
+          ); // true
+          console.log(
+            `compressedFile size ${compressedFile.size / 1024 / 1024} MB`
+          ); // smaller than maxSizeMB
+              imageCompression.getDataUrlFromFile(compressedFile)
+                .then(function(compressedDataURI){
+
+                  this.image=compressedDataURI
+              }.bind(this))
+          //return uploadToServer(compressedFile); // write your own logic
+        }.bind(this))
+        .catch(function(error) {
+          console.log(error.message);
+        });
+    },
     complete() {
-      let specie=this.source[this.specieIndex - 1]
-      this.$store.dispatch("releve/setObservation", {coordinates:this.coordinates,
-      genus:this.genus,
-      specie:specie ? specie.name:''});
+      let specie = this.source[this.specieIndex - 1];
+      this.$store.dispatch("releve/setObservation", {
+        coordinates: this.coordinates,
+        genus: this.genus,
+        image: this.image,
+        specie: specie ? specie.name : ""
+      });
       this.$store.commit("completion/set", 10);
       this.$store.commit("navigator/pop");
     },
-    cancel(){
-      this.$store.commit('navigator/pop')
+    cancel() {
+      this.$store.commit("navigator/pop");
     }
   }
 };

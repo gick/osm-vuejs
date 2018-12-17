@@ -144,7 +144,7 @@ export default {
               }
               axios.defaults.withCredentials = true
               commit('set', userObject)
-             return axios.get('http://osm.reveries-project.fr:8000/login',{params: {
+             return axios.get('http://localhost:8000/login',{params: {
                 id: user.getAttribute('id')
               }}).then(function(){
                 dispatch('loadObservation')

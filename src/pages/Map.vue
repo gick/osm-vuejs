@@ -95,7 +95,7 @@ export default {
   created() {
     this.$nextTick(() => {
       this.map = this.$refs.map.mapObject; // work as expected
-            axios.get("http://osm.reveries-project.fr:8000/trees").then(
+            axios.get("http://reveries-project.fr:8000/trees").then(
         function(results) {
           for (let circle of results.data) {
             circle.radius = 5;
