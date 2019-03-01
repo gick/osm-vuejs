@@ -9,7 +9,6 @@
           <ons-list-header>Information</ons-list-header>
           <ons-list-item v-show="releve.genus">Genre : {{releve.genus}}</ons-list-item>
           <ons-list-item v-show="releve.specie">Espèce : {{releve.specie}}</ons-list-item>
-          <ons-list-item>React</ons-list-item>
         </ons-list>
       </div>
     </ons-card>

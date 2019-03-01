@@ -9,10 +9,12 @@
         style="height: 60vh"
         @update:center="centerUpdate"
         @click="onMapClick"
+        @locationfound="locationfound"
+        @locationerror="locationerror"
         @update:zoom="zoomUpdate"
       >
         <l-circle
-          @click="circleClick(index)"
+          @click="circleClick(event,index)"
           custom="10"
           v-if="newCircle"
           :lat-lng="newCircle.center"
@@ -21,7 +23,7 @@
         />
 
         <l-circle
-          @click="circleClick(index)"
+          @click="circleClick(event,index)"
           v-for="(circle,index) in osmCircles"
           custom="10"
           v-bind:key="index"
@@ -30,7 +32,7 @@
           :color="'blue'"
         />
         <l-circle
-          @click="circleClick(index)"
+          @click="circleClick($event,index)"
           v-for="(circle,index) in observations"
           custom="10"
           v-bind:key="index+osmCircles.length"
@@ -38,7 +40,6 @@
           :radius="8"
           :color="'red'"
         />
-
 
         <l-tile-layer :url="url" :attribution="attribution"/>
       </l-map>
@@ -53,9 +54,11 @@ import {
   LCircle,
   LMarker,
   LPopup,
+  Vue2Leaflet,
   LTooltip
 } from "vue2-leaflet";
 import SimplePage from "./SimplePage.vue";
+import Releve from './Releve.vue'
 
 export default {
   components: {
@@ -68,8 +71,8 @@ export default {
   },
   data() {
     return {
-      newCircle:null,
-      osmCircles:[],
+      newCircle: null,
+      osmCircles: [],
       map: null,
       circleClicked: false,
       zoom: 18,
@@ -87,36 +90,63 @@ export default {
       }
     };
   },
-  computed:{
-    observations(){
-      return this.$store.state.releve.releves
+  computed: {
+    observations() {
+      return this.$store.state.releve.releves;
     }
   },
   created() {
     this.$nextTick(() => {
       this.map = this.$refs.map.mapObject; // work as expected
-            axios.get("http://osm.reveries-project.fr:8000/trees").then(
+      this.map.locate({ setView: true, maxZoom: 16 });
+      axios.get("http://localhost:8000/trees").then(
         function(results) {
+          console.log(results);
           for (let circle of results.data) {
             circle.radius = 5;
             this.osmCircles.push(circle);
           }
         }.bind(this)
       );
-
     });
   },
   methods: {
-    circleClick(evt) {
-      console.log(evt);
+    locationerror(e) {
+      alert(e.message);
+    },
+    locationfound(e) {
+      var radius = e.accuracy / 2;
+      L.marker(e.latlng)
+        .addTo(this.map)
+        .bindPopup("You are within " + radius + " meters from this point")
+        .openPopup();
+
+      L.circle(e.latlng, radius).addTo(this.map);
+    },
+    circleClick(evt,index) {
+      console.log(index);
+      var releve=this.observations[index]
       this.circleClicked = true;
-      this.$ons.notification
-        .alert("Un releve est déja présent ici!")
-        .then(response => {
-          this.$nextTick(() => {
+       this.$store.commit('navigator/push', {
+        extends: Releve,
+        data() {
+          return {
+            releve: releve
+          }
+        }
+
+      });
+             this.$nextTick(() => {
             this.circleClicked = false;
           });
-        });
+
+     // this.$ons.notification
+     //   .alert("Un releve est déja présent ici!")
+     //   .then(response => {
+     //     this.$nextTick(() => {
+     //       this.circleClicked = false;
+     //     });
+     //   });
     },
     onMapClick(evt) {
       console.log(evt);
@@ -131,28 +161,22 @@ export default {
         radius: 10
       };
       console.log("clicked on map");
-      /*   var circle = L.circle([evt.latlng.lat, evt.latlng.lng], {
-        color: "red",
-        fillColor: "#f03",
-        fillOpacity: 0.5,
-        radius: 10
-      })
-        .addTo(this.map)
-        .on("click", this.circleClick);*/
-
       this.$ons.notification
         .confirm("Voulez vous réaliser un nouveau relevé?")
         .then(response => {
           if (response) {
-            let coordinates=[this.newCircle.center[0],this.newCircle.center[1]]
-            this.newCircle=null
+            let coordinates = [
+              this.newCircle.center[0],
+              this.newCircle.center[1]
+            ];
+            this.newCircle = null;
 
             //this.$store.commit("releve/add", { coordinates:coordinates });
             this.$store.commit("navigator/push", {
               extends: SimplePage,
               data() {
                 return {
-                  coordinates:coordinates ,
+                  coordinates: coordinates,
                   toolbarInfo: {
                     backLabel: "Home",
                     title: "key"
@@ -161,7 +185,7 @@ export default {
               }
             });
           } else {
-            this.newCircle=null;
+            this.newCircle = null;
           }
         });
     },

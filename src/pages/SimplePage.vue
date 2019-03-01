@@ -16,7 +16,7 @@
             :source="source"
             inputClass="inputClass"
             results-display="name"
-            placeholder="Nom de l'espece"
+            placeholder="Nom du genre"
             v-model="specieIndex"
           ></autocomplete>
         </div>
@@ -25,7 +25,7 @@
         <div class="left">
           <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>
         </div>
-        <v-ons-input placeholder="Nom du genre" float v-model="genus"></v-ons-input>
+        <v-ons-input placeholder="Nom de l'espèce" float v-model="genus"></v-ons-input>
       </v-ons-list-item>
       <v-ons-list-item>
         <div class="left">
@@ -54,6 +54,7 @@
       </v-ons-list-item>
     </v-ons-list>
     <section style="margin: 16px">
+      <v-ons-button @click="identify" style="margin: 6px 0">Identifier</v-ons-button>
       <v-ons-button :disabled="!completed" @click="complete" style="margin: 6px 0">Envoyer</v-ons-button>
       <v-ons-button modifier="outline" @click="cancel" style="margin: 6px 0">Annuler</v-ons-button>
     </section>
@@ -62,6 +63,7 @@
 <script>
 import PictureInput from "vue-picture-input";
 import Autocomplete from "vuejs-auto-complete";
+import Identification from "./Identification.vue";
 import imageCompression from "browser-image-compression";
 import genusList from "../js/genus.js";
 export default {
@@ -89,10 +91,23 @@ export default {
     }
   },
   methods: {
+    identify() {
+      this.$store.commit("navigator/push", {
+        extends: Identification,
+        data() {
+          return {
+            toolbarInfo: {
+              backLabel: "Home",
+              title: "key"
+            }
+          };
+        }
+      });
+    },
     onChange() {
-      var that=this
+      var that = this;
       //this.image = this.$refs.pictureInput.image;
-     // console.log(this.image.length)
+      // console.log(this.image.length)
       var imageFile = this.$refs.pictureInput.file;
       console.log("originalFile instanceof Blob", imageFile instanceof Blob); // true
       console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
@@ -100,21 +115,23 @@ export default {
       var maxSizeMB = 0.1;
       var maxWidthOrHeight = 600; // compressedFile will scale down by ratio to a point that width or height is smaller than maxWidthOrHeight
       imageCompression(imageFile, maxSizeMB, maxWidthOrHeight) // maxSizeMB, maxWidthOrHeight are optional
-        .then(function(compressedFile) {
-          console.log(
-            "compressedFile instanceof Blob",
-            compressedFile instanceof Blob
-          ); // true
-          console.log(
-            `compressedFile size ${compressedFile.size / 1024 / 1024} MB`
-          ); // smaller than maxSizeMB
-              imageCompression.getDataUrlFromFile(compressedFile)
-                .then(function(compressedDataURI){
-
-                  this.image=compressedDataURI
-              }.bind(this))
-          //return uploadToServer(compressedFile); // write your own logic
-        }.bind(this))
+        .then(
+          function(compressedFile) {
+            console.log(
+              "compressedFile instanceof Blob",
+              compressedFile instanceof Blob
+            ); // true
+            console.log(
+              `compressedFile size ${compressedFile.size / 1024 / 1024} MB`
+            ); // smaller than maxSizeMB
+            imageCompression.getDataUrlFromFile(compressedFile).then(
+              function(compressedDataURI) {
+                this.image = compressedDataURI;
+              }.bind(this)
+            );
+            //return uploadToServer(compressedFile); // write your own logic
+          }.bind(this)
+        )
         .catch(function(error) {
           console.log(error.message);
         });

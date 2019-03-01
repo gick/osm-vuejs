@@ -57,7 +57,7 @@ export default {
         setObservation({commit},releve){
           commit('add',releve)
           axios.defaults.withCredentials = true
-                    axios.post('http://osm.reveries-project.fr:8000/observation',
+                    axios.post('http://localhost:8000/observation',
           {releve:releve})
         }}
 
@@ -120,7 +120,7 @@ export default {
           });
         },
         loadObservation({commit}){
-          axios.get('http://osm.reveries-project.fr:8000/observation')
+          axios.get('http://localhost:8000/observation')
           .then(function(res){commit('releve/addMultiple',res.data,{root:true})})
         }
         ,
@@ -144,7 +144,7 @@ export default {
               }
               axios.defaults.withCredentials = true
               commit('set', userObject)
-             return axios.get('http://osm.reveries-project.fr:8000/login',{params: {
+             return axios.get('http://localhost:8000/login',{params: {
                 id: user.getAttribute('id')
               }}).then(function(){
                 dispatch('loadObservation')
