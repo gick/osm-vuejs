@@ -29,10 +29,10 @@
         </p>
       </div>
       <div v-if="completionRate>=100" class="content">
-        <p>Bravo vous avez terminé votre mission.</p>
+        <p>Bravo vous avez terminé la première mission.</p>
         <p>
-          Vous avez effectué {{completionRate/10}} relevé! Vous pouvez continuer à en effectuer pour gagner des points bonus!
-          <v-ons-progress-bar :value="completionRate" secondary-value="100"></v-ons-progress-bar>
+          Votre nouvelle mission est d'effectuer 3 relevés <b>d'espèces différentes.</b>
+          <v-ons-progress-bar :value="completionRate2" secondary-value="30"></v-ons-progress-bar>
         </p>
       </div>
     </v-ons-card>

@@ -99,7 +99,7 @@ export default {
     this.$nextTick(() => {
       this.map = this.$refs.map.mapObject; // work as expected
       this.map.locate({ setView: true, maxZoom: 16 });
-      axios.get("http://localhost:8000/trees").then(
+      axios.get("/trees").then(
         function(results) {
           console.log(results);
           for (let circle of results.data) {

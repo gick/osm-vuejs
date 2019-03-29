@@ -57,7 +57,7 @@ export default {
         setObservation({commit},releve){
           commit('add',releve)
           axios.defaults.withCredentials = true
-                    axios.post('http://localhost:8000/observation',
+                    axios.post('/observation',
           {releve:releve})
         }}
 
@@ -79,15 +79,29 @@ export default {
         }
       }
     },
+    completion2:{
+      strict:true,
+      namespaced:true,
+      state:{rate:0},
+      mutations:{
+        set(state,rate){
+          state.rate=state.rate+rate
+          }
+      }
+    },
     completion: {
       strict: true,
       namespaced: true,
       state: {
-        rate: 0
+        rate: 0,
+        mission:'A',
       },
       mutations: {
         set(state, rate) {
           state.rate = state.rate + rate;
+          if(state.rate==10){
+            state.mission='B'
+          }
         }
       }
     },
@@ -120,7 +134,7 @@ export default {
           });
         },
         loadObservation({commit}){
-          axios.get('http://localhost:8000/observation')
+          axios.get('/observation')
           .then(function(res){commit('releve/addMultiple',res.data,{root:true})})
         }
         ,
@@ -144,7 +158,7 @@ export default {
               }
               axios.defaults.withCredentials = true
               commit('set', userObject)
-             return axios.get('http://localhost:8000/login',{params: {
+             return axios.get('/login',{params: {
                 id: user.getAttribute('id')
               }}).then(function(){
                 dispatch('loadObservation')

@@ -66,6 +66,8 @@ import Autocomplete from "vuejs-auto-complete";
 import Identification from "./Identification.vue";
 import imageCompression from "browser-image-compression";
 import genusList from "../js/genus.js";
+import speciesList from "../js/species.js";
+
 export default {
   data() {
     return {
