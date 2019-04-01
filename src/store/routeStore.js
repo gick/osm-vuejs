@@ -42,6 +42,14 @@ export default {
         add(state, releve) {
           state.releves.push(releve);
         },
+        modify(state,newReleve){
+          let index=state.releves.findIndex(releve=>releve._id==newReleve.id)
+          if(index!=-1){
+            state.releves[index].specie=newReleve.specie
+            state.releves[index].genus=newReleve.genus
+          }
+          axios.post('http://localhost:8000/modifyObservation',state.releves[index])
+        },
         addMultiple(state,observations){
           for(var observation of observations){
             state.releves.push(observation)
@@ -57,7 +65,7 @@ export default {
         setObservation({commit},releve){
           commit('add',releve)
           axios.defaults.withCredentials = true
-                    axios.post('/observation',
+                    axios.post('http://localhost:8000/observation',
           {releve:releve})
         }}
 
@@ -134,7 +142,7 @@ export default {
           });
         },
         loadObservation({commit}){
-          axios.get('/observation')
+          axios.get('http://localhost:8000/observation')
           .then(function(res){commit('releve/addMultiple',res.data,{root:true})})
         }
         ,
@@ -158,7 +166,7 @@ export default {
               }
               axios.defaults.withCredentials = true
               commit('set', userObject)
-             return axios.get('/login',{params: {
+             return axios.get('http://localhost:8000/login',{params: {
                 id: user.getAttribute('id')
               }}).then(function(){
                 dispatch('loadObservation')

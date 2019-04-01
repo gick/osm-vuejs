@@ -22,7 +22,7 @@
       <div  class="title">Mission en cours</div>
       <div v-if="completionRate<100" class="content">
         <p>Bonjour {{$store.state.user.name}}</p>
-        <p>Votre mission actuelle est d'effectuer 10 relevés. Pour cela, utiliser la carte accessible via la barre de menu.</p>
+        <p>Votre mission actuelle est {{$store.state.completion.mission}} d'effectuer 10 relevés. Pour cela, utiliser la carte accessible via la barre de menu.</p>
         <p>
           Vous avez effectué {{completionRate/10}} relevé.
           <v-ons-progress-bar :value="completionRate" secondary-value="100"></v-ons-progress-bar>

@@ -6,7 +6,8 @@
       </div>
     </v-ons-toolbar>
     <v-ons-list>
-      <v-ons-list-header>Nouveau relevé</v-ons-list-header>
+      <v-ons-list-header v-if="!modify">Nouveau relevé</v-ons-list-header>
+      <v-ons-list-header v-if="modify">Modifier un relevé</v-ons-list-header>
       <v-ons-list-item>
         <div class="left">
           <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>
@@ -16,17 +17,13 @@
             :source="source"
             inputClass="inputClass"
             results-display="name"
-            placeholder="Nom du genre"
-            v-model="specieIndex"
+            placeholder="Nom de l'espèce"
+            v-model="currentSpecie"
+            :initial-display="specie"
           ></autocomplete>
         </div>
       </v-ons-list-item>
-      <v-ons-list-item>
-        <div class="left">
-          <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>
-        </div>
-        <v-ons-input placeholder="Nom de l'espèce" float v-model="genus"></v-ons-input>
-      </v-ons-list-item>
+
       <v-ons-list-item>
         <div class="left">
           <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>
@@ -54,8 +51,7 @@
       </v-ons-list-item>
     </v-ons-list>
     <section style="margin: 16px">
-      <v-ons-button @click="identify" style="margin: 6px 0">Identifier</v-ons-button>
-      <v-ons-button :disabled="!completed" @click="complete" style="margin: 6px 0">Envoyer</v-ons-button>
+      <v-ons-button  @click="complete" style="margin: 6px 0">Envoyer</v-ons-button>
       <v-ons-button modifier="outline" @click="cancel" style="margin: 6px 0">Annuler</v-ons-button>
     </section>
   </v-ons-page>
@@ -73,9 +69,9 @@ export default {
     return {
       image: null,
       common: "",
-      source: genusList,
+      source: speciesList,
       genus: "",
-      specieIndex: 0
+      specie:''
     };
   },
   components: {
@@ -139,15 +135,26 @@ export default {
         });
     },
     complete() {
-      let specie = this.source[this.specieIndex - 1];
-      this.$store.dispatch("releve/setObservation", {
-        coordinates: this.coordinates,
-        genus: this.genus,
-        image: this.image,
-        specie: specie ? specie.name : ""
-      });
-      this.$store.commit("completion/set", 10);
-      this.$store.commit("navigator/pop");
+      let specie = this.source[this.currentSpecie - 1];
+      if (!this.modify) {
+        this.$store.dispatch("releve/setObservation", {
+          coordinates: this.coordinates,
+          image: this.image,
+          specieIndex: this.specieIndex,
+          specie: specie ? specie.name : ""
+        });
+        this.$store.commit("completion/set", 10);
+        this.$store.commit("navigator/pop");
+      } else {
+        this.$store.commit("releve/modify", {
+          id: this.releveId,
+          genus: this.genus,
+          image: this.image,
+          specieIndex: this.specieIndex,
+          specie: specie ? specie.name : ""
+        });
+        this.$store.commit("navigator/pop");
+      }
     },
     cancel() {
       this.$store.commit("navigator/pop");

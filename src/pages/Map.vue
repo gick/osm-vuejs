@@ -13,24 +13,7 @@
         @locationerror="locationerror"
         @update:zoom="zoomUpdate"
       >
-        <l-circle
-          @click="circleClick(event,index)"
-          custom="10"
-          v-if="newCircle"
-          :lat-lng="newCircle.center"
-          :radius="8"
-          :color="'red'"
-        />
 
-        <l-circle
-          @click="circleClick(event,index)"
-          v-for="(circle,index) in osmCircles"
-          custom="10"
-          v-bind:key="index"
-          :lat-lng="circle.center"
-          :radius="5"
-          :color="'blue'"
-        />
         <l-circle
           @click="circleClick($event,index)"
           v-for="(circle,index) in observations"
@@ -82,7 +65,7 @@ export default {
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       withPopup: L.latLng(47.41322, -1.219482),
       withTooltip: L.latLng(47.41422, -1.250482),
-      currentZoom: 11.5,
+      currentZoom: 16,
       currentCenter: L.latLng(47.41322, -1.219482),
       showParagraph: false,
       mapOptions: {
