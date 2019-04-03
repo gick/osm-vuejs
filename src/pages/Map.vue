@@ -1,6 +1,8 @@
 <template>
   <v-ons-page>
     <div>
+      <v-ons-button  @click="centerMap">Recentrer la carte</v-ons-button>
+
       <l-map
         ref="map"
         :zoom="zoom"
@@ -13,7 +15,6 @@
         @locationerror="locationerror"
         @update:zoom="zoomUpdate"
       >
-
         <l-circle
           @click="circleClick($event,index)"
           v-for="(circle,index) in observations"
@@ -23,14 +24,42 @@
           :radius="8"
           :color="'red'"
         />
+        <l-circle
+          v-for="(circle,index) in osmData"
+          custom="10"
+          @click="osmClick(index)"
+          v-bind:key="'OSM'+index"
+          :lat-lng="getCoordinate(circle)"
+          :radius="8"
+          :color="'yellow'"
+        />
 
-        <l-tile-layer :url="url" :attribution="attribution"/>
+
+        <l-tile-layer :url="url" :options="mapOptions" :attribution="attribution"/>
       </l-map>
+      <v-ons-dialog cancelable class="lorem-dialog" :visible.sync="missionAOver">
+        <!-- Optional page. This could contain a Navigator as well. -->
+        <v-ons-page>
+          <v-ons-toolbar>
+            <div class="center">Première mission</div>
+          </v-ons-toolbar>
+          <p style="text-align: center">Vous avez effectué 10 relevés, place à la mission 2</p>
+          <p style="text-align: center">
+            <v-ons-button modifier="light" @click="firstMissionEnd">Close</v-ons-button>
+          </p>
+        </v-ons-page>
+      </v-ons-dialog>
     </div>
   </v-ons-page>
 </template>
+<style>
+.lorem-dialog .dialog-container {
+  height: 200px;
+}
+</style>
 
 <script>
+
 import {
   LMap,
   LTileLayer,
@@ -41,7 +70,7 @@ import {
   LTooltip
 } from "vue2-leaflet";
 import SimplePage from "./SimplePage.vue";
-import Releve from './Releve.vue'
+import Releve from "./Releve.vue";
 
 export default {
   components: {
@@ -54,11 +83,12 @@ export default {
   },
   data() {
     return {
+      missionAOver:false,
       newCircle: null,
       osmCircles: [],
       map: null,
       circleClicked: false,
-      zoom: 18,
+      zoom: 19,
       center: L.latLng(48.08497, -0.75763),
       url: "//proxy-ign.openstreetmap.fr/94GjiyqD/bdortho/{z}/{x}/{y}.jpg",
       attribution:
@@ -69,19 +99,37 @@ export default {
       currentCenter: L.latLng(47.41322, -1.219482),
       showParagraph: false,
       mapOptions: {
-        zoomSnap: 0.5
+        zoomSnap: 0.5,
+        minZoom:15,
+        maxZoom:19  
       }
     };
   },
   computed: {
     observations() {
       return this.$store.state.releve.releves;
+    },
+    osmData(){
+      return this.$store.state.osmData.data
+    },
+    currentMission(){
+      return this.$store.state.releve.mission
     }
+  },
+
+  watch:{
+    'currentMission':function(oldMission,newMission){
+      console.log(oldMission)
+      if(oldMission=='B'){
+      this.missionAOver=true
+      }
+    }
+
   },
   created() {
     this.$nextTick(() => {
       this.map = this.$refs.map.mapObject; // work as expected
-      this.map.locate({ setView: true, maxZoom: 16 });
+      this.map.locate({ watch:true,setView: true, maxZoom: 19,zoom:19 });
       axios.get("/trees").then(
         function(results) {
           console.log(results);
@@ -93,7 +141,26 @@ export default {
       );
     });
   },
+  mounted(){
+    this.$root.$on('changeCenter', coordinates => {
+      this.map.flyTo(coordinates)   
+      });
+
+  }
+  ,
+
   methods: {
+    centerMap(){
+            this.map.locate({ setView: true});
+
+    },
+    getCoordinate(circle){
+      return {lat:circle.lat,lng:circle.lon}
+    },
+    firstMissionEnd(){
+      this.missionAOver=true
+      this.$store.commit('tabbar/set',1)
+    },
     locationerror(e) {
       alert(e.message);
     },
@@ -106,30 +173,50 @@ export default {
 
       L.circle(e.latlng, radius).addTo(this.map);
     },
-    circleClick(evt,index) {
+    osmClick(index){
+      let releve=this.osmData[index]
+            this.circleClicked = true;
+
+      console.log(releve)
+      let newReleve={}
+      newReleve.specie=releve.tags.species
+        this.$store.commit("navigator/push", {
+        extends: Releve,
+        data() {
+          return {
+            releve: newReleve
+          };
+        }
+      });
+      this.$nextTick(() => {
+        this.circleClicked = false;
+      });
+
+    }
+    ,
+    circleClick(evt, index) {
       console.log(index);
-      var releve=this.observations[index]
+      var releve = this.observations[index];
       this.circleClicked = true;
-       this.$store.commit('navigator/push', {
+      this.$store.commit("navigator/push", {
         extends: Releve,
         data() {
           return {
             releve: releve
-          }
+          };
         }
-
       });
-             this.$nextTick(() => {
-            this.circleClicked = false;
-          });
+      this.$nextTick(() => {
+        this.circleClicked = false;
+      });
 
-     // this.$ons.notification
-     //   .alert("Un releve est déja présent ici!")
-     //   .then(response => {
-     //     this.$nextTick(() => {
-     //       this.circleClicked = false;
-     //     });
-     //   });
+      // this.$ons.notification
+      //   .alert("Un releve est déja présent ici!")
+      //   .then(response => {
+      //     this.$nextTick(() => {
+      //       this.circleClicked = false;
+      //     });
+      //   });
     },
     onMapClick(evt) {
       console.log(evt);
@@ -176,8 +263,8 @@ export default {
       this.currentZoom = zoom;
     },
     centerUpdate(center) {
-      this.currentCenter = center;
-    },
+      this.$store.dispatch('osmData/getOSMData',{boundary:this.map.getBounds()})
+  },
     showLongText() {
       this.showParagraph = !this.showParagraph;
     },

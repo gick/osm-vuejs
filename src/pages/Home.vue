@@ -20,7 +20,7 @@
 
     <v-ons-card v-show="$store.state.user.id">
       <div  class="title">Mission en cours</div>
-      <div v-if="completionRate<100" class="content">
+      <div v-if="currentMission=='A'" class="content">
         <p>Bonjour {{$store.state.user.name}}</p>
         <p>Votre mission actuelle est {{$store.state.completion.mission}} d'effectuer 10 relevés. Pour cela, utiliser la carte accessible via la barre de menu.</p>
         <p>
@@ -28,13 +28,22 @@
           <v-ons-progress-bar :value="completionRate" secondary-value="100"></v-ons-progress-bar>
         </p>
       </div>
-      <div v-if="completionRate>=100" class="content">
+      <div v-if="currentMission=='B'" class="content">
         <p>Bravo vous avez terminé la première mission.</p>
         <p>
           Votre nouvelle mission est d'effectuer 3 relevés <b>d'espèces différentes.</b>
           <v-ons-progress-bar :value="completionRate2" secondary-value="30"></v-ons-progress-bar>
         </p>
       </div>
+      <div v-if="currentMission=='C'" class="content">
+        <p>Bravo vous avez terminé la deuxième mission.</p>
+        <p>
+          La dernière mission consiste à corriger ou valider des relevés fait par d'autres personnes
+          <b>Corrigez ou validez 5 relevés </b>pour terminer cette mission.
+          <v-ons-progress-bar :value="completionRate2" secondary-value="30"></v-ons-progress-bar>
+        </p>
+      </div>
+
     </v-ons-card>
     <!--  <v-ons-button @click="logout">Logout</v-ons-button>
       <p v-show='username'>Bonjour user {{username}}</p>
@@ -102,8 +111,8 @@ export default {
     };
   },
   computed: {
-    completionRate() {
-      return this.$store.state.completion.rate;
+    currentMission() {
+      return this.$store.state.releve.mission;
     }
   },
   methods: {

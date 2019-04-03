@@ -20,13 +20,14 @@ export default {
     }
   },
   methods: {
-    transition(name) {
+    transition(releve) {
 
       this.$store.commit('navigator/push', {
         extends: Releve,
         data() {
           return {
-            releve: name
+            releve: releve,
+            visualize:true,
           }
         }
       });

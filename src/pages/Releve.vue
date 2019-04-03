@@ -12,6 +12,8 @@
         </ons-list>
         <section style="margin: 16px">
           <v-ons-button @click="modify" style="margin: 6px 0">Modifier</v-ons-button>
+          <v-ons-button @click="validate" style="margin: 6px 0">Valider</v-ons-button>
+          <v-ons-button v-if="visualize" @click="visualizeReleve" style="margin: 6px 0">Voir</v-ons-button>
         </section>
       </div>
     </ons-card>
@@ -22,6 +24,15 @@ import SimplePage from "./SimplePage.vue";
 
 export default {
   methods: {
+    visualizeReleve(){
+      this.$store.commit('navigator/pop')
+      this.$store.commit('tabbar/set',0)
+      this.$root.$emit('changeCenter', this.releve.coordinates);
+    },
+    validate(){
+      this.$store.commit('releve/validate',this.releve)
+      this.$store.commit('navigator/pop')
+    },
     modify() {
       var id = this.releve._id;
       var specie = this.releve.specie;

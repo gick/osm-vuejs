@@ -8,7 +8,7 @@
     <v-ons-list>
       <v-ons-list-header v-if="!modify">Nouveau relevé</v-ons-list-header>
       <v-ons-list-header v-if="modify">Modifier un relevé</v-ons-list-header>
-      <v-ons-list-item>
+                  <v-ons-list-item>
         <div class="left">
           <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>
         </div>
@@ -20,9 +20,11 @@
             placeholder="Nom de l'espèce"
             v-model="currentSpecie"
             :initial-display="specie"
+            @selected="specieSelected"
           ></autocomplete>
         </div>
       </v-ons-list-item>
+
 
       <v-ons-list-item>
         <div class="left">
@@ -49,6 +51,7 @@
       }"
         ></picture-input>
       </v-ons-list-item>
+
     </v-ons-list>
     <section style="margin: 16px">
       <v-ons-button  @click="complete" style="margin: 6px 0">Envoyer</v-ons-button>
@@ -56,6 +59,11 @@
     </section>
   </v-ons-page>
 </template>
+<style>
+#app .autocomplete__results{
+ position:relative!important;
+}
+</style>
 <script>
 import PictureInput from "vue-picture-input";
 import Autocomplete from "vuejs-auto-complete";
@@ -71,7 +79,9 @@ export default {
       common: "",
       source: speciesList,
       genus: "",
-      specie:''
+      specie:'',
+      currentSpecie:0,
+      modify:false
     };
   },
   components: {
@@ -89,6 +99,9 @@ export default {
     }
   },
   methods: {
+    specieSelected(specie){
+      this.specie=specie.display
+    },
     identify() {
       this.$store.commit("navigator/push", {
         extends: Identification,
@@ -135,13 +148,11 @@ export default {
         });
     },
     complete() {
-      let specie = this.source[this.currentSpecie - 1];
       if (!this.modify) {
         this.$store.dispatch("releve/setObservation", {
           coordinates: this.coordinates,
           image: this.image,
-          specieIndex: this.specieIndex,
-          specie: specie ? specie.name : ""
+          specie: this.specie
         });
         this.$store.commit("completion/set", 10);
         this.$store.commit("navigator/pop");
@@ -150,8 +161,7 @@ export default {
           id: this.releveId,
           genus: this.genus,
           image: this.image,
-          specieIndex: this.specieIndex,
-          specie: specie ? specie.name : ""
+          specie: this.specie
         });
         this.$store.commit("navigator/pop");
       }

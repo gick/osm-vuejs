@@ -4,6 +4,32 @@ import {
 var osmAuth = require("osm-auth");
 export default {
   modules: {
+    osmData:{
+      strict:true,
+      namespaced:true,
+      state:{
+        data:[],
+      },
+      mutations:{
+        setData(state,data){
+          state.data=data
+        }
+      },
+      actions:{
+        getOSMData({commit},boundary){
+          
+          let south=boundary.boundary._southWest.lat
+          let west=boundary.boundary._southWest.lng
+          let north=boundary.boundary._northEast.lat
+          let east=boundary.boundary._northEast.lng
+          axios.get('http://localhost:8000/osmdata',{params:{south:south,west:west,north:north,east:east}}).then(function(response){
+          console.log(response.data)  
+          commit('setData',response.data)
+          })
+        }
+      }
+
+    },
     navigator: {
       strict: true,
       namespaced: true,
@@ -37,12 +63,33 @@ export default {
       namespaced: true,
       state: {
         releves: [],
+        differentReleve:new Set(),
+        mission:'B',
+        modifyValidate:0,
+        completionA:0,
       },
       mutations: {
         add(state, releve) {
-          state.releves.push(releve);
+          state.releves.push(releve)
+          state.completionA=state.completionA+1
+          if(state.completionA==2){
+            state.mission='B'
+          }
+          if(state.mission=='B'){
+            state.differentReleve.add(releve.specie)
+            if(state.differentReleve.size==2)
+              {
+                state.mission='C'
+              }
+          }
         },
         modify(state,newReleve){
+          if(state.mission=='C'){
+            state.modifyValidate++
+            if(state.modifyValidate==5){
+              state.mission='D'
+            }
+          }
           let index=state.releves.findIndex(releve=>releve._id==newReleve.id)
           if(index!=-1){
             state.releves[index].specie=newReleve.specie
@@ -55,6 +102,20 @@ export default {
             state.releves.push(observation)
           }
         },
+        validate(state,currentReleve){
+          if(state.mission=='C'){
+            state.modifyValidate++
+            if(state.modifyValidate==5){
+              state.mission='D'
+            }
+          }
+
+          let index = state.releves.findIndex(releve=>releve._id==currentReleve._id)
+          if(index!=-1){
+            state.releves[index].validated=true
+          }
+        }
+        ,
         delete(state) {
           if (state.releve.length > 1) {
             state.releve.pop();
@@ -103,10 +164,17 @@ export default {
       state: {
         rate: 0,
         mission:'A',
+        firstMissionEnd:false,
       },
       mutations: {
+        closeFirstMission(state){
+          state.firstMissionEnd=false
+        },
         set(state, rate) {
           state.rate = state.rate + rate;
+          if(state.rate>=20){
+            state.firstMissionEnd=true
+          }
           if(state.rate==10){
             state.mission='B'
           }
@@ -155,6 +223,14 @@ export default {
             auto: true,
           });
           auth.authenticate(function () {
+            auth.xhr({
+              method: 'GET',
+              path: '/api/0.6/permissions'
+  }, function(err, details) {
+              console.log(err);
+              console.log(details);
+  });
+  
             auth.xhr({
               method: 'GET',
               path: '/api/0.6/user/details'
