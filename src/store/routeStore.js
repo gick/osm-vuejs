@@ -22,7 +22,7 @@ export default {
           let west=boundary.boundary._southWest.lng
           let north=boundary.boundary._northEast.lat
           let east=boundary.boundary._northEast.lng
-          axios.get('http://localhost:8000/osmdata',{params:{south:south,west:west,north:north,east:east}}).then(function(response){
+          axios.get('/osmdata',{params:{south:south,west:west,north:north,east:east}}).then(function(response){
           console.log(response.data)  
           commit('setData',response.data)
           })
@@ -95,7 +95,7 @@ export default {
             state.releves[index].specie=newReleve.specie
             state.releves[index].genus=newReleve.genus
           }
-          axios.post('http://localhost:8000/modifyObservation',state.releves[index])
+          axios.post('/modifyObservation',state.releves[index])
         },
         addMultiple(state,observations){
           for(var observation of observations){
@@ -126,7 +126,7 @@ export default {
         setObservation({commit},releve){
           commit('add',releve)
           axios.defaults.withCredentials = true
-                    axios.post('http://localhost:8000/observation',
+                    axios.post('/observation',
           {releve:releve})
         }}
 
@@ -210,7 +210,7 @@ export default {
           });
         },
         loadObservation({commit}){
-          axios.get('http://localhost:8000/observation')
+          axios.get('/observation')
           .then(function(res){commit('releve/addMultiple',res.data,{root:true})})
         }
         ,
@@ -242,7 +242,7 @@ export default {
               }
               axios.defaults.withCredentials = true
               commit('set', userObject)
-             return axios.get('http://localhost:8000/login',{params: {
+             return axios.get('/login',{params: {
                 id: user.getAttribute('id')
               }}).then(function(){
                 dispatch('loadObservation')
