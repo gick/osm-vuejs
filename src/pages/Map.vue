@@ -156,7 +156,8 @@ export default {
 
   methods: {
     centerMap(){
-            this.map.locate({ setView: true});
+            this.map.invalidateSize()
+
 
     },
     getCoordinate(circle){
