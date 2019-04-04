@@ -229,7 +229,7 @@ export default {
         ,
         login({
          dispatch, commit
-        }) {
+        }) {return
           var auth = osmAuth({
             oauth_secret: 'ycJOK6xrlW0tPXb280k1VLkH4zGlsaGyTPm4vGvr',
             oauth_consumer_key: '1zPARMhKbBJfy6lZa9Jt3SvXOM4D3bxr1s3pMly0'
