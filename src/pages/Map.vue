@@ -24,6 +24,11 @@
           :radius="8"
           :color="'red'"
         />
+
+      <l-marker
+        :lat-lng.sync="position">
+      </l-marker>
+
         <l-circle
           v-for="(circle,index) in osmData"
           custom="10"
@@ -96,7 +101,7 @@ export default {
       withPopup: L.latLng(47.41322, -1.219482),
       withTooltip: L.latLng(47.41422, -1.250482),
       currentZoom: 16,
-      currentCenter: L.latLng(47.41322, -1.219482),
+      position: L.latLng(47.41322, -1.219482),
       showParagraph: false,
       mapOptions: {
         zoomSnap: 0.5,
@@ -162,16 +167,10 @@ export default {
       this.$store.commit('tabbar/set',1)
     },
     locationerror(e) {
-      alert(e.message);
+      //alert(e.message);
     },
     locationfound(e) {
-      var radius = e.accuracy / 2;
-      L.marker(e.latlng)
-        .addTo(this.map)
-        .bindPopup("You are within " + radius + " meters from this point")
-        .openPopup();
-
-      L.circle(e.latlng, radius).addTo(this.map);
+      this.position=e.latlng
     },
     osmClick(index){
       let releve=this.osmData[index]

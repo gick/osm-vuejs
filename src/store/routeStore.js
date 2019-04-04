@@ -28,7 +28,18 @@ export default {
           })
         }
       }
-
+    },
+    arboretum:{
+      strict:true,
+      namespaced:true,
+      state:{
+        species:[]
+      },
+      mutations:{
+        add(state,specie){
+          state.species.push(specie)
+        }
+      }
     },
     navigator: {
       strict: true,
@@ -125,6 +136,9 @@ export default {
       actions:{
         setObservation({commit},releve){
           commit('add',releve)
+          if(releve.specie){
+            commit('arboretum/add',releve.specie,{root:true})
+          }
           axios.defaults.withCredentials = true
                     axios.post('/observation',
           {releve:releve})

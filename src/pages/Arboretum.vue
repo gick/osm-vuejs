@@ -3,14 +3,14 @@
     <v-ons-list-header>Mon arboretum</v-ons-list-header>
 
     <v-ons-list>
-      <vs-on-list-item>
+
+      <vs-on-list-item v-bind:key="index" v-for="(specie,index) in species">
         <v-ons-card>
-          <div class="title">Chêne rouvre</div>
+          <img :src="getImageUrl(specie)">
+          <div class="title">{{specie}}</div>
           <div class="content">
-            <p>Bravo vous avez identifier un chêne rouvre.</p>
             <p>
-             Vous avez identifié un chêne rouvre, identifier en cinq pour passer au niveau suivant !
-              <v-ons-progress-bar :value="20" secondary-value="100"></v-ons-progress-bar>
+              Nombre d'identification : {{getIdentificationNumber(specie)}}
             </p>
           </div>
         </v-ons-card>
@@ -37,6 +37,23 @@ export default {
       checkedColors: ["Green", "Blue"],
       volume: 25
     };
+  },
+  computed:{
+    species(){
+      let species=[...new Set(this.$store.state.arboretum.species)]
+      return species
+    },
+    specieList(){
+      return this.$store.state.arboretum.species
+    }
+  },
+  methods:{
+    getIdentificationNumber(specie){
+      return this.specieList.filter(v=>v==specie).length
+    },
+    getImageUrl(specie){
+      return './static/Feuilles/'+specie.replace(' ','')+'.jpg'
+    }
   }
 };
 </script>
