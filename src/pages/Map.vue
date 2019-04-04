@@ -1,7 +1,6 @@
 <template>
-  <v-ons-page>
+  <v-ons-page v-on:show="mapShow">
     <div>
-      <v-ons-button  @click="centerMap">Recentrer la carte</v-ons-button>
 
       <l-map
         ref="map"
@@ -155,10 +154,8 @@ export default {
   ,
 
   methods: {
-    centerMap(){
+    mapShow(){
             this.map.invalidateSize()
-
-
     },
     getCoordinate(circle){
       return {lat:circle.lat,lng:circle.lon}
