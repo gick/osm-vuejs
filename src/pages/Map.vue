@@ -134,7 +134,7 @@ export default {
   created() {
     this.$nextTick(() => {
       this.map = this.$refs.map.mapObject; // work as expected
-      this.map.locate({ watch:true,setView: true, maxZoom: 19,zoom:19 });
+      this.map.locate({ setView: true, maxZoom: 19,zoom:19 });
       axios.get("/trees").then(
         function(results) {
           console.log(results);
