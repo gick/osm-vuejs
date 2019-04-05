@@ -4,7 +4,6 @@
       <v-ons-icon icon="ion-close"></v-ons-icon>
     </v-ons-fab>
 
-    <p class="intro">Ceci est un prototype d'interface pour les missions.
       <br>
       <br>
     </p>
@@ -22,17 +21,12 @@
       <div  class="title">Mission en cours</div>
       <div v-if="currentMission=='A'" class="content">
         <p>Bonjour {{$store.state.user.name}}</p>
-        <p>Votre mission actuelle est {{$store.state.completion.mission}} d'effectuer 10 relevés. Pour cela, utiliser la carte accessible via la barre de menu.</p>
-        <p>
-          Vous avez effectué {{completionRate/10}} relevé.
-          <v-ons-progress-bar :value="completionRate" secondary-value="100"></v-ons-progress-bar>
-        </p>
+        <p>Votre mission actuelle est d'effectuer 10 relevés. Pour cela, utiliser la carte accessible via la barre de menu.</p>
       </div>
       <div v-if="currentMission=='B'" class="content">
         <p>Bravo vous avez terminé la première mission.</p>
         <p>
           Votre nouvelle mission est d'effectuer 3 relevés <b>d'espèces différentes.</b>
-          <v-ons-progress-bar :value="completionRate2" secondary-value="30"></v-ons-progress-bar>
         </p>
       </div>
       <div v-if="currentMission=='C'" class="content">
@@ -40,7 +34,6 @@
         <p>
           La dernière mission consiste à corriger ou valider des relevés fait par d'autres personnes
           <b>Corrigez ou validez 5 relevés </b>pour terminer cette mission.
-          <v-ons-progress-bar :value="completionRate2" secondary-value="30"></v-ons-progress-bar>
         </p>
       </div>
 
@@ -56,7 +49,6 @@
 </template>
 
 <script>
-var osmAuth = require('osm-auth');
 import PullHook from "./PullHook.vue";
 import Dialogs from "./Dialogs.vue";
 import Buttons from "./Buttons.vue";
@@ -117,7 +109,7 @@ export default {
   },
   methods: {
     authenticate(){
-        this.$store.dispatch('user/login')
+     this.$store.dispatch('user/login')
     },
     logout(){
         this.$store.dispatch('user/logout')

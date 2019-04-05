@@ -24,6 +24,7 @@ import Map from './pages/Map.vue';
 import Home from './pages/Home.vue';
 import Arboretum from './pages/Arboretum.vue';
 import Releve from './pages/Releves.vue';
+import Folia from './pages/Folia.vue'
 
 // Just a linear interpolation formula
 const lerp = (x0, x1, t) => parseInt((1 - t) * x0 + t * x1, 10);
@@ -96,6 +97,7 @@ export default {
           theme: purple,
           badge:this.$store.state.releve.releves.length ? this.$store.state.releve.releves.length : null
         }
+
       ]
     },
 
@@ -108,7 +110,7 @@ export default {
       }
     },
     title() {
-      return this.md ? 'Onsen UI' : this.tabs[this.index].title || this.tabs[this.index].label;
+      return this.md ? 'Albiziapp' : this.tabs[this.index].title || this.tabs[this.index].label;
     },
     swipeTheme() {
       return this.md && {

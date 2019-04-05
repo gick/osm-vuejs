@@ -6,7 +6,7 @@
 
       <vs-on-list-item v-bind:key="index" v-for="(specie,index) in species">
         <v-ons-card>
-          <img :src="getImageUrl(specie)">
+          <img :src="getImageUrl(specie)" onerror="this.style.display='none'"/>
           <div class="title">{{specie}}</div>
           <div class="content">
             <p>
@@ -52,7 +52,7 @@ export default {
       return this.specieList.filter(v=>v==specie).length
     },
     getImageUrl(specie){
-      return './static/Feuilles/'+specie.replace(' ','')+'.jpg'
+      return './Feuilles/'+specie.replace(' ','')+'.jpg'
     }
   }
 };

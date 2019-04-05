@@ -41,7 +41,7 @@
 
         <l-tile-layer :url="url" :options="mapOptions" :attribution="attribution"/>
       </l-map>
-      <v-ons-dialog cancelable class="lorem-dialog" :visible.sync="missionAOver">
+      <v-ons-dialog class="lorem-dialog" :visible.sync="missionAOver">
         <!-- Optional page. This could contain a Navigator as well. -->
         <v-ons-page>
           <v-ons-toolbar>
@@ -49,10 +49,35 @@
           </v-ons-toolbar>
           <p style="text-align: center">Vous avez effectué 10 relevés, place à la mission 2</p>
           <p style="text-align: center">
-            <v-ons-button modifier="light" @click="firstMissionEnd">Close</v-ons-button>
+            <v-ons-button modifier="light" @click="firstMissionEnd">OK</v-ons-button>
           </p>
         </v-ons-page>
       </v-ons-dialog>
+      <v-ons-dialog class="lorem-dialog" :visible.sync="missionBOver">
+        <!-- Optional page. This could contain a Navigator as well. -->
+        <v-ons-page>
+          <v-ons-toolbar>
+            <div class="center">Seconde mission</div>
+          </v-ons-toolbar>
+          <p style="text-align: center">Vous avez effectué 3 relevés d'espèces différentes, place à la mission 3</p>
+          <p style="text-align: center">
+            <v-ons-button modifier="light" @click="secondMissionEnd">OK</v-ons-button>
+          </p>
+        </v-ons-page>
+      </v-ons-dialog>
+      <v-ons-dialog class="lorem-dialog" :visible.sync="missionCOver">
+        <!-- Optional page. This could contain a Navigator as well. -->
+        <v-ons-page>
+          <v-ons-toolbar>
+            <div class="center">Fin de la cartographie</div>
+          </v-ons-toolbar>
+          <p style="text-align: center">Vous avez terminé l'exercice, merci!</p>
+          <p style="text-align: center">
+            <v-ons-button modifier="light" @click="thirdMissionEnd">OK</v-ons-button>
+          </p>
+        </v-ons-page>
+      </v-ons-dialog>
+
     </div>
   </v-ons-page>
 </template>
@@ -88,6 +113,8 @@ export default {
   data() {
     return {
       missionAOver:false,
+      missionBOver:false, 
+      missionCOver:false,
       newCircle: null,
       osmCircles: [],
       map: null,
@@ -122,18 +149,25 @@ export default {
   },
 
   watch:{
-    'currentMission':function(oldMission,newMission){
-      console.log(oldMission)
-      if(oldMission=='B'){
+    'currentMission':function(newMission,oldMission){
+      console.log(newMission)
+      if(newMission=='B'){
       this.missionAOver=true
       }
+      if(newMission=='C'){
+        this.missionBOver=true
+      }
+    if(newMission=='D'){
+        this.missionCOver=true
+      }
+
     }
 
   },
   created() {
     this.$nextTick(() => {
       this.map = this.$refs.map.mapObject; // work as expected
-      this.map.locate({ setView: true, maxZoom: 19,zoom:19 });
+      this.map.locate({ setView: true,watch:true, maxZoom: 19,zoom:19 });
       axios.get("/trees").then(
         function(results) {
           console.log(results);
@@ -161,14 +195,28 @@ export default {
       return {lat:circle.lat,lng:circle.lon}
     },
     firstMissionEnd(){
-      this.missionAOver=true
+      this.missionAOver=false
+      this.$store.commit('tabbar/set',1)
+    },
+    thirdMissionEnd(){
+      this.missionCOver=false
+      this.$store.commit('tabbar/set',1)
+
+    },
+    secondMissionEnd(){
+      this.missionBOver=false
       this.$store.commit('tabbar/set',1)
     },
     locationerror(e) {
       //alert(e.message);
     },
     locationfound(e) {
-      this.position=e.latlng
+    var radius = e.accuracy / 2;
+    this.position=e.latlng
+   /* L.marker(e.latlng).addTo(this.map)
+        .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+    L.circle(e.latlng, radius).addTo(this.map);*/
     },
     osmClick(index){
       let releve=this.osmData[index]

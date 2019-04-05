@@ -21,6 +21,7 @@
     "vue": "^2.5.3",
     "vue-onsenui": "^2.6.1",
     "vue-picture-input": "^2.1.6",
+    "vue-signature-pad": "^1.1.9-beta.1",
     "vue2-leaflet": "^1.2.3",
     "vuejs-auto-complete": "^0.9.0",
     "vuex": "^3.0.1"

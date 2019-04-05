@@ -4,40 +4,56 @@ import {
 var osmAuth = require("osm-auth");
 export default {
   modules: {
-    osmData:{
-      strict:true,
-      namespaced:true,
-      state:{
-        data:[],
+    osmData: {
+      strict: true,
+      namespaced: true,
+      state: {
+        data: [],
       },
-      mutations:{
-        setData(state,data){
-          state.data=data
+      mutations: {
+        setData(state, data) {
+          state.data = data
         }
       },
-      actions:{
-        getOSMData({commit},boundary){
-          
-          let south=boundary.boundary._southWest.lat
-          let west=boundary.boundary._southWest.lng
-          let north=boundary.boundary._northEast.lat
-          let east=boundary.boundary._northEast.lng
-          axios.get('/osmdata',{params:{south:south,west:west,north:north,east:east}}).then(function(response){
-          console.log(response.data)  
-          commit('setData',response.data)
+      actions: {
+        getOSMData({
+          commit
+        }, boundary) {
+
+          let south = boundary.boundary._southWest.lat
+          let west = boundary.boundary._southWest.lng
+          let north = boundary.boundary._northEast.lat
+          let east = boundary.boundary._northEast.lng
+          axios.get('/osmdata', {
+            params: {
+              south: south,
+              west: west,
+              north: north,
+              east: east
+            }
+          }).then(function (response) {
+            console.log(response.data)
+            commit('setData', response.data)
           })
         }
       }
     },
-    arboretum:{
-      strict:true,
-      namespaced:true,
-      state:{
-        species:[]
+    arboretum: {
+      strict: true,
+      namespaced: true,
+      state: {
+        species: []
       },
-      mutations:{
-        add(state,specie){
+      mutations: {
+        add(state, specie) {
           state.species.push(specie)
+        },
+        addMultiple(state,releves){
+          for(var releve of releves){
+            if(releve.specie){
+              state.species.push(releve.specie)
+            }
+          }
         }
       }
     },
@@ -74,75 +90,85 @@ export default {
       namespaced: true,
       state: {
         releves: [],
-        differentReleve:new Set(),
-        mission:'B',
-        modifyValidate:0,
-        completionA:0,
+        differentReleve: new Set(),
+        mission: 'A',
+        modifyValidate: 0,
+        completionA: 0,
       },
       mutations: {
         add(state, releve) {
           state.releves.push(releve)
-          state.completionA=state.completionA+1
-          if(state.completionA==2){
-            state.mission='B'
-          }
-          if(state.mission=='B'){
+          if (state.mission == 'B') {
             state.differentReleve.add(releve.specie)
-            if(state.differentReleve.size==2)
-              {
-                state.mission='C'
-              }
-          }
-        },
-        modify(state,newReleve){
-          if(state.mission=='C'){
-            state.modifyValidate++
-            if(state.modifyValidate==5){
-              state.mission='D'
+            if (state.differentReleve.size == 2) {
+              state.mission = 'C'
             }
           }
-          let index=state.releves.findIndex(releve=>releve._id==newReleve.id)
-          if(index!=-1){
-            state.releves[index].specie=newReleve.specie
-            state.releves[index].genus=newReleve.genus
+          state.completionA = state.completionA + 1
+          if (state.completionA == 2) {
+            state.mission = 'B'
           }
-          axios.post('/modifyObservation',state.releves[index])
+
         },
-        addMultiple(state,observations){
-          for(var observation of observations){
+        modify(state, newReleve) {
+          if (state.mission == 'C') {
+            state.modifyValidate++
+            if (state.modifyValidate == 2) {
+              state.mission = 'D'
+            }
+          }
+          let index = state.releves.findIndex(releve => releve._id == newReleve.id)
+          if (index != -1) {
+            state.releves[index].specie = newReleve.specie
+            state.releves[index].genus = newReleve.genus
+          }
+          axios.post('/modifyObservation', state.releves[index])
+        },
+        addMultiple(state, observations) {
+          for (var observation of observations) {
             state.releves.push(observation)
           }
         },
-        validate(state,currentReleve){
-          if(state.mission=='C'){
+        validate(state, currentReleve) {
+          if (state.mission == 'C') {
             state.modifyValidate++
-            if(state.modifyValidate==5){
-              state.mission='D'
+            if (state.modifyValidate == 2) {
+              state.mission = 'D'
             }
           }
 
-          let index = state.releves.findIndex(releve=>releve._id==currentReleve._id)
-          if(index!=-1){
-            state.releves[index].validated=true
+          let index = state.releves.findIndex(releve => releve._id == currentReleve._id)
+          if (index != -1) {
+            state.releves[index].validated = true
           }
-        }
-        ,
+        },
         delete(state) {
           if (state.releve.length > 1) {
             state.releve.pop();
           }
         },
       },
-      actions:{
-        setObservation({commit},releve){
-          commit('add',releve)
-          if(releve.specie){
-            commit('arboretum/add',releve.specie,{root:true})
-          }
+      actions: {
+        setObservation({
+          commit
+        }, releve) {
+          // commit('add', releve)
           axios.defaults.withCredentials = true
-                    axios.post('/observation',
-          {releve:releve})
-        }}
+          axios.post('/observation', {
+            releve: releve
+          }).then(function (response) {
+            if (response.data.observation) {
+              commit('add', response.data.observation)
+              if (response.data.observation.specie) {
+                commit('arboretum/add', response.data.observation.specie, {
+                  root: true
+                })
+              }
+
+            }
+          })
+        }
+      }
 
     },
 
@@ -162,14 +188,16 @@ export default {
         }
       }
     },
-    completion2:{
-      strict:true,
-      namespaced:true,
-      state:{rate:0},
-      mutations:{
-        set(state,rate){
-          state.rate=state.rate+rate
-          }
+    completion2: {
+      strict: true,
+      namespaced: true,
+      state: {
+        rate: 0
+      },
+      mutations: {
+        set(state, rate) {
+          state.rate = state.rate + rate
+        }
       }
     },
     completion: {
@@ -177,20 +205,20 @@ export default {
       namespaced: true,
       state: {
         rate: 0,
-        mission:'A',
-        firstMissionEnd:false,
+        mission: 'A',
+        firstMissionEnd: false,
       },
       mutations: {
-        closeFirstMission(state){
-          state.firstMissionEnd=false
+        closeFirstMission(state) {
+          state.firstMissionEnd = false
         },
         set(state, rate) {
           state.rate = state.rate + rate;
-          if(state.rate>=20){
-            state.firstMissionEnd=true
+          if (state.rate >= 20) {
+            state.firstMissionEnd = true
           }
-          if(state.rate==10){
-            state.mission='B'
+          if (state.rate == 10) {
+            state.mission = 'B'
           }
         }
       }
@@ -222,14 +250,23 @@ export default {
             id: null
           });
         },
-        loadObservation({commit}){
+        loadObservation({
+          commit
+        }) {
           axios.get('/observation')
-          .then(function(res){commit('releve/addMultiple',res.data,{root:true})})
-        }
-        ,
+            .then(function (res) {
+              commit('releve/addMultiple', res.data, {
+                root: true
+              })
+              commit('arboretum/addMultiple', res.data, {
+                root: true
+              })
+            })
+        },
         login({
-         dispatch, commit
-        }) {return
+          dispatch,
+          commit
+        }) {
           var auth = osmAuth({
             oauth_secret: 'ycJOK6xrlW0tPXb280k1VLkH4zGlsaGyTPm4vGvr',
             oauth_consumer_key: '1zPARMhKbBJfy6lZa9Jt3SvXOM4D3bxr1s3pMly0'
@@ -238,11 +275,11 @@ export default {
             auth.xhr({
               method: 'GET',
               path: '/api/0.6/permissions'
-  }, function(err, details) {
+            }, function (err, details) {
               console.log(err);
               console.log(details);
-  });
-  
+            });
+
             auth.xhr({
               method: 'GET',
               path: '/api/0.6/user/details'
@@ -254,9 +291,11 @@ export default {
               }
               axios.defaults.withCredentials = true
               commit('set', userObject)
-             return axios.get('/login',{params: {
-                id: user.getAttribute('id')
-              }}).then(function(){
+              return axios.get('/login', {
+                params: {
+                  id: user.getAttribute('id')
+                }
+              }).then(function () {
                 dispatch('loadObservation')
               })
 

@@ -15,7 +15,6 @@ import Carousel from './pages/Carousel.vue'
 export default {
   beforeCreate() {
         this.$store.commit('navigator/push', AppSplitter);
-        this.$store.dispatch('user/login')
   },
   data() {
     return {
