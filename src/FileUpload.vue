@@ -2,7 +2,7 @@
     <div style="display:inline-block;" class="file-upload-form">
       <v-ons-button @click="$refs.file.click()">Photo</v-ons-button>
 
-      <input type="file" @change="previewImage" ref="file" style="display:none" accept="image/*">
+      <input type="file" @change="previewImage" ref="file" style="display:none"  accept="image/*;capture=camera">
     </div>
 </template>
 <script>
@@ -14,6 +14,7 @@ export default {
     previewImage: function(event) {
       // Reference to the DOM input element
       var input = event.target;
+      console.log(input)
       // Ensure that you have a file before attempting to read it
       if (input.files && input.files[0]) {
         // create a new FileReader to read this image and convert to base64 format
