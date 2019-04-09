@@ -96,7 +96,15 @@ export default {
           page: Releve,
           theme: purple,
           badge:this.$store.state.releve.releves.length ? this.$store.state.releve.releves.length : null
+        },
+                {
+          label: 'Folia',
+          icon: 'ion-edit',
+          page: Folia,
+          
+          theme: purple
         }
+
 
       ]
     },

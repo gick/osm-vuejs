@@ -1,11 +1,9 @@
 <template>
-  <div>
-    <div class="file-upload-form">
+    <div style="display:inline-block;" class="file-upload-form">
       <v-ons-button @click="$refs.file.click()">Photo</v-ons-button>
 
       <input type="file" @change="previewImage" ref="file" style="display:none" accept="image/*">
     </div>
-  </div>
 </template>
 <script>
 export default {

@@ -6,7 +6,6 @@
 
       <br>
       <br>
-    </p>
       <v-ons-card v-show="!$store.state.user.id">
       <div  class="title">Authentifiez vous!</div>
       <div class="content">

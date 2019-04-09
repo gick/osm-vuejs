@@ -15,7 +15,7 @@ var browserTargets = [
 ];
 
 var babelOptions = {
-  babelrc: false,
+  babelrc: true,
   presets: [ ['env', { browsers: browserTargets }] ]
 };
 
