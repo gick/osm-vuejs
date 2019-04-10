@@ -6,6 +6,8 @@ import './vue-onsenui-kitchensink.css'; // CSS specific to this app
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VueOnsen from 'vue-onsenui'; // For UMD
+import VueSocketIO from 'vue-socket.io'
+
 // import VueOnsen from 'vue-onsenui/esm'; // For ESM
 // import * as OnsenComponents from './onsen-components'; // For ESM
 import storeLike from './store/routeStore';
@@ -19,6 +21,15 @@ L.Icon.Default.mergeOptions({
   iconUrl: require('leaflet/dist/images/marker-icon.png'),
   shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 });
+Vue.use(new VueSocketIO({
+  debug: true,
+  connection: 'http://localhost:8081',
+  vuex: {
+      storeLike,
+      actionPrefix: 'SOCKET_',
+      mutationPrefix: 'SOCKET_'
+  } ,
+}))
 
 Vue.use(Vuex);
 Vue.use(VueOnsen);

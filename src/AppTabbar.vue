@@ -99,7 +99,7 @@ export default {
         },
                 {
           label: 'Folia',
-          icon: 'ion-edit',
+          icon: 'ion-search',
           page: Folia,
           
           theme: purple
