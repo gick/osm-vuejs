@@ -15,9 +15,9 @@
         <div class="title">Identification via Folia</div>
         <div class="content">
           <div style="position:relative;">
-          <p>
-             <v-ons-progress-bar :value="currentStep"></v-ons-progress-bar>
-          </p>
+            <p>
+              <v-ons-progress-bar :value="currentStep"></v-ons-progress-bar>
+            </p>
           </div>
           <v-ons-list v-if="foliaResult.length">
             <v-ons-list-header>Résultats</v-ons-list-header>
@@ -28,9 +28,8 @@
           </v-ons-list>
         </div>
       </v-ons-card>
-
-      <div style="position:relative">
-        <img ref="image" :src="imageData" @load="imageLoaded" style="width:100%">
+      <v-ons-modal :visible="modalVisible">
+        <img ref="image" :src="imageData" @load="imageLoaded" style="max-height: 100vh;max-width: 100vw;">
         <VueSignaturePad
           :options="{dotSize:5,minWidth:15,maxWidth:15,penColor:'rgb(0,125,0)',onBegin}"
           :width="width"
@@ -38,7 +37,10 @@
           ref="signaturePad"
           style="position:absolute;top:0;"
         ></VueSignaturePad>
-      </div>
+        <v-ons-button style="position: absolute;left: 0;right: 0;bottom: 1px" @click="sendImages">OK</v-ons-button>
+      </v-ons-modal>
+
+      <div style="position:relative"></div>
     </div>
   </v-ons-page>
 </template>
@@ -58,7 +60,8 @@ export default {
       foliaStarted: false,
       socketID: "",
       foliaResult: [],
-      draw:false
+      draw: false,
+      modalVisible:false
     };
   },
   components: {
@@ -71,7 +74,7 @@ export default {
       console.log("socket connected");
     },
     foliaProgress: function(data) {
-      this.currentStep=this.currentStep+4;
+      this.currentStep = this.currentStep + 4;
     },
     foliaResult: function(data) {
       for (let specieResult of data) {
@@ -86,25 +89,27 @@ export default {
     }
   },
   methods: {
-    onBegin(){
-      this.draw=true
+    onBegin() {
+      this.draw = true;
     },
-    restart(){
-      this.imageData=""
-      this.$refs.signaturePad.clearSignature()
-      this.width="0"
-      this.height="0"
-      this.foliaStarted=false
-      this.foliaResult=[]
-      this.currentStep=0
-      this.draw=false
+    restart() {
+      this.imageData = "";
+      this.$refs.signaturePad.clearSignature();
+      this.width = "0";
+      this.height = "0";
+      this.foliaStarted = false;
+      this.foliaResult = [];
+      this.currentStep = 0;
+      this.draw = false;
     },
     imageLoaded() {
-      this.width = this.$refs.image.clientWidth + "px";
-      this.height = this.$refs.image.clientHeight + "px";
+      this.modalVisible=true
       this.$refs.signaturePad.resizeCanvas();
       this.$nextTick(() => {
-        this.$refs.signaturePad.resizeCanvas();
+              this.width = this.$refs.image.clientWidth + "px";
+      this.height = this.$refs.image.clientHeight + "px";
+        this.$nextTick(()=>{this.$refs.signaturePad.resizeCanvas();})
+        
       });
       console.log("imageLoaded");
     },
@@ -139,6 +144,7 @@ export default {
     },
 
     sendImages() {
+      this.modalVisible=false
       let { status, data } = this.$refs.signaturePad.saveSignature();
       this.foliaStarted = true;
       this.resizedataURL(
@@ -153,7 +159,7 @@ export default {
           Number(this.height.replace("px", "")),
           "image/jpeg"
         ).then(imageData => {
-          axios.post("/setupImages", {
+          axios.post("https://albiziapp.reveries-project.fr/setupImages", {
             trace: dataURI,
             leaf: imageData,
             socketID: this.socketID

@@ -1,12 +1,19 @@
 <template>
-    <div style="display:inline-block;" class="file-upload-form">
-      <v-ons-button @click="$refs.pictureInput.click()">Photo</v-ons-button>
+  <div style="display:inline-block;" class="file-upload-form">
+    <v-ons-button @click="$refs.pictureInput.click()">Photo</v-ons-button>
 
-      <input type="file" @change="previewImage" ref="pictureInput" style="display:none"  accept="image/*;capture=camera">
-    </div>
+    <input
+      type="file"
+      @change="previewImage"
+      ref="pictureInput"
+      style="display:none"
+      accept="image/*;capture=camera"
+    >
+  </div>
 </template>
 <script>
 import imageCompression from "browser-image-compression";
+import getOrientedImage from "exif-orientation-image";
 
 export default {
   data() {
@@ -16,10 +23,14 @@ export default {
     previewImage: function(event) {
       // Reference to the DOM input element
       var imageFile = this.$refs.pictureInput.files[0];
-      console.log("originalFile instanceof Blob", imageFile instanceof Blob); // true
-      console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
-
-      var maxSizeMB = 0.1;
+      var that=this
+    getOrientedImage(imageFile, function(err, canvas) {
+        if (!err) {
+          that.$emit("image", canvas.toDataURL("image/jpeg", 1.0));
+          that.$refs.pictureInput.value = "";
+        }
+      });
+      /*  var maxSizeMB = 0.1;
       var maxWidthOrHeight = 600; // compressedFile will scale down by ratio to a point that width or height is smaller than maxWidthOrHeight
       imageCompression(imageFile, maxSizeMB, maxWidthOrHeight) // maxSizeMB, maxWidthOrHeight are optional
         .then(
@@ -42,7 +53,7 @@ export default {
         )
         .catch(function(error) {
           console.log(error.message);
-        });
+        });*/
     }
   }
 };
