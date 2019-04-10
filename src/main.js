@@ -23,7 +23,7 @@ L.Icon.Default.mergeOptions({
 });
 Vue.use(new VueSocketIO({
   debug: true,
-  connection: 'http://localhost:8081',
+  connection: 'https://albiziapp.reveries-project.fr/',
   vuex: {
       storeLike,
       actionPrefix: 'SOCKET_',
