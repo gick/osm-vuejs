@@ -29,7 +29,7 @@
         </div>
       </v-ons-card>
       <v-ons-modal :visible="modalVisible">
-        <img ref="image" :src="imageData" @load="imageLoaded" style="max-height: 100vh;max-width: 100vw;">
+        <img ref="image" :src="imageData" @load="imageLoaded" style="max-height: 100vh;max-width: 100vw;height:100vh;">
         <VueSignaturePad
           :options="{dotSize:5,minWidth:15,maxWidth:15,penColor:'rgb(0,125,0)',onBegin}"
           :width="width"
