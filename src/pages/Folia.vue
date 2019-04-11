@@ -6,7 +6,21 @@
         <div class="title">Identifier une feuille</div>
         <div class="content">
           <p>Prenez une photo de feuille puis réaliser un tracé à l'intérieur de la feuille</p>
-          <FileUpload @image="setImage"></FileUpload>
+          <picture-input
+            ref="pictureInput"
+            @change="onChange"
+            :crop="false"
+            :removable="true"
+            margin="16"
+            accept="image/*"
+            capture="camera"
+            size="10"
+            buttonClass="btn"
+            :customStrings="{
+        upload: '<h1>Bummer!</h1>',
+        drag: 'Prendre photo'
+      }"
+          ></picture-input>
           <v-ons-button :disabled="(foliaStarted || !draw)" @click="sendImages">Identifier</v-ons-button>
           <v-ons-button @click="restart" v-if="foliaResult.length">Nouvelle identification</v-ons-button>
         </div>
@@ -46,6 +60,8 @@
 </template>
 
 <script>
+import PictureInput from "vue-picture-input";
+
 import imageCompression from "browser-image-compression";
 import VueSignaturePad from "vue-signature-pad";
 import FileUpload from "../FileUpload.vue";
@@ -61,12 +77,13 @@ export default {
       socketID: "",
       foliaResult: [],
       draw: false,
-      modalVisible:false
+      modalVisible: false
     };
   },
   components: {
     VueSignaturePad,
-    FileUpload
+    FileUpload,
+    PictureInput
   },
   sockets: {
     connect: function(socket) {
@@ -88,7 +105,12 @@ export default {
       this.socketID = socketID;
     }
   },
-  methods: {
+  methods: {    
+    onChange:function(){
+      this.imageData=this.$refs.pictureInput.image
+      this.modalVisible=true
+    },
+
     onBegin() {
       this.draw = true;
     },
@@ -103,13 +125,14 @@ export default {
       this.draw = false;
     },
     imageLoaded() {
-      this.modalVisible=true
+      this.modalVisible = true;
       this.$refs.signaturePad.resizeCanvas();
       this.$nextTick(() => {
-              this.width = this.$refs.image.clientWidth + "px";
-      this.height = this.$refs.image.clientHeight + "px";
-        this.$nextTick(()=>{this.$refs.signaturePad.resizeCanvas();})
-        
+        this.width = this.$refs.image.clientWidth + "px";
+        this.height = this.$refs.image.clientHeight + "px";
+        this.$nextTick(() => {
+          this.$refs.signaturePad.resizeCanvas();
+        });
       });
       console.log("imageLoaded");
     },
@@ -144,7 +167,7 @@ export default {
     },
 
     sendImages() {
-      this.modalVisible=false
+      this.modalVisible = false;
       let { status, data } = this.$refs.signaturePad.saveSignature();
       this.foliaStarted = true;
       this.resizedataURL(
