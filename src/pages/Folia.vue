@@ -106,8 +106,8 @@ export default {
     }
   },
   methods: {    
-    onChange:function(){
-      this.imageData=this.$refs.pictureInput.image
+    onChange:function(image){
+      this.imageData=image
       this.modalVisible=true
     },
 
