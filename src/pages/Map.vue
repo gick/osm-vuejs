@@ -20,7 +20,7 @@
           custom="10"
           v-bind:key="index+osmCircles.length"
           :lat-lng="circle.coordinates"
-          :radius="8"
+          :radius="6"
           :color="'red'"
         />
 
@@ -34,13 +34,16 @@
           @click="osmClick(index)"
           v-bind:key="'OSM'+index"
           :lat-lng="getCoordinate(circle)"
-          :radius="8"
+          :radius="6"
           :color="'yellow'"
         />
 
 
         <l-tile-layer :url="url" :options="mapOptions" :attribution="attribution"/>
       </l-map>
+      <v-ons-card>
+      <v-ons-button @click="centerMap">Centrer carte</v-ons-button>
+      </v-ons-card>
       <v-ons-dialog class="lorem-dialog" :visible.sync="missionAOver">
         <!-- Optional page. This could contain a Navigator as well. -->
         <v-ons-page>
@@ -167,7 +170,7 @@ export default {
   created() {
     this.$nextTick(() => {
       this.map = this.$refs.map.mapObject; // work as expected
-      this.map.locate({ setView: true,watch:true, maxZoom: 19,zoom:19 });
+      this.map.locate({ setView: true, maxZoom: 19,zoom:19 });
       axios.get("/trees").then(
         function(results) {
           console.log(results);
@@ -183,11 +186,20 @@ export default {
     this.$root.$on('changeCenter', coordinates => {
       this.map.flyTo(coordinates)   
       });
-
+    let options = {
+     enableHighAccuracy: true,
+      timeout: 1000,
+      maximumAge: 0
+    };
+    navigator.geolocation.watchPosition(this.locationfound, this.locationerror, options);
   }
   ,
 
   methods: {
+    centerMap(){
+            this.map.flyTo(this.position)   
+
+    },
     mapShow(){
             this.map.invalidateSize()
     },
@@ -212,7 +224,7 @@ export default {
     },
     locationfound(e) {
     var radius = e.accuracy / 2;
-    this.position=e.latlng
+    this.position=[e.coords.latitude,e.coords.longitude]
    /* L.marker(e.latlng).addTo(this.map)
         .bindPopup("You are within " + radius + " meters from this point").openPopup();
 

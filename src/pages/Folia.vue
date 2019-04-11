@@ -162,7 +162,7 @@ export default {
           Number(this.height.replace("px", "")),
           "image/jpeg"
         ).then(imageData => {
-          axios.post("https://albiziapp.reveries-project.fr/setupImages", {
+          axios.post("/setupImages", {
             trace: dataURI,
             leaf: imageData,
             socketID: this.socketID
