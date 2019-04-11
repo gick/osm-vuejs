@@ -29,6 +29,7 @@
         </div>
       </v-ons-card>
       <v-ons-modal :visible="modalVisible">
+        <div style="position:relative;">
         <img ref="image" :src="imageData" @load="imageLoaded" style="max-height: 100vh;max-width: 100vw;">
         <VueSignaturePad
           :options="{dotSize:5,minWidth:15,maxWidth:15,penColor:'rgb(0,125,0)',onBegin}"
@@ -37,6 +38,7 @@
           ref="signaturePad"
           style="position:absolute;top:0;"
         ></VueSignaturePad>
+        </div>
         <v-ons-button style="position: absolute;left: 0;right: 0;bottom: 1px" @click="sendImages">OK</v-ons-button>
       </v-ons-modal>
 
