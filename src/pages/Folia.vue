@@ -36,10 +36,11 @@
           :width="width"
           :height="height"
           ref="signaturePad"
-          style="position:absolute;top:0;"
+          style="position:absolute;top:0;left: 0;right: 0;margin: auto;"
         ></VueSignaturePad>
         </div>
-        <v-ons-button style="position: absolute;left: 0;right: 0;bottom: 1px" @click="sendImages">OK</v-ons-button>
+        <p>Réalisez un tracé à l'intérieur de la feuille puis valider</p>
+        <v-ons-button style="position: absolute;left: 0;right: 0;bottom: 1px" @click="sendImages">Valider</v-ons-button>
       </v-ons-modal>
 
       <div style="position:relative"></div>
