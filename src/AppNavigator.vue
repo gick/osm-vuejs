@@ -3,7 +3,6 @@
     :page-stack="$store.state.navigator.stack"
     :pop-page="storePop"
     :options="{animation:'slide-ios'}"
-    @postpush="showPopTip"
     :class="{ 'border-radius': borderRadius }"
   ></v-ons-navigator>
 </template>
