@@ -1,0 +1,199 @@
+{
+	"missions" : [
+		{"mecaniques" : [
+			{ "nom" : "chronometre" , "temps" : 3600},
+			{ "nom" : "question" , "score" : 10},
+			{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+		],
+		"activites" : [
+			{"typeActivite" : "A1",
+				"mecaniques" : [
+					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
+					{ "nom" : "question" , "score" : 10},
+					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+			],
+			"conditionDeFin" : [
+				{"nbArbre" : 1},
+				{"tempsLimite" : 120}
+			]
+			},
+			{"typeActivite" : "A2",
+				"mecaniques" : [
+					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
+					{ "nom" : "question" , "score" : 10},
+					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+			],
+			"conditionDeFin" : [
+				{"nbArbre" : 2},
+				{"tempsLimite" : 120}
+			],
+			"espece" : "Acer Negundo"
+			},
+			{"typeActivite" : "A3",
+				"mecaniques" : [
+					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
+					{ "nom" : "question" , "score" : 10},
+					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+			],
+			"conditionDeFin" : [
+				{"nbArbre" : 2},
+				{"tempsLimite" : 120}
+			],
+			"genre" : "Alnus"
+			},
+			{"typeActivite" : "A4",
+				"mecaniques" : [
+					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
+					{ "nom" : "question" , "score" : 10},
+					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+			],
+			"conditionDeFin" : [
+				{"nbArbre" : 2},
+				{"tempsLimite" : 120}
+			]
+			},
+			{"typeActivite" : "A5", "mecaniques" : [
+				{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
+				{ "nom" : "question" , "score" : 10},
+				{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+			],
+			"conditionDeFin" : [
+				{"nbArbre" : 2},
+				{"tempsLimite" : 120}
+			],
+			"espece" : "Acer Opalus"}
+		]},
+
+		{"mecaniques" : [
+			{ "nom" : "chronometre" , "temps" : 3600},
+			{ "nom" : "question" , "score" : 10},
+			{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+		],
+		"activites" : [
+			{"typeActivite" : "B1",
+				"mecaniques" : [
+					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
+					{ "nom" : "question" , "score" : 10},
+					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+			],
+			"conditionDeFin" : [
+				{"nbArbre" : 1},
+				{"tempsLimite" : 120}
+			]
+			},
+			{"typeActivite" : "B2",
+				"mecaniques" : [
+					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
+					{ "nom" : "question" , "score" : 10},
+					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+			],
+			"conditionDeFin" : [
+				{"nbArbre" : 2},
+				{"tempsLimite" : 120}
+			],
+			"espece" : "Acer Negundo"
+			},
+			{"typeActivite" : "B3",
+				"mecaniques" : [
+					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
+					{ "nom" : "question" , "score" : 10},
+					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+			],
+			"conditionDeFin" : [
+				{"nbArbre" : 2},
+				{"tempsLimite" : 120}
+			],
+			"genre" : "Alnus"
+			},
+			{"typeActivite" : "B4",
+				"mecaniques" : [
+					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
+					{ "nom" : "question" , "score" : 10},
+					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+			],
+			"conditionDeFin" : [
+				{"nbArbre" : 2},
+				{"tempsLimite" : 120}
+			]
+			},
+			{"typeActivite" : "B5", "mecaniques" : [
+				{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
+				{ "nom" : "question" , "score" : 10},
+				{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+			],
+			"conditionDeFin" : [
+				{"nbArbre" : 2},
+				{"tempsLimite" : 120}
+			],
+			"espece" : "Acer Opalus"}
+		]},
+
+		{"mecaniques" : [
+			{ "nom" : "chronometre" , "temps" : 3600},
+			{ "nom" : "question" , "score" : 10},
+			{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+		],
+		"activites" : [
+			{"typeActivite" : "C1",
+				"mecaniques" : [
+					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
+					{ "nom" : "question" , "score" : 10},
+					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+			],
+			"conditionDeFin" : [
+				{"nbArbre" : 1},
+				{"tempsLimite" : 120}
+			]
+			},
+			{"typeActivite" : "C2",
+				"mecaniques" : [
+					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
+					{ "nom" : "question" , "score" : 10},
+					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+			],
+			"conditionDeFin" : [
+				{"nbArbre" : 2},
+				{"tempsLimite" : 120}
+			],
+			"espece" : "Acer Negundo"
+			},
+			{"typeActivite" : "C3",
+				"mecaniques" : [
+					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
+					{ "nom" : "question" , "score" : 10},
+					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+			],
+			"conditionDeFin" : [
+				{"nbArbre" : 2},
+				{"tempsLimite" : 120}
+			],
+			"genre" : "Alnus"
+			},
+			{"typeActivite" : "C4",
+				"mecaniques" : [
+					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
+					{ "nom" : "question" , "score" : 10},
+					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+			],
+			"conditionDeFin" : [
+				{"nbArbre" : 2},
+				{"tempsLimite" : 120}
+			]
+			},
+			{"typeActivite" : "C5", "mecaniques" : [
+				{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
+				{ "nom" : "question" , "score" : 10},
+				{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+			],
+			"conditionDeFin" : [
+				{"nbArbre" : 2},
+				{"tempsLimite" : 120}
+			],
+			"espece" : "Acer Opalus"}
+		]}
+	]
+}
+
+
+
+
