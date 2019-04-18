@@ -116,6 +116,7 @@ export default {
       });
     },
     onChange() {
+      this.imageHasChange = true;
       var that = this;
       //this.image = this.$refs.pictureInput.image;
       // console.log(this.image.length)
@@ -154,8 +155,10 @@ export default {
           image: this.image,
           specie: this.specie
         });
-        this.$store.commit("completion/set", 10);
         this.$store.commit("navigator/pop");
+        if (this.image != null) {
+          this.$store.commit("releve/photoAjoutee", this.specie)
+        }
       } else {
         this.$store.commit("releve/modify", {
           id: this.releveId,
@@ -164,6 +167,9 @@ export default {
           specie: this.specie
         });
         this.$store.commit("navigator/pop");
+        if (this.image != null && this.imageHasChange) {
+          this.$store.commit("releve/photoAjoutee", this.specie)
+        }
       }
     },
     cancel() {

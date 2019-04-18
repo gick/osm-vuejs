@@ -44,39 +44,28 @@
       <v-ons-card>
       <v-ons-button @click="centerMap">Centrer carte</v-ons-button>
       </v-ons-card>
-      <v-ons-dialog class="lorem-dialog" :visible.sync="missionAOver">
+     <v-ons-dialog class="lorem-dialog" :visible.sync="missionOver">
         <!-- Optional page. This could contain a Navigator as well. -->
         <v-ons-page>
           <v-ons-toolbar>
-            <div class="center">Première mission</div>
+            <div class="center">Mission terminée</div>
           </v-ons-toolbar>
-          <p style="text-align: center">Vous avez effectué 10 relevés, place à la mission 2</p>
+          <p style="text-align: center">Vous avez terminé votre mission, place à la mission suivante</p>
           <p style="text-align: center">
-            <v-ons-button modifier="light" @click="firstMissionEnd">OK</v-ons-button>
+            <v-ons-button modifier="light" @click="closeDialog">OK</v-ons-button>
           </p>
         </v-ons-page>
       </v-ons-dialog>
-      <v-ons-dialog class="lorem-dialog" :visible.sync="missionBOver">
+
+      <v-ons-dialog class="lorem-dialog" :visible.sync="activityOver">
         <!-- Optional page. This could contain a Navigator as well. -->
         <v-ons-page>
           <v-ons-toolbar>
-            <div class="center">Seconde mission</div>
+            <div class="center">Activité terminée</div>
           </v-ons-toolbar>
-          <p style="text-align: center">Vous avez effectué 3 relevés d'espèces différentes, place à la mission 3</p>
+          <p style="text-align: center">Réalisez l'ensemble des activités pour accomplir la mission</p>
           <p style="text-align: center">
-            <v-ons-button modifier="light" @click="secondMissionEnd">OK</v-ons-button>
-          </p>
-        </v-ons-page>
-      </v-ons-dialog>
-      <v-ons-dialog class="lorem-dialog" :visible.sync="missionCOver">
-        <!-- Optional page. This could contain a Navigator as well. -->
-        <v-ons-page>
-          <v-ons-toolbar>
-            <div class="center">Fin de la cartographie</div>
-          </v-ons-toolbar>
-          <p style="text-align: center">Vous avez terminé l'exercice, merci!</p>
-          <p style="text-align: center">
-            <v-ons-button modifier="light" @click="thirdMissionEnd">OK</v-ons-button>
+            <v-ons-button modifier="light" @click="closeDialog">OK</v-ons-button>
           </p>
         </v-ons-page>
       </v-ons-dialog>
@@ -115,9 +104,8 @@ export default {
   },
   data() {
     return {
-      missionAOver:false,
-      missionBOver:false, 
-      missionCOver:false,
+      missionOver:false,
+      activityOver: false,
       newCircle: null,
       osmCircles: [],
       map: null,
@@ -148,24 +136,29 @@ export default {
     },
     currentMission(){
       return this.$store.state.releve.mission
+    },
+    activiteEnCours() {
+      return this.$store.state.releve.activiteEnCours
+    },
+    indexActivite() {
+      return this.$store.state.releve.indexActivite
+    },
+    nbActivite() {
+      return this.$store.state.releve.mission.activites.length
     }
   },
 
   watch:{
-    'currentMission':function(newMission,oldMission){
-      console.log(newMission)
-      if(newMission=='B'){
-      this.missionAOver=true
-      }
-      if(newMission=='C'){
-        this.missionBOver=true
-      }
-    if(newMission=='D'){
-        this.missionCOver=true
-      }
-
+    'activiteEnCours': {
+      handler : function(newMision, oldMission) {
+        if (this.indexActivite + 1 == this.nbActivite) {
+          this.missionOver = true;
+        } else {
+          this.activityOver = true
+        }   
+      },
+      deep : true
     }
-
   },
   created() {
     this.$nextTick(() => {
@@ -206,17 +199,9 @@ export default {
     getCoordinate(circle){
       return {lat:circle.lat,lng:circle.lon}
     },
-    firstMissionEnd(){
-      this.missionAOver=false
-      this.$store.commit('tabbar/set',1)
-    },
-    thirdMissionEnd(){
-      this.missionCOver=false
-      this.$store.commit('tabbar/set',1)
-
-    },
-    secondMissionEnd(){
-      this.missionBOver=false
+    closeDialog(){
+      this.missionOver = false
+      this.activityOver = false
       this.$store.commit('tabbar/set',1)
     },
     locationerror(e) {

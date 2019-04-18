@@ -1,6 +1,7 @@
 import {
   cpus
 } from "os";
+import missions from "../missions.json"
 var osmAuth = require("osm-auth");
 export default {
   modules: {
@@ -90,38 +91,50 @@ export default {
       namespaced: true,
       state: {
         releves: [],
-        differentReleve: new Set(),
-        mission: 'A',
-        modifyValidate: 0,
-        completionA: 0,
+        differentSpecieAdded: new Array(),
+        differentGenderAdded: new Array(),
+        differentSpecieChecked: new Array(),
+        differentGenderChecked: new Array(),
+        differentSpeciePhotographed: new Array(),
+        differentGenderPhotographed: new Array(),
+        mission: null,
+        activite: null,
+        indexActivite : 0,
+        completion: 0,
+        goal: 0,
+        activiteEnCours : 0
       },
       mutations: {
+        photoAjoutee(state, specie) {
+          updateCompletion(state, "photo", specie)
+        },
+        setCompletion(state, completion) {
+          state.completion = completion;
+        },
+        setGoal(state, goal) {
+          state.goal = goal;
+        },
+        setIndexActivite(state, index) {
+          state.indexActivite = index
+        },
+        setActivite(state, activite) {
+          state.activite = activite
+        },
+        setMission(state, mission) {
+          state.mission = mission
+        },
         add(state, releve) {
           state.releves.push(releve)
-          if (state.mission == 'B') {
-            state.differentReleve.add(releve.specie)
-            if (state.differentReleve.size == 2) {
-              state.mission = 'C'
-            }
-          }
-          state.completionA = state.completionA + 1
-          if (state.completionA == 2) {
-            state.mission = 'B'
-          }
-
+          updateCompletion(state, "add", releve.specie)            
         },
         modify(state, newReleve) {
-          if (state.mission == 'C') {
-            state.modifyValidate++
-            if (state.modifyValidate == 2) {
-              state.mission = 'D'
-            }
-          }
           let index = state.releves.findIndex(releve => releve._id == newReleve.id)
           if (index != -1) {
+            updateCompletion(state, "modify/validate", state.releves[index].specie)
             state.releves[index].specie = newReleve.specie
             state.releves[index].genus = newReleve.genus
-          }
+          }    
+
           axios.post('/modifyObservation', state.releves[index])
         },
         addMultiple(state, observations) {
@@ -130,12 +143,8 @@ export default {
           }
         },
         validate(state, currentReleve) {
-          if (state.mission == 'C') {
-            state.modifyValidate++
-            if (state.modifyValidate == 2) {
-              state.mission = 'D'
-            }
-          }
+
+          updateCompletion(state, "modify/validate", currentReleve.specie)
 
           let index = state.releves.findIndex(releve => releve._id == currentReleve._id)
           if (index != -1) {
@@ -147,12 +156,20 @@ export default {
             state.releve.pop();
           }
         },
+        clearSets(state) {
+          state.differentSpecieAdded.length = 0
+          state.differentGenderAdded.length = 0
+          state.differentSpeciePhotographed.length = 0
+          state.differentGenderPhotographed.length = 0
+          state.differentSpecieChecked.length = 0
+          state.differentGenderChecked.length = 0
+        }
       },
       actions: {
         setObservation({
           commit
         }, releve) {
-          // commit('add', releve)
+          commit('add', releve)
           axios.defaults.withCredentials = true
           axios.post('/observation', {
             releve: releve
@@ -164,12 +181,10 @@ export default {
                   root: true
                 })
               }
-
             }
           })
         }
-      }
-
+      }   
     },
 
     splitter: {
@@ -188,41 +203,7 @@ export default {
         }
       }
     },
-    completion2: {
-      strict: true,
-      namespaced: true,
-      state: {
-        rate: 0
-      },
-      mutations: {
-        set(state, rate) {
-          state.rate = state.rate + rate
-        }
-      }
-    },
-    completion: {
-      strict: true,
-      namespaced: true,
-      state: {
-        rate: 0,
-        mission: 'A',
-        firstMissionEnd: false,
-      },
-      mutations: {
-        closeFirstMission(state) {
-          state.firstMissionEnd = false
-        },
-        set(state, rate) {
-          state.rate = state.rate + rate;
-          if (state.rate >= 20) {
-            state.firstMissionEnd = true
-          }
-          if (state.rate == 10) {
-            state.mission = 'B'
-          }
-        }
-      }
-    },
+
     user: {
       strict: true,
       namespaced: true,
@@ -305,7 +286,6 @@ export default {
       }
     }
 
-
     ,
 
     tabbar: {
@@ -321,4 +301,77 @@ export default {
       }
     }
   }
+
 };
+
+
+function updateCompletion(state, operation, specie) {
+  switch (operation) {
+    case 'add' : 
+          if (!state.differentSpecieAdded.includes(specie)) {
+            state.differentSpecieAdded.push(specie)
+          }
+          if (!state.differentGenderAdded.includes(specie.split(' ')[0])) {
+            state.differentGenderAdded.push(specie.split(' ')[0])
+          }
+          
+          if (state.activite.typeActivite == 'A1'){
+            state.completion++;
+          } else if (state.activite.typeActivite == 'A2' && state.activite.espece == specie){
+            state.completion++;
+          } else if (state.activite.typeActivite == 'A3' && specie.indexOf(state.activite.genre) == 0){
+            state.completion++;
+          } else if (state.activite.typeActivite == 'A4'){
+            state.completion = state.differentSpecieAdded.length;
+          } else if (state.activite.typeActivite == 'A5'){
+            state.completion = state.differentGenderAdded.length;
+          } 
+     break
+    case 'modify/validate' :
+            if (!state.differentSpecieChecked.includes(specie)){
+              state.differentSpecieChecked.push(specie)
+            }
+            if (! state.differentGenderChecked.includes(specie.split(' ')[0])) {
+              state.differentGenderChecked.push(specie.split(' ')[0])
+            }
+
+            if (state.activite.typeActivite == 'B1'){
+              state.completion++;
+            } else if (state.activite.typeActivite == 'B2' && state.activite.espece == specie){
+              state.completion++;
+            } else if (state.activite.typeActivite == 'B3' && specie.indexOf(state.activite.genre) == 0){
+              state.completion++;
+            } else if (state.activite.typeActivite == 'B4'){
+              state.completion = state.differentSpecieChecked.length;
+            } else if (state.activite.typeActivite == 'B5'){
+              state.completion = state.differentGenderChecked.length;
+            }
+      break
+    case 'photo' :
+          if (!state.differentSpeciePhotographed.includes(specie)) {
+            state.differentSpeciePhotographed.push(specie)
+          }
+          if (!state.differentGenderPhotographed.includes(specie.split(' ')[0])) {
+            state.differentGenderPhotographed.push(specie.split(' ')[0])
+          }  
+
+          if (state.activite.typeActivite == 'C1'){
+            state.completion++;
+          } else if (state.activite.typeActivite == 'C2' && state.activite.espece == specie){
+            state.completion++;
+          } else if (state.activite.typeActivite == 'C3' && specie.indexOf(state.activite.genre) == 0){
+            state.completion++;
+          } else if (state.activite.typeActivite == 'C4'){
+            state.completion = state.differentSpeciePhotographed.length;
+          } else if (state.activite.typeActivite == 'C5'){
+            state.completion = state.differentGenderPhotographed.length;
+          }
+      break
+  }
+
+  if (state.completion == state.goal) {          
+    state.activiteEnCours++;
+  }
+}
+
+

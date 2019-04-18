@@ -36,7 +36,7 @@
 					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
 			],
 			"conditionDeFin" : [
-				{"nbArbre" : 2},
+				{"nbArbre" : 3},
 				{"tempsLimite" : 120}
 			],
 			"genre" : "Alnus"
@@ -48,7 +48,7 @@
 					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
 			],
 			"conditionDeFin" : [
-				{"nbArbre" : 2},
+				{"nbArbre" : 5},
 				{"tempsLimite" : 120}
 			]
 			},
