@@ -130,8 +130,11 @@ export default {
         modify(state, newReleve) {
           let index = state.releves.findIndex(releve => releve._id == newReleve._id)
           if (index != -1) {
-            updateCompletion(state, "modify/validate", state.releves[index].specie)
-            state.releves[index]=newReleve
+           // state.releves[index].test='truc'
+            state.releves.splice(index,1,newReleve)
+            state.releves[index].prev=newReleve.prev
+           // updateCompletion(state, "modify/validate", state.releves[index].specie)
+
           }    
 
         },

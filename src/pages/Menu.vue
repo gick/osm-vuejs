@@ -13,6 +13,7 @@
           {{ item.title }}
         </div>
       </v-ons-list-item>
+      <v-ons-list-item @click="logout">Logout</v-ons-list-item>
     </v-ons-list>
   </v-ons-page>
 </template>
@@ -26,7 +27,11 @@ export default {
     },
     loadLink(url) {
       window.open(url, '_blank');
+    },
+    logout(){
+      this.$store.dispatch('user/logout')
     }
+
   },
   data() {
     return {

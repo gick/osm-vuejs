@@ -5,7 +5,8 @@
       <v-ons-list-item v-for="(releve,index) in releves" :key="index"
         modifier="chevron"
         @click="transition(releve)">
-        <p>{{releve.specie }} {{releve.genus}} </p>
+        <p>Auteur : {{}}</p>
+        <p>{{releve.specie }} {{releve.genus}}</p>
       </v-ons-list-item>
     </v-ons-list>
   </v-ons-page>
@@ -30,7 +31,7 @@ export default {
         extends: Releve,
         data() {
           return {
-            releve: releve,
+            id: releve._id,
             visualize:true,
           }
         }
