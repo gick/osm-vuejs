@@ -91,12 +91,8 @@ export default {
       namespaced: true,
       state: {
         releves: [],
-        differentSpecieAdded: new Array(),
-        differentGenderAdded: new Array(),
-        differentSpecieChecked: new Array(),
-        differentGenderChecked: new Array(),
-        differentSpeciePhotographed: new Array(),
-        differentGenderPhotographed: new Array(),
+        differentSpecie: new Array(),
+        differentGender: new Array(),
         mission: null,
         activite: null,
         indexActivite : 0,
@@ -157,12 +153,8 @@ export default {
           }
         },
         clearSets(state) {
-          state.differentSpecieAdded.length = 0
-          state.differentGenderAdded.length = 0
-          state.differentSpeciePhotographed.length = 0
-          state.differentGenderPhotographed.length = 0
-          state.differentSpecieChecked.length = 0
-          state.differentGenderChecked.length = 0
+          state.differentSpecie.length = 0
+          state.differentGender.length = 0
         }
       },
       actions: {
@@ -306,72 +298,38 @@ export default {
 
 
 function updateCompletion(state, operation, specie) {
-  switch (operation) {
-    case 'add' : 
-          if (!state.differentSpecieAdded.includes(specie)) {
-            state.differentSpecieAdded.push(specie)
-          }
-          if (!state.differentGenderAdded.includes(specie.split(' ')[0])) {
-            state.differentGenderAdded.push(specie.split(' ')[0])
-          }
+  if (specie == '') return
+  var typeAction = state.activite.typeActivite.split('')[0]
+  if ((typeAction == 'A' && operation == 'add') ||
+      (typeAction == 'B' && operation == 'modify/validate') ||
+      (typeAction == 'C' && operation == 'photo' )) {
+
+    if (!state.differentSpecie.includes(specie)) {
+      state.differentSpecie.push(specie)
+    }
           
-          if (state.activite.typeActivite == 'A1'){
-            state.completion++;
-          } else if (state.activite.typeActivite == 'A2' && state.activite.espece == specie){
-            state.completion++;
-          } else if (state.activite.typeActivite == 'A3' && specie.indexOf(state.activite.genre) == 0){
-            state.completion++;
-          } else if (state.activite.typeActivite == 'A4'){
-            state.completion = state.differentSpecieAdded.length;
-          } else if (state.activite.typeActivite == 'A5'){
-            state.completion = state.differentGenderAdded.length;
-          } 
-     break
-    case 'modify/validate' :
-            if (!state.differentSpecieChecked.includes(specie)){
-              state.differentSpecieChecked.push(specie)
-            }
-            if (! state.differentGenderChecked.includes(specie.split(' ')[0])) {
-              state.differentGenderChecked.push(specie.split(' ')[0])
-            }
+    if (!state.differentGender.includes(specie.split(' ')[0])) {
+      state.differentGender.push(specie.split(' ')[0])
+    }
+        
+    var numAction = state.activite.typeActivite.split('')[1]
 
-            if (state.activite.typeActivite == 'B1'){
-              state.completion++;
-            } else if (state.activite.typeActivite == 'B2' && state.activite.espece == specie){
-              state.completion++;
-            } else if (state.activite.typeActivite == 'B3' && specie.indexOf(state.activite.genre) == 0){
-              state.completion++;
-            } else if (state.activite.typeActivite == 'B4'){
-              state.completion = state.differentSpecieChecked.length;
-            } else if (state.activite.typeActivite == 'B5'){
-              state.completion = state.differentGenderChecked.length;
-            }
-      break
-    case 'photo' :
-          if (!state.differentSpeciePhotographed.includes(specie)) {
-            state.differentSpeciePhotographed.push(specie)
-          }
-          if (!state.differentGenderPhotographed.includes(specie.split(' ')[0])) {
-            state.differentGenderPhotographed.push(specie.split(' ')[0])
-          }  
+    if (numAction == '1'){
+      state.completion++;
+    } else if (numAction == '2' && state.activite.espece == specie){
+        state.completion++;
+    } else if (numAction == '3' && specie.indexOf(state.activite.genre) == 0){
+      state.completion++;
+    } else if (numAction == '4'){
+      state.completion = state.differentSpecie.length;
+    } else if (numAction == '5'){
+      state.completion = state.differentGender.length;
+    } 
 
-          if (state.activite.typeActivite == 'C1'){
-            state.completion++;
-          } else if (state.activite.typeActivite == 'C2' && state.activite.espece == specie){
-            state.completion++;
-          } else if (state.activite.typeActivite == 'C3' && specie.indexOf(state.activite.genre) == 0){
-            state.completion++;
-          } else if (state.activite.typeActivite == 'C4'){
-            state.completion = state.differentSpeciePhotographed.length;
-          } else if (state.activite.typeActivite == 'C5'){
-            state.completion = state.differentGenderPhotographed.length;
-          }
-      break
-  }
-
-  if (state.completion == state.goal) {          
-    state.activiteEnCours++;
-  }
+    if (state.completion == state.goal) {          
+      state.activiteEnCours++;
+    }
+  }  
 }
 
 

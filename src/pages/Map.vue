@@ -63,7 +63,7 @@
           <v-ons-toolbar>
             <div class="center">Activité terminée</div>
           </v-ons-toolbar>
-          <p style="text-align: center">Réalisez l'ensemble des activités pour accomplir la mission</p>
+          <p style="text-align: center">Vous avez terminé votre activité, place à l'activité suivante</p>
           <p style="text-align: center">
             <v-ons-button modifier="light" @click="closeDialog">OK</v-ons-button>
           </p>
