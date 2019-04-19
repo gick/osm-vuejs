@@ -8,6 +8,14 @@ import Vuex from 'vuex';
 import VueOnsen from 'vue-onsenui'; // For UMD
 import VueSocketIO from 'vue-socket.io'
 
+import BootstrapVue from 'bootstrap-vue' // For progressBar
+
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+import BProgress from 'bootstrap-vue/es/components/progress/progress'
+import BProgressBar from 'bootstrap-vue/es/components/progress/progress-bar'
+
 // import VueOnsen from 'vue-onsenui/esm'; // For ESM
 // import * as OnsenComponents from './onsen-components'; // For ESM
 import storeLike from './store/routeStore';
@@ -33,10 +41,13 @@ Vue.use(new VueSocketIO({
 
 Vue.use(Vuex);
 Vue.use(VueOnsen);
+Vue.use(BootstrapVue)
 
 // Register components globally
 // Object.values(OnsenComponents).forEach(component => Vue.component(component.name, component)); // For ESM
 Vue.component('custom-toolbar', CustomToolbar); // Common toolbar
+Vue.component('b-progress', BProgress);
+Vue.component('b-progress-bar', BProgressBar);
 
 new Vue({
   el: '#app',

@@ -12,6 +12,8 @@
     "deploy": "npm run build && npm run demo:index && gh-pages -d www"
   },
   "dependencies": {
+    "bootstrap": "^4.3.1",
+    "bootstrap-vue": "^2.0.0-rc.18",
     "browser-image-compression": "0.0.3",
     "dateformat": "^3.0.3",
     "exif-orientation-image": "^1.0.1",
@@ -20,7 +22,8 @@
     "osm-auth": "^1.0.2",
     "pusher-js": "^4.4.0",
     "v-autocomplete": "^1.8.2",
-    "vue": "^2.5.3",
+    "vue": "^2.6.10",
+    "vue-loader": "^11.0.0",
     "vue-onsenui": "^2.6.1",
     "vue-picture-input": "^2.1.6",
     "vue-signature-pad": "^1.1.9-beta.1",
@@ -48,8 +51,7 @@
     "postcss-smart-import": "^0.7.5",
     "postcss-url": "^7.1.2",
     "style-loader": "^0.18.2",
-    "vue-loader": "^12.0.4",
-    "vue-template-compiler": "^2.5.3",
+    "vue-template-compiler": "^2.6.10",
     "webpack": "^3.8.1",
     "webpack-dev-server": "2.7.1"
   }

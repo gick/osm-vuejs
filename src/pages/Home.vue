@@ -1,9 +1,5 @@
 <template>
   <v-ons-page> 
-    <v-ons-fab style="background-color:red" @click="logout" v-show="$store.state.user.id" position="bottom right">
-      <v-ons-icon icon="ion-close"></v-ons-icon>
-    </v-ons-fab>
-
       <br>
       <br>
     </p>
@@ -16,24 +12,43 @@
       </div>
     </v-ons-card>
 
+
     <v-ons-card v-show="$store.state.user.id">
       <div class="title">
-        Mission en cours
-        <v-ons-button @click="afficherDetails"> Détails </v-ons-button>
-      </div>
-      <div v-if="details" v-for="item in activites">
-        <li v-show="(item.statut=='skipped')"><strike>{{item.intitule}}</strike></li>
-        <li v-show="(item.statut=='onGoing')"><B>{{item.intitule}}</B></li>
-        <li v-show="(item.statut=='done')">✓ {{item.intitule}}</li>
-        <li v-show="(item.statut=='toDo')">{{item.intitule}}</li>
-      </div>
-      <div id="consigneMission" class="content">
-
-      </div> 
-       <v-ons-button @click="activitySkipped"> Passer l'activité </v-ons-button> 
-      <p>Progression : {{completion}} / {{goal}}</p>
-      <progress :value="calculProgression" max="100"></progress>
+        Mission en cours ( {{ indexActivite + 1}} / {{activites.length}} )
+      </div>          
     </v-ons-card>
+
+    <v-card v-show="$store.state.user.id">
+        <div v-for="item in activites">
+          <v-ons-card class=opaque v-show="(item.statut=='skipped')">
+            ❌ {{item.intitule}}
+          </v-ons-card>
+          <v-ons-card v-show="(item.statut=='onGoing')">
+            <v-ons-row>
+              <v-ons-col>
+                {{item.intitule}}  
+                <br>
+                <b-progress :value="completion" :max="goal" class="w-75" animated />
+                  <!-- {{ completion }} / {{ goal }}
+                </b-progress>  -->
+              </v-ons-col>  
+              <v-ons-col width="10%">
+               <v-ons-icon icon="fa-angle-double-right" @click="activitySkipped" size="30px"></v-ons-icon> 
+             </v-ons-col>
+            </v-ons-row>            
+          </v-ons-card>
+          <v-ons-card class=opaque v-show="(item.statut=='done')">
+            ✓ {{item.intitule}}
+          </v-ons-card>
+          <v-ons-card class=opaque v-show="(item.statut=='toDo')">
+            {{item.intitule}}
+          </v-ons-card>
+        </div>
+    </v-card>
+
+</v-ons-card>
+   
     <!--  <v-ons-button @click="logout">Logout</v-ons-button>
       <p v-show='username'>Bonjour user {{username}}</p>
 
@@ -64,7 +79,6 @@ export default {
     return {
       username:'',
       activites: [],
-      details : false,
       pages: [
         {
           component: SimplePage,
@@ -127,12 +141,6 @@ export default {
     },
     indexActivite() {
        return this.$store.state.releve.indexActivite
-    },
-    calculProgression() {
-      if (this.goal == 0)
-        return 0
-      else
-        return (this.completion / this.goal) * 100      
     }
   },
   watch : {
@@ -190,14 +198,14 @@ export default {
         var typeActivite;
         switch (this.currentMission.activites[i].typeActivite.split('')[0]) {
           case 'A' : 
-            typeActivite = 'identifier'
-            break;
-          case 'B' :
-            typeActivite = 'verifier'
-            break;
-          case 'C' :
-            typeActivite = 'photographier'
-            break;
+          typeActivite = 'Identifie'
+          break;
+        case 'B' :
+          typeActivite = 'Modifie ou valide'
+          break;
+        case 'C' :
+          typeActivite = 'Prend une photo de'
+          break;
         }
         var sousCategorieActivite;
         switch (this.currentMission.activites[i].typeActivite.split('')[1]) {
@@ -221,13 +229,9 @@ export default {
         this.$store.commit('releve/setGoal', nbAction)
        // this.$store.state.releve.goal = nbAction
         var arbre = nbAction > 1 ? " arbres" : " arbre"
-        this.activites.push(new Activite("Vous devez " + typeActivite + " " + nbAction + arbre + sousCategorieActivite,"toDo"));
+        this.activites.push(new Activite(typeActivite + " " + nbAction + arbre + sousCategorieActivite,"toDo"));
       }
       this.newActivity()
-    },
-
-    afficherDetails() {
-      this.details = !this.details
     },
 
     newActivity() {
@@ -246,41 +250,10 @@ export default {
        //this.$store.state.releve.activite = this.currentMission.activites[this.indexActivite]
 
       //recuperation du type d'activite
-      var typeActivite;
-      switch (this.currentMission.activites[this.indexActivite].typeActivite.split('')[0]) {
-        case 'A' : 
-          typeActivite = 'identifier'
-          break;
-        case 'B' :
-          typeActivite = 'verifier'
-          break;
-        case 'C' :
-          typeActivite = 'photographier'
-          break;
-      }
-      var sousCategorieActivite;
-      switch (this.currentMission.activites[this.indexActivite].typeActivite.split('')[1]) {
-        case '2' :
-          sousCategorieActivite = " de l'espece " + this.currentMission.activites[this.indexActivite].espece
-          break;
-        case '3' :
-          sousCategorieActivite = ' du genre ' + this.currentMission.activites[this.indexActivite].genre
-          break;
-        case '4' :
-          sousCategorieActivite = " d'especes differentes"
-          break;
-        case '5' :
-          sousCategorieActivite = ' de genres differents'
-          break;
-        default : 
-          sousCategorieActivite = ''
-      }
 
       var nbAction = this.currentMission.activites[this.indexActivite].conditionDeFin[0].nbArbre
       this.$store.commit('releve/setGoal', nbAction)
       //this.$store.state.releve.goal = nbAction
-      var arbre = nbAction > 1 ? " arbres" : " arbre"
-      document.getElementById("consigneMission").innerHTML = "<p>Vous devez " + typeActivite + " " + nbAction + arbre + sousCategorieActivite + ".</p>"
       this.activites[this.indexActivite].statut = 'onGoing'
       /*for (let i = 0; i < this.currentMission.mecaniques.length; i++) {
         document.getElementById("consigneMission").innerHTML += "<p>" + this.currentMission.mecaniques[i].nom + "</p>"
@@ -309,4 +282,9 @@ ons-card {
 .card--material__title {
   font-size: 20px;
 }
+
+.opaque {
+  filter : opacity(30%);
+}
+
 </style>
