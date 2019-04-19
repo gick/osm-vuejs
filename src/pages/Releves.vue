@@ -16,7 +16,11 @@ import Releve from './Releve.vue'
 export default {
   computed:{
     releves(){
-      return this.$store.state.releve.releves
+      return this.$store.state.releve.releves.filter(value=>value.osmId==this.userID)
+    },
+    userID(){
+            return this.$store.state.user.id
+
     }
   },
   methods: {

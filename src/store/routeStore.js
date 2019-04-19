@@ -5,13 +5,6 @@ import missions from "../missions.json"
 var osmAuth = require("osm-auth");
 export default {
   modules: {
-    usersReleve:{
-      strict: true,
-      namespaced: true,
-      state:{
-        data:[]
-      }
-    },
     osmData: {
       strict: true,
       namespaced: true,
@@ -32,7 +25,7 @@ export default {
           let west = boundary.boundary._southWest.lng
           let north = boundary.boundary._northEast.lat
           let east = boundary.boundary._northEast.lng
-          axios.get('/osmdata', {
+          axios.get('/api/osmdata', {
             params: {
               south: south,
               west: west,
@@ -135,14 +128,12 @@ export default {
           updateCompletion(state, "add", releve.specie)            
         },
         modify(state, newReleve) {
-          let index = state.releves.findIndex(releve => releve._id == newReleve.id)
+          let index = state.releves.findIndex(releve => releve._id == newReleve._id)
           if (index != -1) {
             updateCompletion(state, "modify/validate", state.releves[index].specie)
-            state.releves[index].specie = newReleve.specie
-            state.releves[index].genus = newReleve.genus
+            state.releves[index]=newReleve
           }    
 
-          axios.post('http://localhost:8000/modifyObservation', state.releves[index])
         },
         addMultiple(state, observations) {
           for (var observation of observations) {
@@ -156,7 +147,7 @@ export default {
           let index = state.releves.findIndex(releve => releve._id == currentReleve._id)
           if (index != -1) {
             state.releves[index].validated = true
-            axios.post('http://localhost:8000/validate', {id:currentReleve._id})
+            axios.post('/api/validate', {id:currentReleve._id})
 
           }
         },
@@ -175,13 +166,22 @@ export default {
         }
       },
       actions: {
+        modifyObservation({commit},newReleve){
+          axios.defaults.withCredentials = true
+
+          axios.post('/api/modifyObservation', {releve:newReleve})
+          .then(function(response){
+            commit('modify',response.data.observation)
+          })
+
+        },
         setObservation({
           commit
         }, releve) {
           //commit('add', releve)
           axios.defaults.withCredentials = true
-          axios.post('http://localhost:8000/observation', {
-            releve: releve
+          axios.post('/api/observation', {
+            releve
           }).then(function (response) {
             if (response.data.observation) {
               commit('add', response.data.observation)
@@ -243,7 +243,7 @@ export default {
         loadObservation({
           commit
         }) {
-          axios.get('http://localhost:8000/observation')
+          axios.get('/api/observation')
             .then(function (res) {
               commit('releve/addMultiple', res.data, {
                 root: true
@@ -281,7 +281,7 @@ export default {
               }
               axios.defaults.withCredentials = true
               commit('set', userObject)
-              return axios.get('http://localhost:8000/login', {
+              return axios.get('/api/login', {
                 params: {
                   id: user.getAttribute('id'),
                   name: user.getAttribute('display_name'),

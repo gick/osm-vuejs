@@ -15,13 +15,13 @@
         @update:zoom="zoomUpdate"
       >
         <l-circle
-          @click="circleClick($event,index)"
+          @click="circleClick(circle)"
           v-for="(circle,index) in observations"
           custom="10"
           v-bind:key="index+osmCircles.length"
           :lat-lng="circle.coordinates"
           :radius="6"
-          :color="'red'"
+          :color="userID===circle.osmId ? 'red':'lime'"
         />
 
       <l-marker
@@ -128,6 +128,10 @@ export default {
     };
   },
   computed: {
+    userID(){
+      return this.$store.state.user.id
+    }
+    ,
     observations() {
       return this.$store.state.releve.releves;
     },
@@ -236,9 +240,8 @@ export default {
 
     }
     ,
-    circleClick(evt, index) {
-      console.log(index);
-      var releve = this.observations[index];
+    circleClick(releve) {
+
       this.circleClicked = true;
       this.$store.commit("navigator/push", {
         extends: Releve,
