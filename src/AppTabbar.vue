@@ -2,14 +2,16 @@
   <v-ons-page :style="swipePosition">
     <custom-toolbar :style="swipeTheme" modifier="white-content">
       {{ title }}
-      <v-ons-toolbar-button slot="right" modifier="white-content"
+      <v-ons-toolbar-button
+        slot="right"
+        modifier="white-content"
         @click="$store.commit('splitter/toggle'); showTip(null, 'Try dragging from right edge!')"
       >
         <v-ons-icon icon="ion-navicon, material:md-menu"></v-ons-icon>
       </v-ons-toolbar-button>
     </custom-toolbar>
-
-    <v-ons-tabbar position="auto"
+    <v-ons-tabbar
+      position="auto"
       :modifier="md ? 'autogrow white-content' : ''"
       :on-swipe="md ? onSwipe : null"
       :tabbar-style="swipeTheme"
@@ -20,11 +22,12 @@
 </template>
 
 <script>
-import Map from './pages/Map.vue';
-import Home from './pages/Home.vue';
-import Arboretum from './pages/Arboretum.vue';
-import Releve from './pages/Releves.vue';
-import Folia from './pages/Folia.vue'
+import Pusher from "pusher-js";
+import Map from "./pages/Map.vue";
+import Home from "./pages/Home.vue";
+import Arboretum from "./pages/Arboretum.vue";
+import Releve from "./pages/Releves.vue";
+import Folia from "./pages/Folia.vue";
 
 // Just a linear interpolation formula
 const lerp = (x0, x1, t) => parseInt((1 - t) * x0 + t * x1, 10);
@@ -34,14 +37,32 @@ const blue = [30, 136, 229];
 const purple = [103, 58, 183];
 
 export default {
-  data () {
+  data() {
     return {
       shutUp: !this.md,
       showingTip: false,
       colors: red,
       animationOptions: {},
-      topPosition: 0,
+      topPosition: 0
     };
+  },
+  mounted() {
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher("f204a3eb6cfeb87e594b", {
+      cluster: "eu",
+      forceTLS: true
+    });
+
+    var channel = pusher.subscribe("observation");
+    channel.bind("new_obs", function(data) {
+      if(data.osmId==this.userID){
+        return
+      }
+      else{
+        this.$store.commit('releve/add',data)
+      }
+  }.bind(this));
   },
   methods: {
     onSwipe(index, animationOptions) {
@@ -49,88 +70,108 @@ export default {
       this.animationOptions = animationOptions;
 
       // Interpolate colors and top position
-      const a = Math.floor(index), b = Math.ceil(index), ratio = index % 1;
-      this.colors = this.colors.map((c, i) => lerp(this.tabs[a].theme[i], this.tabs[b].theme[i], ratio));
-      this.topPosition = lerp(this.tabs[a].top || 0, this.tabs[b].top || 0, ratio);
+      const a = Math.floor(index),
+        b = Math.ceil(index),
+        ratio = index % 1;
+      this.colors = this.colors.map((c, i) =>
+        lerp(this.tabs[a].theme[i], this.tabs[b].theme[i], ratio)
+      );
+      this.topPosition = lerp(
+        this.tabs[a].top || 0,
+        this.tabs[b].top || 0,
+        ratio
+      );
     },
     showTip(e, message) {
       if (!this.shutUp && !(e && e.swipe) && !this.showingTip) {
         this.showingTip = true;
-        this.$ons.notification.toast({
-          message,
-          buttonLabel: 'Shut up!',
-          timeout: 2000
-        }).then(i => {
-          this.shutUp = i === 0;
-          this.showingTip = false;
-        });
+        this.$ons.notification
+          .toast({
+            message,
+            buttonLabel: "Shut up!",
+            timeout: 2000
+          })
+          .then(i => {
+            this.shutUp = i === 0;
+            this.showingTip = false;
+          });
       }
     }
   },
 
   computed: {
-        tabs(){
+    tabs() {
       return [
         {
-          label: 'Carte',
-          icon: 'ion-map',
-          active:false,
+          label: "Carte",
+          icon: "ion-map",
+          active: false,
           page: Map,
-          theme: red,
+          theme: red
         },
         {
-          label: 'Mission',
-          icon: 'ion-home',
+          label: "Mission",
+          icon: "ion-home",
           page: Home,
           theme: red
         },
         {
-          label: 'Arboretum',
-          icon: 'ion-leaf',
+          label: "Arboretum",
+          icon: "ion-leaf",
           page: Arboretum,
           theme: blue
         },
         {
-          label: 'Relevés',
-          icon: 'ion-edit',
+          label: "Relevés",
+          icon: "ion-edit",
           page: Releve,
           theme: purple,
-          badge:this.$store.state.releve.releves.length ? this.$store.state.releve.releves.length : null
+          badge: this.$store.state.releve.releves.filter(value=>value.osmId==this.userID).length
+            ? this.$store.state.releve.releves.filter(value=>value.osmId==this.userID).length
+            : null
         },
-                {
-          label: 'Folia',
-          icon: 'ion-search',
+        {
+          label: "Folia",
+          icon: "ion-search",
           page: Folia,
-          
+
           theme: purple
         }
-
-
-      ]
+      ];
     },
-
+    userID(){
+      return this.$store.state.user.id
+    },
     index: {
       get() {
         return this.$store.state.tabbar.index;
       },
       set(newValue) {
-        this.$store.commit('tabbar/set', newValue)
+        this.$store.commit("tabbar/set", newValue);
       }
     },
     title() {
-      return this.md ? 'Albiziapp' : this.tabs[this.index].title || this.tabs[this.index].label;
+      return this.md
+        ? "Albiziapp"
+        : this.tabs[this.index].title || this.tabs[this.index].label;
     },
     swipeTheme() {
-      return this.md && {
-        backgroundColor: `rgb(${this.colors.join(',')})`,
-        transition: `all ${this.animationOptions.duration || 0}s ${this.animationOptions.timing || ''}`
-      }
+      return (
+        this.md && {
+          backgroundColor: `rgb(${this.colors.join(",")})`,
+          transition: `all ${this.animationOptions.duration || 0}s ${this
+            .animationOptions.timing || ""}`
+        }
+      );
     },
     swipePosition() {
-      return this.md && {
-        top: this.topPosition + 'px',
-        transition: `all ${this.animationOptions.duration || 0}s ${this.animationOptions.timing || ''}`
-      }
+      return (
+        this.md && {
+          top: this.topPosition + "px",
+          transition: `all ${this.animationOptions.duration || 0}s ${this
+            .animationOptions.timing || ""}`
+        }
+      );
     }
   }
 };

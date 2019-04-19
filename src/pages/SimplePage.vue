@@ -19,7 +19,7 @@
             results-display="name"
             placeholder="Nom de l'espèce"
             v-model="currentSpecie"
-            :initial-display="specie"
+            :initial-display="releve.specie"
             @selected="specieSelected"
           ></autocomplete>
         </div>
@@ -30,7 +30,7 @@
         <div class="left">
           <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>
         </div>
-        <v-ons-input placeholder="Nom commun" float v-model="common"></v-ons-input>
+        <v-ons-input placeholder="Nom commun" float v-model="releve.common"></v-ons-input>
       </v-ons-list-item>
       <v-ons-list-item>
         <picture-input
@@ -75,6 +75,7 @@ import speciesList from "../js/species.js";
 export default {
   data() {
     return {
+      releve:{},
       image: null,
       common: "",
       source: speciesList,
@@ -100,7 +101,7 @@ export default {
   },
   methods: {
     specieSelected(specie){
-      this.specie=specie.display
+      this.releve.specie=specie.display
     },
     identify() {
       this.$store.commit("navigator/push", {
@@ -138,7 +139,7 @@ export default {
             ); // smaller than maxSizeMB
             imageCompression.getDataUrlFromFile(compressedFile).then(
               function(compressedDataURI) {
-                this.image = compressedDataURI;
+                this.releve.image = compressedDataURI;
               }.bind(this)
             );
             //return uploadToServer(compressedFile); // write your own logic
@@ -149,23 +150,18 @@ export default {
         });
     },
     complete() {
+      let releve=this.releve
       if (!this.modify) {
-        this.$store.dispatch("releve/setObservation", {
-          coordinates: this.coordinates,
-          image: this.image,
-          specie: this.specie
-        });
+        this.releve.coordinates=this.coordinates
+        this.$store.dispatch("releve/setObservation", 
+          releve
+        );
         this.$store.commit("navigator/pop");
         if (this.image != null) {
           this.$store.commit("releve/photoAjoutee", this.specie)
         }
       } else {
-        this.$store.commit("releve/modify", {
-          id: this.releveId,
-          genus: this.genus,
-          image: this.image,
-          specie: this.specie
-        });
+        this.$store.dispatch("releve/modifyObservation", releve);
         this.$store.commit("navigator/pop");
         if (this.image != null && this.imageHasChange) {
           this.$store.commit("releve/photoAjoutee", this.specie)

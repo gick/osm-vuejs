@@ -102,7 +102,11 @@ module.exports = {
   devServer: {
     historyApiFallback: true,
     noInfo: false,
-    disableHostCheck: true
+    disableHostCheck: true,
+    proxy: {
+      '/api': 'http://localhost:8000'
+    }
+
   },
   performance: {
     hints: false
