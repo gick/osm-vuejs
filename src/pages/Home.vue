@@ -1,9 +1,5 @@
 <template>
   <v-ons-page> 
-    <v-ons-fab style="background-color:red" @click="logout" v-show="$store.state.user.id" position="bottom right">
-      <v-ons-icon icon="ion-close"></v-ons-icon>
-    </v-ons-fab>
-
       <br>
       <br>
     </p>
@@ -24,11 +20,11 @@
     </v-ons-card>
 
     <v-card v-show="$store.state.user.id">
-        <v-ons-card v-for="item in activites">
-          <div class=opaque v-show="(item.statut=='skipped')">
+        <div v-for="item in activites">
+          <v-ons-card class=opaque v-show="(item.statut=='skipped')">
             ❌ {{item.intitule}}
-          </div>
-          <div v-show="(item.statut=='onGoing')">
+          </v-ons-card>
+          <v-ons-card v-show="(item.statut=='onGoing')">
             <v-ons-row>
               <v-ons-col>
                 {{item.intitule}}  
@@ -40,17 +36,15 @@
               <v-ons-col width="10%">
                <v-ons-icon icon="fa-angle-double-right" @click="activitySkipped" size="30px"></v-ons-icon> 
              </v-ons-col>
-            </v-ons-row>
-               
-          </div>
-          <div class=opaque v-show="(item.statut=='done')">
+            </v-ons-row>            
+          </v-ons-card>
+          <v-ons-card class=opaque v-show="(item.statut=='done')">
             ✓ {{item.intitule}}
-
-          </div>
-          <div class=blur v-show="(item.statut=='toDo')">
+          </v-ons-card>
+          <v-ons-card class=opaque v-show="(item.statut=='toDo')">
             {{item.intitule}}
-          </div>
-        </v-ons-card>
+          </v-ons-card>
+        </div>
     </v-card>
 
 </v-ons-card>
@@ -287,10 +281,6 @@ ons-card {
 .card__title,
 .card--material__title {
   font-size: 20px;
-}
-
-.blur {
-  filter: blur(1px);
 }
 
 .opaque {
