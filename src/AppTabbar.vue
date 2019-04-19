@@ -8,7 +8,6 @@
         <v-ons-icon icon="ion-navicon, material:md-menu"></v-ons-icon>
       </v-ons-toolbar-button>
     </custom-toolbar>
-
     <v-ons-tabbar position="auto"
       :modifier="md ? 'autogrow white-content' : ''"
       :on-swipe="md ? onSwipe : null"
@@ -19,7 +18,8 @@
   </v-ons-page>
 </template>
 
-<script>
+<script> 
+import Pusher from 'pusher-js'
 import Map from './pages/Map.vue';
 import Home from './pages/Home.vue';
 import Arboretum from './pages/Arboretum.vue';
@@ -42,6 +42,20 @@ export default {
       animationOptions: {},
       topPosition: 0,
     };
+  },
+  mounted(){
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('f204a3eb6cfeb87e594b', {
+      cluster: 'eu',
+      forceTLS: true
+    });
+
+    var channel = pusher.subscribe('observation');
+    channel.bind('new_obs', function(data) {
+      console.log(JSON.stringify(data));
+    });
+
   },
   methods: {
     onSwipe(index, animationOptions) {

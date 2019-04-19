@@ -5,6 +5,13 @@ import missions from "../missions.json"
 var osmAuth = require("osm-auth");
 export default {
   modules: {
+    usersReleve:{
+      strict: true,
+      namespaced: true,
+      state:{
+        data:[]
+      }
+    },
     osmData: {
       strict: true,
       namespaced: true,
@@ -135,7 +142,7 @@ export default {
             state.releves[index].genus = newReleve.genus
           }    
 
-          axios.post('/modifyObservation', state.releves[index])
+          axios.post('http://localhost:8000/modifyObservation', state.releves[index])
         },
         addMultiple(state, observations) {
           for (var observation of observations) {
@@ -149,6 +156,8 @@ export default {
           let index = state.releves.findIndex(releve => releve._id == currentReleve._id)
           if (index != -1) {
             state.releves[index].validated = true
+            axios.post('http://localhost:8000/validate', {id:currentReleve._id})
+
           }
         },
         delete(state) {
@@ -169,9 +178,9 @@ export default {
         setObservation({
           commit
         }, releve) {
-          commit('add', releve)
+          //commit('add', releve)
           axios.defaults.withCredentials = true
-          axios.post('/observation', {
+          axios.post('http://localhost:8000/observation', {
             releve: releve
           }).then(function (response) {
             if (response.data.observation) {
@@ -234,7 +243,7 @@ export default {
         loadObservation({
           commit
         }) {
-          axios.get('/observation')
+          axios.get('http://localhost:8000/observation')
             .then(function (res) {
               commit('releve/addMultiple', res.data, {
                 root: true
@@ -272,9 +281,10 @@ export default {
               }
               axios.defaults.withCredentials = true
               commit('set', userObject)
-              return axios.get('/login', {
+              return axios.get('http://localhost:8000/login', {
                 params: {
-                  id: user.getAttribute('id')
+                  id: user.getAttribute('id'),
+                  name: user.getAttribute('display_name'),
                 }
               }).then(function () {
                 dispatch('loadObservation')
