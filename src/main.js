@@ -23,7 +23,7 @@ import CustomToolbar from './partials/CustomToolbar.vue';
 import AppNavigator from './AppNavigator.vue';
 import L from 'leaflet';
 delete L.Icon.Default.prototype._getIconUrl;
-
+Vue.config.devtools = true
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
   iconUrl: require('leaflet/dist/images/marker-icon.png'),
