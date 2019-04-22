@@ -61,7 +61,15 @@ export default {
       }
       else{
         this.$store.commit('releve/add',data)
+      }}.bind(this))
+    channel.bind("modify_obs", function(data) {
+      if(data.modifierId==this.userID){
+        return
       }
+      else{
+        this.$store.commit('releve/modify',data)
+      }
+
   }.bind(this));
   },
   methods: {

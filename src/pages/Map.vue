@@ -247,7 +247,7 @@ export default {
         extends: Releve,
         data() {
           return {
-            releve: releve
+            id: releve._id
           };
         }
       });

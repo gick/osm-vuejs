@@ -145,9 +145,7 @@ export default {
 
           let index = state.releves.findIndex(releve => releve._id == currentReleve._id)
           if (index != -1) {
-            state.releves[index].validated = true
-            axios.post('/api/validate', {id:currentReleve._id})
-
+            state.releves.splice(index,1,currentReleve)
           }
         },
         delete(state) {
@@ -161,6 +159,14 @@ export default {
         }
       },
       actions: {
+        validateObservation({commit},releve){
+          axios.defaults.withCredentials = true
+          axios.post('/api/validate', {releve:releve})
+          .then(function(response){
+            commit('validate',response.data.observation)
+          })
+
+        },
         modifyObservation({commit},newReleve){
           axios.defaults.withCredentials = true
 

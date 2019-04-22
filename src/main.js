@@ -38,10 +38,16 @@ Vue.use(new VueSocketIO({
       mutationPrefix: 'SOCKET_'
   } ,
 }))
+window.location.hash = "#albiziapp";
 
 Vue.use(Vuex);
 Vue.use(VueOnsen);
 Vue.use(BootstrapVue)
+window.addEventListener("hashchange", function(){
+  console.log("Hash changed to", window.location.hash);
+  window.location.hash = "#albiziapp";
+  // .... Do your thing here...
+});
 
 // Register components globally
 // Object.values(OnsenComponents).forEach(component => Vue.component(component.name, component)); // For ESM

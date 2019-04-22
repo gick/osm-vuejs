@@ -30,6 +30,8 @@ export default {
     },
     logout(){
       this.$store.dispatch('user/logout')
+      this.$store.commit('splitter/toggle');
+
     }
 
   },
@@ -41,13 +43,19 @@ export default {
           icon: 'ion-home'
         },
         {
+          title: 'Mon arboretum',
+          icon: 'ion-leaf'
+        },
+        {
           title: 'Mes relevés',
           icon: 'ion-edit'
         },
         {
-          title: 'Mon arboretum',
-          icon: 'ion-leaf'
+          title: "Folia",
+          icon: "ion-search",
         }
+
+
       ]
     };
   }
