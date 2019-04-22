@@ -38,14 +38,15 @@ Vue.use(new VueSocketIO({
       mutationPrefix: 'SOCKET_'
   } ,
 }))
-window.location.hash = "#albiziapp";
+window.location.hash = "#de";
 
 Vue.use(Vuex);
 Vue.use(VueOnsen);
 Vue.use(BootstrapVue)
 window.addEventListener("hashchange", function(){
   console.log("Hash changed to", window.location.hash);
-  window.location.hash = "#albiziapp";
+    window.location.hash = "#albiziapp"
+  
   // .... Do your thing here...
 });
 
