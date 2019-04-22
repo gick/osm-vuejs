@@ -179,7 +179,6 @@ export default {
         setObservation({
           commit
         }, releve) {
-          commit('add', releve)
           axios.defaults.withCredentials = true
           axios.post('/api/observation', {
             releve
