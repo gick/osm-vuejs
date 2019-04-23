@@ -88,6 +88,7 @@ import {
 } from "vue2-leaflet";
 import SimplePage from "./SimplePage.vue";
 import Releve from "./Releve.vue";
+import ReleveOSM from "./ReleveOSM.vue";
 
 export default {
   components: {
@@ -239,7 +240,7 @@ export default {
       let newReleve = {};
       newReleve.specie = releve.tags.species;
       this.$store.commit("navigator/push", {
-        extends: Releve,
+        extends: ReleveOSM,
         data() {
           return {
             releve: newReleve
