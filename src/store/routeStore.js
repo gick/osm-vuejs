@@ -181,7 +181,6 @@ export default {
         }, releve) {
 
          // commit('add', releve)
-          081810412842c8715d9e276d0861c02b505c4a99
           axios.defaults.withCredentials = true
           axios.post('/api/observation', {
             releve
