@@ -1,80 +1,35 @@
 {
 	"missions" : [
 		{"mecaniques" : [
-			{ "nom" : "chronometre" , "temps" : 3600},
-			{ "nom" : "question" , "score" : 10},
-			{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+			{ "nom" : "score" ,
+				"actions" : [
+					{"code" : "O", "nbPoint" : 5},
+					{"code" : "CG", "nbPoint" : 7},
+					{"code" : "CE", "nbPoint" : 7},
+					{"code" : "CN", "nbPoint" : 7},
+					{"code" : "V", "nbPoint" : 3}
+				]		
+			},
+			{ "nom" : "trophee", "trophees" : [
+				{"titre" : "Une mission terminée", "image" : "./path",
+					"condition" : {"nbMissionReussie" : 1}
+				},
+				{"titre" : "Deux missions terminées", "image" : "./path",
+					"condition" : {"nbMissionReussie" : 2}
+				},
+				{"titre" : "Trois missions terminées", "image" : "./path",
+					"condition" : {"nbMissionReussie" : 3}
+				}
+			]}
 		],
 		"activites" : [
 			{"typeActivite" : "A1",
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-					{ "nom" : "question" , "score" : 10},
-					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
-			],
-			"conditionDeFin" : [
-				{"nbArbre" : 1},
-				{"tempsLimite" : 120}
-			]
-			},
-			{"typeActivite" : "A2",
-				"mecaniques" : [
-					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-					{ "nom" : "question" , "score" : 10},
-					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
-			],
-			"conditionDeFin" : [
-				{"nbArbre" : 2},
-				{"tempsLimite" : 120}
-			],
-			"espece" : "Acer Negundo"
-			},
-			{"typeActivite" : "A3",
-				"mecaniques" : [
-					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-					{ "nom" : "question" , "score" : 10},
-					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
-			],
-			"conditionDeFin" : [
-				{"nbArbre" : 3},
-				{"tempsLimite" : 120}
-			],
-			"genre" : "Alnus"
-			},
-			{"typeActivite" : "A4",
-				"mecaniques" : [
-					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-					{ "nom" : "question" , "score" : 10},
-					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
-			],
-			"conditionDeFin" : [
-				{"nbArbre" : 5},
-				{"tempsLimite" : 120}
-			]
-			},
-			{"typeActivite" : "A5", "mecaniques" : [
-				{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-				{ "nom" : "question" , "score" : 10},
-				{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
-			],
-			"conditionDeFin" : [
-				{"nbArbre" : 2},
-				{"tempsLimite" : 120}
-			],
-			"espece" : "Acer Opalus"}
-		]},
-
-		{"mecaniques" : [
-			{ "nom" : "chronometre" , "temps" : 3600},
-			{ "nom" : "question" , "score" : 10},
-			{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
-		],
-		"activites" : [
-			{"typeActivite" : "B1",
-				"mecaniques" : [
-					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-					{ "nom" : "question" , "score" : 10},
-					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+					{ "nom" : "score" , "nbPoint" : 10},
+					{ "nom" : "trophee", "titre" : "Mission 1 faite", "image" : "./path", 
+						"condition" : {"statutMission" : "done"}	
+					}
 			],
 			"conditionDeFin" : [
 				{"nbArbre" : 1},
@@ -84,72 +39,10 @@
 			{"typeActivite" : "B2",
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-					{ "nom" : "question" , "score" : 10},
-					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
-			],
-			"conditionDeFin" : [
-				{"nbArbre" : 2},
-				{"tempsLimite" : 120}
-			],
-			"espece" : "Acer Negundo"
-			},
-			{"typeActivite" : "B3",
-				"mecaniques" : [
-					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-					{ "nom" : "question" , "score" : 10},
-					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
-			],
-			"conditionDeFin" : [
-				{"nbArbre" : 2},
-				{"tempsLimite" : 120}
-			],
-			"genre" : "Alnus"
-			},
-			{"typeActivite" : "B4",
-				"mecaniques" : [
-					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-					{ "nom" : "question" , "score" : 10},
-					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
-			],
-			"conditionDeFin" : [
-				{"nbArbre" : 2},
-				{"tempsLimite" : 120}
-			]
-			},
-			{"typeActivite" : "B5", "mecaniques" : [
-				{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-				{ "nom" : "question" , "score" : 10},
-				{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
-			],
-			"conditionDeFin" : [
-				{"nbArbre" : 2},
-				{"tempsLimite" : 120}
-			],
-			"espece" : "Acer Opalus"}
-		]},
-
-		{"mecaniques" : [
-			{ "nom" : "chronometre" , "temps" : 3600},
-			{ "nom" : "question" , "score" : 10},
-			{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
-		],
-		"activites" : [
-			{"typeActivite" : "C1",
-				"mecaniques" : [
-					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-					{ "nom" : "question" , "score" : 10},
-					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
-			],
-			"conditionDeFin" : [
-				{"nbArbre" : 1},
-				{"tempsLimite" : 120}
-			]
-			},
-			{"typeActivite" : "C2",
-				"mecaniques" : [
-					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-					{ "nom" : "question" , "score" : 10},
-					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+					{ "nom" : "score" , "nbPoint" : 12},
+					{ "nom" : "trophee", "titre" : "Mission 2 faite", "image" : "./path", 
+						"condition" : {"statutMission" : "done"}	
+					}
 			],
 			"conditionDeFin" : [
 				{"nbArbre" : 2},
@@ -160,36 +53,83 @@
 			{"typeActivite" : "C3",
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-					{ "nom" : "question" , "score" : 10},
-					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+					{ "nom" : "score" , "nbPoint" : 12},
+					{ "nom" : "trophee", "titre" : "Mission 1 faite", "image" : "./path", 
+						"condition" : {"statutMission" : "done"}	
+					}
 			],
 			"conditionDeFin" : [
-				{"nbArbre" : 2},
+				{"nbArbre" : 3},
 				{"tempsLimite" : 120}
 			],
 			"genre" : "Alnus"
+			}
+		]},
+
+		{"mecaniques" : [
+			{ "nom" : "score" ,
+				"actions" : [
+					{"code" : "O", "nbPoint" : 5},
+					{"code" : "CG", "nbPoint" : 7},
+					{"code" : "CE", "nbPoint" : 7},
+					{"code" : "CN", "nbPoint" : 7},
+					{"code" : "V", "nbPoint" : 3}
+				]		
 			},
-			{"typeActivite" : "C4",
+			{ "nom" : "trophee", "trophees" : [
+				{"titre" : "Une mission terminée", "image" : "./path",
+					"condition" : {"nbMissionReussie" : 1}
+				},
+				{"titre" : "Deux missions terminées", "image" : "./path",
+					"condition" : {"nbMissionReussie" : 2}
+				},
+				{"titre" : "Trois missions terminées", "image" : "./path",
+					"condition" : {"nbMissionReussie" : 3}
+				}
+			]}
+		],
+		"activites" : [
+			{"typeActivite" : "A4",
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-					{ "nom" : "question" , "score" : 10},
-					{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+					{ "nom" : "score" , "nbPoint" : 10},
+					{ "nom" : "trophee", "titre" : "Mission 1 faite", "image" : "./path", 
+						"condition" : {"statutMission" : "done"}	
+					}
 			],
 			"conditionDeFin" : [
 				{"nbArbre" : 2},
 				{"tempsLimite" : 120}
 			]
 			},
-			{"typeActivite" : "C5", "mecaniques" : [
-				{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-				{ "nom" : "question" , "score" : 10},
-				{ "nom" : "trophee", "titre" : "Botaniste", "image" : "./path"}
+			{"typeActivite" : "B1",
+				"mecaniques" : [
+					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
+					{ "nom" : "score" , "nbPoint" : 12},
+					{ "nom" : "trophee", "titre" : "Mission 2 faite", "image" : "./path", 
+						"condition" : {"statutMission" : "done"}	
+					}
+			],
+			"conditionDeFin" : [
+				{"nbArbre" : 1},
+				{"tempsLimite" : 120}
+			],
+			"espece" : "Acer Negundo"
+			},
+			{"typeActivite" : "C2",
+				"mecaniques" : [
+					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
+					{ "nom" : "score" , "nbPoint" : 12},
+					{ "nom" : "trophee", "titre" : "Mission 1 faite", "image" : "./path", 
+						"condition" : {"statutMission" : "done"}	
+					}
 			],
 			"conditionDeFin" : [
 				{"nbArbre" : 2},
 				{"tempsLimite" : 120}
 			],
-			"espece" : "Acer Opalus"}
+			"espece" : "Acer Negundo"
+			}
 		]}
 	]
 }

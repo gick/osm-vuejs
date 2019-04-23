@@ -170,7 +170,7 @@ export default {
         setObservation({
           commit
         }, releve) {
-          commit('add', releve)
+         // commit('add', releve)
           axios.defaults.withCredentials = true
           axios.post('/api/observation', {
             releve
@@ -314,6 +314,7 @@ function updateCompletion(state, operation, specie) {
   if ((typeAction == 'A' && operation == 'add') ||
       (typeAction == 'B' && operation == 'modify/validate') ||
       (typeAction == 'C' && operation == 'photo' )) {
+    
 
     if (!state.differentSpecie.includes(specie)) {
       state.differentSpecie.push(specie)
