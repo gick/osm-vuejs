@@ -14,13 +14,31 @@
         </div>
         <div class="center">
           <autocomplete
-            :source="source"
+            ref="species"
+            :source="specieSource"
             inputClass="inputClass"
-            results-display="name"
+            results-display="Species"
+            results-value="Numbers"
             placeholder="Nom de l'espèce"
             v-model="currentSpecie"
             :initial-display="releve.specie"
-            @selected="specieSelected"
+            @selected="specieSelected">
+          </autocomplete>
+        </div>
+      </v-ons-list-item>
+      <v-ons-list-item>
+        <div class="left">
+          <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>
+        </div>
+        <div class="center">
+          <autocomplete
+            ref="genus"
+            :source="genusList"
+            inputClass="inputClass"
+            results-display="name"
+            placeholder="Nom du genre"
+            :initial-display="releve.genus"
+            @selected="genusSelected"
           ></autocomplete>
         </div>
       </v-ons-list-item>
@@ -30,23 +48,19 @@
         </div>
         <div class="center">
           <autocomplete
-            :source="genusList"
+            ref="common"
+            :source="specieSource"
             inputClass="inputClass"
-            results-display="name"
-            placeholder="Nom du genre"
-            v-model="currentGenus"
-            :initial-display="releve.genus"
-            @selected="genusSelected"
+            results-display="verna1"
+            placeholder="Nom commun"
+            results-value="Numbers"
+            v-model="common"
+            :initial-display="releve.common"
+            @selected="commonSelected"
           ></autocomplete>
         </div>
       </v-ons-list-item>
 
-      <v-ons-list-item>
-        <div class="left">
-          <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>
-        </div>
-        <v-ons-input placeholder="Nom commun" float v-model="releve.common"></v-ons-input>
-      </v-ons-list-item>
       <v-ons-list-item>
         <picture-input
           ref="pictureInput"
@@ -85,7 +99,7 @@ import Identification from "./Identification.vue";
 import imageCompression from "browser-image-compression";
 import genusList from "../js/genus.js";
 import speciesList from "../js/species.js";
-
+import specieVernac from "../js/species_vernac.js"
 export default {
   data() {
     return {
@@ -94,6 +108,7 @@ export default {
       common: "",
       source: speciesList,
       genusList:genusList,
+      specieSource:specieVernac,
       genus: "",
       specie: "",
       currentSpecie: 0,
@@ -115,8 +130,22 @@ export default {
     }
   },
   methods: {
+    noResult(e){
+      console.log(e)
+    },
+    commonSelected(common){
+      this.releve.common=common.display
+      this.releve.specie=common.selectedObject.Species
+      this.releve.genus=common.selectedObject.genus
+      this.$refs.species._data.display=this.releve.specie
+      this.$refs.genus._data.display=this.releve.genus
+    },
     specieSelected(specie) {
       this.releve.specie = specie.display;
+      this.releve.common=specie.selectedObject.verna1
+            this.releve.genus=specie.selectedObject.genus
+      this.$refs.common._data.display=this.releve.common
+      this.$refs.genus._data.display=this.releve.genus
     },
     genusSelected(genus) {
       this.releve.genus = genus.display;

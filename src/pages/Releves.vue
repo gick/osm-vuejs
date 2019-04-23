@@ -10,7 +10,8 @@
       >
         <div class="center">
           <span class="list-item__title">Auteur : {{releve.authorName}}</span>
-          <span class="list-item__subtitle">{{releve.specie}} {{releve.common}}</span>
+          <span class="list-item__subtitle">{{releve.specie}}</span>
+          <span class="list-item__subtitle">{{releve.common}}</span>
         </div>
       </v-ons-list-item>
     </v-ons-list>
