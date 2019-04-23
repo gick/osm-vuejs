@@ -1,7 +1,6 @@
 <template>
   <v-ons-page v-on:show="mapShow">
     <div>
-
       <l-map
         ref="map"
         :zoom="zoom"
@@ -24,9 +23,7 @@
           :color="userID===circle.osmId ? 'red':'lime'"
         />
 
-      <l-marker
-        :lat-lng.sync="position">
-      </l-marker>
+        <l-marker :lat-lng.sync="position"></l-marker>
 
         <l-circle
           v-for="(circle,index) in osmData"
@@ -38,13 +35,12 @@
           :color="'yellow'"
         />
 
-
         <l-tile-layer :url="url" :options="mapOptions" :attribution="attribution"/>
       </l-map>
       <v-ons-card>
-      <v-ons-button @click="centerMap">Centrer carte</v-ons-button>
+        <v-ons-button @click="centerMap">Centrer carte</v-ons-button>
       </v-ons-card>
-     <v-ons-dialog class="lorem-dialog" :visible.sync="missionOver">
+      <v-ons-dialog class="lorem-dialog" :visible.sync="missionOver">
         <!-- Optional page. This could contain a Navigator as well. -->
         <v-ons-page>
           <v-ons-toolbar>
@@ -63,13 +59,14 @@
           <v-ons-toolbar>
             <div class="center">Activité terminée</div>
           </v-ons-toolbar>
-          <p style="text-align: center">Vous avez terminé votre activité, place à l'activité suivante</p>
+          <p
+            style="text-align: center"
+          >Vous avez terminé votre activité, place à l'activité suivante</p>
           <p style="text-align: center">
             <v-ons-button modifier="light" @click="closeDialog">OK</v-ons-button>
           </p>
         </v-ons-page>
       </v-ons-dialog>
-
     </div>
   </v-ons-page>
 </template>
@@ -80,7 +77,6 @@
 </style>
 
 <script>
-
 import {
   LMap,
   LTileLayer,
@@ -104,7 +100,7 @@ export default {
   },
   data() {
     return {
-      missionOver:false,
+      missionOver: false,
       activityOver: false,
       newCircle: null,
       osmCircles: [],
@@ -122,52 +118,52 @@ export default {
       showParagraph: false,
       mapOptions: {
         zoomSnap: 0.5,
-        minZoom:15,
-        maxZoom:19  
-      }
+        minZoom: 15,
+        maxZoom: 19
+      },
+      positionID: 0
     };
   },
   computed: {
-    userID(){
-      return this.$store.state.user.id
-    }
-    ,
+    userID() {
+      return this.$store.state.user.id;
+    },
     observations() {
       return this.$store.state.releve.releves;
     },
-    osmData(){
-      return this.$store.state.osmData.data
+    osmData() {
+      return this.$store.state.osmData.data;
     },
-    currentMission(){
-      return this.$store.state.releve.mission
+    currentMission() {
+      return this.$store.state.releve.mission;
     },
     activiteEnCours() {
-      return this.$store.state.releve.activiteEnCours
+      return this.$store.state.releve.activiteEnCours;
     },
     indexActivite() {
-      return this.$store.state.releve.indexActivite
+      return this.$store.state.releve.indexActivite;
     },
     nbActivite() {
-      return this.$store.state.releve.mission.activites.length
+      return this.$store.state.releve.mission.activites.length;
     }
   },
 
-  watch:{
-    'activiteEnCours': {
-      handler : function(newMision, oldMission) {
+  watch: {
+    activiteEnCours: {
+      handler: function(newMision, oldMission) {
         if (this.indexActivite + 1 == this.nbActivite) {
           this.missionOver = true;
         } else {
-          this.activityOver = true
-        }   
+          this.activityOver = true;
+        }
       },
-      deep : true
+      deep: true
     }
   },
   created() {
     this.$nextTick(() => {
       this.map = this.$refs.map.mapObject; // work as expected
-      this.map.locate({ setView: true, maxZoom: 19,zoom:19 });
+      this.map.locate({ setView: true, maxZoom: 19, zoom: 19 });
       axios.get("/trees").then(
         function(results) {
           console.log(results);
@@ -179,54 +175,70 @@ export default {
       );
     });
   },
-  mounted(){
-    this.$root.$on('changeCenter', coordinates => {
-      this.map.flyTo(coordinates)   
-      });
+  mounted() {
+    this.$root.$on("changeCenter", coordinates => {
+      this.map.flyTo(coordinates);
+    });
     let options = {
-     enableHighAccuracy: true,
+      enableHighAccuracy: true,
       timeout: 1000,
       maximumAge: 0
     };
-    navigator.geolocation.watchPosition(this.locationfound, this.locationerror, options);
-  }
-  ,
-
+    this.positionID = navigator.geolocation.watchPosition(
+      this.locationFound,
+      this.locationError,
+      options
+    );
+  },
   methods: {
-    centerMap(){
-            this.map.flyTo(this.position)   
+    centerMap() {
+      this.map.flyTo(this.position);
+    },
+    mapShow() {
+      this.map.invalidateSize();
+    },
+    getCoordinate(circle) {
+      return { lat: circle.lat, lng: circle.lon };
+    },
+    closeDialog() {
+      this.missionOver = false;
+      this.activityOver = false;
+      this.$store.commit("tabbar/set", 1);
+    },
+    locationerror(){
 
     },
-    mapShow(){
-            this.map.invalidateSize()
+    locationError(e) {
+      console.log(e)
+      navigator.geolocation.clearWatch(this.positionID);
+      let options = {
+        enableHighAccuracy: true,
+        timeout: 1000,
+        maximumAge: 0
+      };
+      this.positionID = navigator.geolocation.watchPosition(
+        this.locationFound,
+        this.locationError,
+        options
+      );
     },
-    getCoordinate(circle){
-      return {lat:circle.lat,lng:circle.lon}
-    },
-    closeDialog(){
-      this.missionOver = false
-      this.activityOver = false
-      this.$store.commit('tabbar/set',1)
-    },
-    locationerror(e) {
-      //alert(e.message);
-    },
-    locationfound(e) {
-    var radius = e.accuracy / 2;
-    this.position=[e.coords.latitude,e.coords.longitude]
-   /* L.marker(e.latlng).addTo(this.map)
+    locationfound(e) {},
+    locationFound(e) {
+      console.log(e)
+      this.position = [e.coords.latitude, e.coords.longitude];
+      /* L.marker(e.latlng).addTo(this.map)
         .bindPopup("You are within " + radius + " meters from this point").openPopup();
 
     L.circle(e.latlng, radius).addTo(this.map);*/
     },
-    osmClick(index){
-      let releve=this.osmData[index]
-            this.circleClicked = true;
+    osmClick(index) {
+      let releve = this.osmData[index];
+      this.circleClicked = true;
 
-      console.log(releve)
-      let newReleve={}
-      newReleve.specie=releve.tags.species
-        this.$store.commit("navigator/push", {
+      console.log(releve);
+      let newReleve = {};
+      newReleve.specie = releve.tags.species;
+      this.$store.commit("navigator/push", {
         extends: Releve,
         data() {
           return {
@@ -237,17 +249,14 @@ export default {
       this.$nextTick(() => {
         this.circleClicked = false;
       });
-
-    }
-    ,
+    },
     circleClick(releve) {
-
       this.circleClicked = true;
       this.$store.commit("navigator/push", {
         extends: Releve,
         data() {
           return {
-            releve: releve
+            id: releve._id
           };
         }
       });
@@ -308,8 +317,10 @@ export default {
       this.currentZoom = zoom;
     },
     centerUpdate(center) {
-      this.$store.dispatch('osmData/getOSMData',{boundary:this.map.getBounds()})
-  },
+      this.$store.dispatch("osmData/getOSMData", {
+        boundary: this.map.getBounds()
+      });
+    },
     showLongText() {
       this.showParagraph = !this.showParagraph;
     },

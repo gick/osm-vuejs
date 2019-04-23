@@ -13,6 +13,7 @@
           {{ item.title }}
         </div>
       </v-ons-list-item>
+      <v-ons-list-item @click="logout">Logout</v-ons-list-item>
     </v-ons-list>
   </v-ons-page>
 </template>
@@ -26,7 +27,13 @@ export default {
     },
     loadLink(url) {
       window.open(url, '_blank');
+    },
+    logout(){
+      this.$store.dispatch('user/logout')
+      this.$store.commit('splitter/toggle');
+
     }
+
   },
   data() {
     return {
@@ -36,13 +43,19 @@ export default {
           icon: 'ion-home'
         },
         {
+          title: 'Mon arboretum',
+          icon: 'ion-leaf'
+        },
+        {
           title: 'Mes relevés',
           icon: 'ion-edit'
         },
         {
-          title: 'Mon arboretum',
-          icon: 'ion-leaf'
+          title: "Folia",
+          icon: "ion-search",
         }
+
+
       ]
     };
   }

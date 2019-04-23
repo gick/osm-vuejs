@@ -23,7 +23,7 @@ import CustomToolbar from './partials/CustomToolbar.vue';
 import AppNavigator from './AppNavigator.vue';
 import L from 'leaflet';
 delete L.Icon.Default.prototype._getIconUrl;
-
+Vue.config.devtools = true
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
   iconUrl: require('leaflet/dist/images/marker-icon.png'),
@@ -38,10 +38,17 @@ Vue.use(new VueSocketIO({
       mutationPrefix: 'SOCKET_'
   } ,
 }))
+window.location.hash = "#de";
 
 Vue.use(Vuex);
 Vue.use(VueOnsen);
 Vue.use(BootstrapVue)
+window.addEventListener("hashchange", function(){
+  console.log("Hash changed to", window.location.hash);
+    window.location.hash = "#albiziapp"
+  
+  // .... Do your thing here...
+});
 
 // Register components globally
 // Object.values(OnsenComponents).forEach(component => Vue.component(component.name, component)); // For ESM

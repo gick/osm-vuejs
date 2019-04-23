@@ -126,8 +126,11 @@ export default {
         modify(state, newReleve) {
           let index = state.releves.findIndex(releve => releve._id == newReleve._id)
           if (index != -1) {
-            updateCompletion(state, "modify/validate", state.releves[index].specie)
-            state.releves[index]=newReleve
+           // state.releves[index].test='truc'
+            state.releves.splice(index,1,newReleve)
+            state.releves[index].prev=newReleve.prev
+           // updateCompletion(state, "modify/validate", state.releves[index].specie)
+
           }    
 
         },
@@ -142,9 +145,7 @@ export default {
 
           let index = state.releves.findIndex(releve => releve._id == currentReleve._id)
           if (index != -1) {
-            state.releves[index].validated = true
-            axios.post('/api/validate', {id:currentReleve._id})
-
+            state.releves.splice(index,1,currentReleve)
           }
         },
         delete(state) {
@@ -158,6 +159,14 @@ export default {
         }
       },
       actions: {
+        validateObservation({commit},releve){
+          axios.defaults.withCredentials = true
+          axios.post('/api/validate', {releve:releve})
+          .then(function(response){
+            commit('validate',response.data.observation)
+          })
+
+        },
         modifyObservation({commit},newReleve){
           axios.defaults.withCredentials = true
 
@@ -170,7 +179,9 @@ export default {
         setObservation({
           commit
         }, releve) {
+
          // commit('add', releve)
+          081810412842c8715d9e276d0861c02b505c4a99
           axios.defaults.withCredentials = true
           axios.post('/api/observation', {
             releve

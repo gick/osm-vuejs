@@ -8,7 +8,7 @@
     <v-ons-list>
       <v-ons-list-header v-if="!modify">Nouveau relevé</v-ons-list-header>
       <v-ons-list-header v-if="modify">Modifier un relevé</v-ons-list-header>
-                  <v-ons-list-item>
+      <v-ons-list-item>
         <div class="left">
           <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>
         </div>
@@ -24,7 +24,22 @@
           ></autocomplete>
         </div>
       </v-ons-list-item>
-
+      <v-ons-list-item>
+        <div class="left">
+          <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>
+        </div>
+        <div class="center">
+          <autocomplete
+            :source="genusList"
+            inputClass="inputClass"
+            results-display="name"
+            placeholder="Nom du genre"
+            v-model="currentGenus"
+            :initial-display="releve.genus"
+            @selected="genusSelected"
+          ></autocomplete>
+        </div>
+      </v-ons-list-item>
 
       <v-ons-list-item>
         <div class="left">
@@ -51,17 +66,16 @@
       }"
         ></picture-input>
       </v-ons-list-item>
-
     </v-ons-list>
     <section style="margin: 16px">
-      <v-ons-button  @click="complete" style="margin: 6px 0">Envoyer</v-ons-button>
+      <v-ons-button @click="complete" style="margin: 6px 0">Envoyer</v-ons-button>
       <v-ons-button modifier="outline" @click="cancel" style="margin: 6px 0">Annuler</v-ons-button>
     </section>
   </v-ons-page>
 </template>
 <style>
-#app .autocomplete__results{
- position:relative!important;
+#app .autocomplete__results {
+  position: relative !important;
 }
 </style>
 <script>
@@ -75,14 +89,15 @@ import speciesList from "../js/species.js";
 export default {
   data() {
     return {
-      releve:{},
+      releve: {},
       image: null,
       common: "",
       source: speciesList,
+      genusList:genusList,
       genus: "",
-      specie:'',
-      currentSpecie:0,
-      modify:false
+      specie: "",
+      currentSpecie: 0,
+      modify: false
     };
   },
   components: {
@@ -100,9 +115,13 @@ export default {
     }
   },
   methods: {
-    specieSelected(specie){
-      this.releve.specie=specie.display
+    specieSelected(specie) {
+      this.releve.specie = specie.display;
     },
+    genusSelected(genus) {
+      this.releve.genus = genus.display;
+    },
+
     identify() {
       this.$store.commit("navigator/push", {
         extends: Identification,
@@ -150,21 +169,19 @@ export default {
         });
     },
     complete() {
-      let releve=this.releve
+      let releve = this.releve;
       if (!this.modify) {
-        this.releve.coordinates=this.coordinates
-        this.$store.dispatch("releve/setObservation", 
-          releve
-        );
+        this.releve.coordinates = this.coordinates;
+        this.$store.dispatch("releve/setObservation", releve);
         this.$store.commit("navigator/pop");
         if (this.image != null) {
-          this.$store.commit("releve/photoAjoutee", this.specie)
+          this.$store.commit("releve/photoAjoutee", this.specie);
         }
       } else {
         this.$store.dispatch("releve/modifyObservation", releve);
         this.$store.commit("navigator/pop");
         if (this.image != null && this.imageHasChange) {
-          this.$store.commit("releve/photoAjoutee", this.specie)
+          this.$store.commit("releve/photoAjoutee", this.specie);
         }
       }
     },
