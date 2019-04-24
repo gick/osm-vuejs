@@ -143,7 +143,7 @@ export default {
     specieSelected(specie) {
       this.releve.specie = specie.display;
       this.releve.common=specie.selectedObject.verna1
-            this.releve.genus=specie.selectedObject.genus
+      this.releve.genus=specie.selectedObject.genus
       this.$refs.common._data.display=this.releve.common
       this.$refs.genus._data.display=this.releve.genus
     },

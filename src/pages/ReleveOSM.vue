@@ -20,7 +20,6 @@
         <section style="margin: 16px">
           <v-ons-button disabled @click="modify" style="margin: 6px 0">Modifier</v-ons-button>
           <v-ons-button disabled @click="validate" style="margin: 6px 0">Valider</v-ons-button>
-          <v-ons-button v-if="visualize" @click="visualizeReleve" style="margin: 6px 0">Voir</v-ons-button>
         </section>
       </div>
     </ons-card>

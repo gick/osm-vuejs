@@ -20,7 +20,26 @@
           v-bind:key="index+osmCircles.length"
           :lat-lng="circle.coordinates"
           :radius="6"
-          :color="userID===circle.osmId ? 'red':'lime'"
+          :color="getColor(circle)"
+        />
+        <l-circle
+          @click="identificationClick(circle)"
+          className="pulse"
+          v-for="(circle,index) in identificationsTodo"
+          custom="10"
+          v-bind:key="index+'identification'"
+          :lat-lng="circle.coordinates"
+          :radius="6"
+          color="blue"
+        />
+        <l-circle
+          @click="identificationClick(circle)"
+          v-for="(circle,index) in identificationsDone"
+          custom="10"
+          v-bind:key="index+'identificationDone'"
+          :lat-lng="circle.coordinates"
+          :radius="6"
+          color="blue"
         />
 
         <l-marker :lat-lng.sync="position"></l-marker>
@@ -74,12 +93,33 @@
 .lorem-dialog .dialog-container {
   height: 200px;
 }
+.null{
+  display:none;
+}
+.pulse {
+  animation: pulsate 1s ease-out;
+  -webkit-animation: pulsate 1s ease-out;
+  -webkit-animation-iteration-count: infinite;
+}
+
+@keyframes pulsate {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
 </style>
 
 <script>
 import {
   LMap,
   LTileLayer,
+  LCircleMarker,
   LCircle,
   LMarker,
   LPopup,
@@ -89,6 +129,7 @@ import {
 import SimplePage from "./SimplePage.vue";
 import Releve from "./Releve.vue";
 import ReleveOSM from "./ReleveOSM.vue";
+import ReleveIdentification from "./ReleveIdentification.vue";
 
 export default {
   components: {
@@ -130,8 +171,18 @@ export default {
       return this.$store.state.user.id;
     },
     observations() {
-      return this.$store.state.releve.releves;
+      return this.$store.state.releve.releves.filter(value=>!value.identification);
     },
+    identifications(){
+      return this.$store.state.releve.releves.filter(value=>value.identification);
+    },
+    identificationsTodo(){
+      return this.identifications.filter(value=>!value.identificationValue.success);
+    },
+    identificationsDone(){
+      return this.identifications.filter(value=>value.identificationValue.success);
+    }
+    ,
     osmData() {
       return this.$store.state.osmData.data;
     },
@@ -182,7 +233,7 @@ export default {
     });
     let options = {
       enableHighAccuracy: true,
-      timeout: 1000,
+      timeout: 10000,
       maximumAge: 0
     };
     this.positionID = navigator.geolocation.watchPosition(
@@ -192,6 +243,12 @@ export default {
     );
   },
   methods: {
+    getColor(releve) {
+      if (releve.identification) {
+        return "blue";
+      }
+      return this.userID === releve.osmId ? "red" : "lime";
+    },
     centerMap() {
       this.map.flyTo(this.position);
     },
@@ -206,15 +263,13 @@ export default {
       this.activityOver = false;
       this.$store.commit("tabbar/set", 1);
     },
-    locationerror(){
-
-    },
+    locationerror() {},
     locationError(e) {
-      console.log(e)
+      console.log(e);
       navigator.geolocation.clearWatch(this.positionID);
       let options = {
         enableHighAccuracy: true,
-        timeout: 1000,
+        timeout: 10000,
         maximumAge: 0
       };
       this.positionID = navigator.geolocation.watchPosition(
@@ -225,7 +280,7 @@ export default {
     },
     locationfound(e) {},
     locationFound(e) {
-      console.log(e)
+      console.log(e);
       this.position = [e.coords.latitude, e.coords.longitude];
       /* L.marker(e.latlng).addTo(this.map)
         .bindPopup("You are within " + radius + " meters from this point").openPopup();
@@ -253,26 +308,35 @@ export default {
     },
     circleClick(releve) {
       this.circleClicked = true;
-      this.$store.commit("navigator/push", {
-        extends: Releve,
-        data() {
-          return {
-            id: releve._id
-          };
-        }
-      });
+        this.$store.commit("navigator/push", {
+          extends: Releve,
+          data() {
+            return {
+              id: releve._id
+            };
+          }
+        });
+      
       this.$nextTick(() => {
         this.circleClicked = false;
       });
-
-      // this.$ons.notification
-      //   .alert("Un releve est déja présent ici!")
-      //   .then(response => {
-      //     this.$nextTick(() => {
-      //       this.circleClicked = false;
-      //     });
-      //   });
     },
+    identificationClick(releve){
+        this.circleClicked = true;
+        this.$store.commit("navigator/push", {
+          extends: ReleveIdentification,
+          data() {
+            return {
+              releve: releve
+            };
+          }
+        });
+      
+      this.$nextTick(() => {
+        this.circleClicked = false;
+      });
+    },
+
     onMapClick(evt) {
       console.log(evt);
       if (this.circleClicked) {

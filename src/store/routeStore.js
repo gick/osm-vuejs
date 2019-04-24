@@ -98,12 +98,17 @@ export default {
         indexActivite : 0,
         completion: 0,
         goal: 0,
-        activiteEnCours : 0
+        activiteEnCours : 0,
+        identificationMode:false,
       },
       mutations: {
         photoAjoutee(state, specie) {
           updateCompletion(state, "photo", specie)
         },
+        setIdentificationMode(state,mode){
+          state.identificationMode=mode
+        }
+        ,
         setCompletion(state, completion) {
           state.completion = completion;
         },
@@ -176,10 +181,13 @@ export default {
           })
 
         },
-        setObservation({
+        setObservation({state,
           commit
         }, releve) {
           axios.defaults.withCredentials = true
+          if(state.identificationMode){
+            releve.identificationMode=true
+          }
           axios.post('/api/observation', {
             releve
           }).then(function (response) {

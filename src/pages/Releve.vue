@@ -63,7 +63,7 @@ import SimplePage from "./SimplePage.vue";
 
 export default {
   data() {
-    return { id: "", showHistory: false };
+    return { id: "", showHistory: false,visualize:false };
   },
   computed: {
     releve() {
