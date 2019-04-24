@@ -3,11 +3,11 @@
 		{"mecaniques" : [
 			{ "nom" : "score" ,
 				"actions" : [
-					{"code" : "O", "nbPoint" : 5},
-					{"code" : "CG", "nbPoint" : 7},
-					{"code" : "CE", "nbPoint" : 7},
-					{"code" : "CN", "nbPoint" : 7},
-					{"code" : "V", "nbPoint" : 3}
+					{"code" : "IDENTIFICATION", "nbPoint" : 5},
+					{"code" : "COMPLETER_GENRE", "nbPoint" : 7},
+					{"code" : "COMPLETER_ESPECE", "nbPoint" : 7},
+					{"code" : "COMPLETER_NOM", "nbPoint" : 7},
+					{"code" : "VALIDATION", "nbPoint" : 3}
 				]		
 			},
 			{ "nom" : "trophee", "trophees" : [
@@ -23,7 +23,7 @@
 			]}
 		],
 		"activites" : [
-			{"typeActivite" : "A1",
+			{"typeActivite" : "IDENTIFIER_ARBRE",
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 10},
@@ -36,7 +36,7 @@
 				{"tempsLimite" : 120}
 			]
 			},
-			{"typeActivite" : "B2",
+			{"typeActivite" : "VERIFIER_ESPECE",
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 12},
@@ -50,7 +50,7 @@
 			],
 			"espece" : "Acer Negundo"
 			},
-			{"typeActivite" : "C3",
+			{"typeActivite" : "PHOTOGRAPHIER_GENRE",
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 12},
@@ -89,7 +89,7 @@
 			]}
 		],
 		"activites" : [
-			{"typeActivite" : "A4",
+			{"typeActivite" : "IDENTIFIER_ESPECESDIFFERENTES",
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 10},
@@ -102,7 +102,7 @@
 				{"tempsLimite" : 120}
 			]
 			},
-			{"typeActivite" : "B1",
+			{"typeActivite" : "VERIFIER_ARBRE",
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 12},
@@ -116,7 +116,7 @@
 			],
 			"espece" : "Acer Negundo"
 			},
-			{"typeActivite" : "C2",
+			{"typeActivite" : "PHOTOGRAPHIER_ESPECE",
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 12},

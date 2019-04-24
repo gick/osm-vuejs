@@ -91,6 +91,7 @@ export default {
       namespaced: true,
       state: {
         releves: [],
+        actionsTransActivite: [],
         differentSpecie: new Array(),
         differentGender: new Array(),
         mission: null,
@@ -98,7 +99,8 @@ export default {
         indexActivite : 0,
         completion: 0,
         goal: 0,
-        activiteEnCours : 0
+        chgtActivity : 0,
+        score : 0
       },
       mutations: {
         photoAjoutee(state, specie) {
@@ -119,9 +121,21 @@ export default {
         setMission(state, mission) {
           state.mission = mission
         },
+        addPoints(state, nbPoint) {
+          state.score += nbPoint
+        },
         add(state, releve) {
           state.releves.push(releve)
           updateCompletion(state, "add", releve.specie)            
+        },
+        addActionTransActivite(state, action, value){
+          state.actionsTransActivite.push({
+            key: action,  
+            value: value
+          })
+        },
+        clearActionsTransActivite(state) {
+          state.actionsTransActivite = []
         },
         modify(state, newReleve) {
           let index = state.releves.findIndex(releve => releve._id == newReleve._id)
@@ -316,14 +330,32 @@ export default {
 
 };
 
+function pointsActions(actions) {
+  for (let i = 0; i< actions.length; i++) {
+    if (actions[i] == '') {
+      
+    }
+  }
+for (let i = 0; i < this.currentMission.mecaniques.length; i++) {
+    //attribution des points
+    if (this.currentMission.mecaniques[i].nom == 'score') {
+      for (let j = 0; j < this.currentMission.mecaniques[i].actions.length; j++) {  
+        if (operation) {
+
+        }
+      }
+    }
+  }
+}
+
 function updateCompletion(state, operation, specie) {
   if (specie == null || specie == '') {
     return
   }
-  var typeAction = state.activite.typeActivite.split('')[0]
-  if ((typeAction == 'A' && operation == 'add') ||
-      (typeAction == 'B' && operation == 'modify/validate') ||
-      (typeAction == 'C' && operation == 'photo' )) {
+  var typeAction = state.activite.typeActivite.split('_')[0]
+  if ((typeAction == 'IDENTIFIER' && operation == 'add') ||
+      (typeAction == 'VERIFIER' && operation == 'modify/validate') ||
+      (typeAction == 'PHOTOGRAPHIER' && operation == 'photo' )) {
     
 
     if (!state.differentSpecie.includes(specie)) {
@@ -334,22 +366,22 @@ function updateCompletion(state, operation, specie) {
       state.differentGender.push(specie.split(' ')[0])
     }
         
-    var numAction = state.activite.typeActivite.split('')[1]
+    var numAction = state.activite.typeActivite.split('_')[1]
 
-    if (numAction == '1'){
+    if (numAction == 'ARBRE'){
       state.completion++;
-    } else if (numAction == '2' && state.activite.espece == specie){
+    } else if (numAction == 'ESPECE' && state.activite.espece == specie){
         state.completion++;
-    } else if (numAction == '3' && specie.indexOf(state.activite.genre) == 0){
+    } else if (numAction == 'GENRE' && specie.indexOf(state.activite.genre) == 0){
       state.completion++;
-    } else if (numAction == '4'){
+    } else if (numAction == 'ESPECESDIFFENRENTES'){
       state.completion = state.differentSpecie.length;
-    } else if (numAction == '5'){
+    } else if (numAction == 'GENRESDIFFERENTS'){
       state.completion = state.differentGender.length;
     } 
 
     if (state.completion == state.goal) {          
-      state.activiteEnCours++;
+      state.chgtActivity++;
     }
   }  
 }
