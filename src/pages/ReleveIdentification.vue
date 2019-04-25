@@ -143,6 +143,7 @@ export default {
       this.releve.identificationValue.genus = genus.display;
     },
     complete() {
+        this.$store.dispatch("releve/identification",this.releve)
         this.releve.identificationValue.success=true
     },
     cancel() {

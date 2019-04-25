@@ -171,10 +171,10 @@ export default {
       return this.$store.state.user.id;
     },
     observations() {
-      return this.$store.state.releve.releves.filter(value=>!value.identification);
+      return this.$store.state.releve.releves.filter(value=>!value.identificationValue.identification);
     },
     identifications(){
-      return this.$store.state.releve.releves.filter(value=>value.identification);
+      return this.$store.state.releve.releves.filter(value=>value.identificationValue.identification);
     },
     identificationsTodo(){
       return this.identifications.filter(value=>!value.identificationValue.success);

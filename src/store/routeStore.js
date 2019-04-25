@@ -100,6 +100,7 @@ export default {
         goal: 0,
         activiteEnCours : 0,
         identificationMode:false,
+        validationMode:false
       },
       mutations: {
         photoAjoutee(state, specie) {
@@ -107,6 +108,9 @@ export default {
         },
         setIdentificationMode(state,mode){
           state.identificationMode=mode
+        },
+        setValidationMode(state,mode){
+          state.validationMode=mode
         }
         ,
         setCompletion(state, completion) {
@@ -180,6 +184,10 @@ export default {
             commit('modify',response.data.observation)
           })
 
+        },
+        identification({state,commit},releve){
+          axios.defaults.withCredentials = true
+          axios.post('/api/identification', {releve:releve})
         },
         setObservation({state,
           commit
