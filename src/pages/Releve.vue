@@ -9,7 +9,7 @@
           <ons-list-item v-show="releve.authorName">Auteur du relevé : {{releve.authorName}}</ons-list-item>
           <ons-list-item v-show="releve.specie">Espèce : {{releve.specie}}</ons-list-item>
           <ons-list-item v-show="releve.genus">Genre : {{releve.genus}}</ons-list-item>
-          
+
           <ons-list-item
             v-show="releve.validation.length-1"
           >Nombre de validations : {{releve.validation.length-1}}</ons-list-item>
@@ -21,8 +21,21 @@
         <img v-show="releve.image" :src="releve.image" style="width: 100%">
 
         <section style="margin: 16px">
-          <v-ons-button @click="modify" style="margin: 6px 0">Modifier</v-ons-button>
-          <v-ons-button :disabled="releve.validated" @click="validate" style="margin: 6px 0">Valider</v-ons-button>
+          <p class="center">
+            Vous pouvez
+            <b>modifier</b> le relevé ou bien
+            <b>confirmer que les informations sont correctes</b>
+          </p>
+          <v-ons-button
+            @click="modify"
+            :disabled="releve.verificationValue.success"
+            style="margin: 6px 0"
+          >Modifier</v-ons-button>
+          <v-ons-button
+            :disabled="releve.validated || releve.verificationValue.success"
+            @click="validate"
+            style="margin: 6px 0"
+          >Information correctes</v-ons-button>
           <v-ons-button v-if="visualize" @click="visualizeReleve" style="margin: 6px 0">Voir</v-ons-button>
         </section>
         <section v-if="releve.prev.length>0" style="margin: 16px">
@@ -63,7 +76,12 @@ import SimplePage from "./SimplePage.vue";
 
 export default {
   data() {
-    return { id: "", showHistory: false,visualize:false };
+    return {
+      id: "",
+      showHistory: false,
+      visualize: false,
+      toastVisible: false
+    };
   },
   computed: {
     releve() {
@@ -78,7 +96,7 @@ export default {
     },
     validate() {
       this.$store.dispatch("releve/validateObservation", this.releve);
-      this.$store.commit("navigator/pop");
+      this.$toasted.show("Votre validation à été prise en compte", {fullWidth:true, position:"bottom-center",duration: 2000 }); // Shows from 0s to 2s
     },
     mutate() {
       this.releve.prev.push({ test: "d" });

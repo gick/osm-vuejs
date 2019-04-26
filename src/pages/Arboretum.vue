@@ -52,7 +52,10 @@ export default {
       return this.specieList.filter(v=>v==specie).length
     },
     getImageUrl(specie){
-      return './Feuilles/'+specie.replace(' ','')+'.jpg'
+      let genus = specie.split(' ')[0]
+      let species= specie.split(' ')[1]
+      let formated=species.charAt(0).toUpperCase()+species.slice(1)
+      return './Feuilles/'+genus+formated+'.jpg'
     }
   }
 };

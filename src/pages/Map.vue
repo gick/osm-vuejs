@@ -41,6 +41,25 @@
           :radius="6"
           color="blue"
         />
+        <l-circle
+          @click="circleClick(circle)"
+          className="pulse"
+          v-for="(circle,index) in verificationTodo"
+          custom="10"
+          v-bind:key="index+'verification'"
+          :lat-lng="circle.coordinates"
+          :radius="6"
+          color="lime"
+        />
+        <l-circle
+          @click="circleClick(circle)"
+          v-for="(circle,index) in verificationDone"
+          custom="10"
+          v-bind:key="index+'verificationDone'"
+          :lat-lng="circle.coordinates"
+          :radius="6"
+          color="lime"
+        />
 
         <l-marker :lat-lng.sync="position"></l-marker>
 
@@ -171,7 +190,10 @@ export default {
       return this.$store.state.user.id;
     },
     observations() {
-      return this.$store.state.releve.releves.filter(value=>!value.identificationValue.identification);
+      return this.$store.state.releve.releves
+      .filter(value=>!value.identificationValue.identification)
+      .filter(value=>!value.verificationValue.verification)
+
     },
     identifications(){
       return this.$store.state.releve.releves.filter(value=>value.identificationValue.identification);
@@ -181,7 +203,17 @@ export default {
     },
     identificationsDone(){
       return this.identifications.filter(value=>value.identificationValue.success);
+    },
+    verifications(){
+      return this.$store.state.releve.releves.filter(value=>value.verificationValue.verification);
+    },
+    verificationTodo(){
+      return this.verifications.filter(value=>!value.verificationValue.success);
+    },
+    verificationDone(){
+      return this.verifications.filter(value=>value.verificationValue.success);
     }
+
     ,
     osmData() {
       return this.$store.state.osmData.data;
