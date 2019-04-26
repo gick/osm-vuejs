@@ -177,7 +177,6 @@ export default {
             this.$store.commit('releve/addPoints', this.currentActivity.mecaniques[i].nbPoint)
           //attribution des trophées
           } else if (this.currentActivity.mecaniques[i].nom == 'trophee') {
-            alert("Nouveau trophée : " + this.currentActivity.mecaniques[i].titre)
             var trophee = new Object()
             trophee.path = this.currentActivity.mecaniques[i].image
             trophee.nom = this.currentActivity.mecaniques[i].titre
@@ -186,9 +185,28 @@ export default {
         }
       }
       if (this.indexActivite + 1 ==  this.currentMission.activites.length) {
+          for (let i = 0; i < this.currentMission.mecaniques.length; i++) {
+          //attribution des trophées
+          if (this.currentMission.mecaniques[i].nom == 'trophee') {
+            var nbActivitesReussies = 0
+            for (let j = 0 ; j < this.activites.length ; j++) {
+              if (this.activites[j].statut == 'done') {
+                nbActivitesReussies++
+              }
+            }
+            for (let j = 0 ; j < this.currentMission.mecaniques[i].trophees.length; j++) {
+              if (nbActivitesReussies >= this.currentMission.mecaniques[i].trophees[j].condition.nbMissionReussie) {
+                var trophee = new Object()
+                trophee.path = this.currentMission.mecaniques[i].trophees[j].image
+                trophee.nom = this.currentMission.mecaniques[i].trophees[j].titre
+                this.$store.commit('releve/addTrophie', trophee)
+              }
+            }
+            
+          }
+        }
         this.newMission()
       } else {
-
         this.newActivity()
       }
     },

@@ -176,7 +176,7 @@ export default {
           for (let i = 0; i< actions.length; i++) {
             if (state.actionsTransActivite.has(actions[i])) {
               var nbPoint = parseInt(state.actionsTransActivite.get(actions[i]))
-              alert("Vous avez obtenu " + nbPoint + " points bonus pour " + actions[i])
+              console.log("Vous avez obtenu " + nbPoint + " points bonus pour " + actions[i])
               state.score += nbPoint
             }
           }

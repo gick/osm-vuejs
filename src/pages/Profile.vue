@@ -8,7 +8,7 @@
     	</v-ons-card>
     	<v-card>
 	    		<v-ons-card v-for="trophie in trophies">
-	    			<img :src=trophie.path>
+	    			<img :src="'./trophees/' + trophie.path">
 	    			<br>
 	    			<center>{{ trophie.nom }}</center>
 	    		</v-ons-card>
