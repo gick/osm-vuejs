@@ -12,13 +12,6 @@
     </v-ons-card>
 
     <v-ons-card v-show="$store.state.user.id">
-      <v-ons-row>
-        <v-ons-col>{{ username }}</v-ons-col>
-        <v-ons-col style="text-align: right">Score : {{ score }}</v-ons-col>
-      </v-ons-row>    
-    </v-ons-card>
-
-    <v-ons-card v-show="$store.state.user.id">
       <div class="title">
         Mission en cours ( {{ indexActivite + 1}} / {{activites.length}} )
       </div>          
@@ -34,9 +27,9 @@
               <v-ons-col>
                 {{item.intitule}}  
                 <br>
-                <b-progress :value="completion" :max="goal" class="w-75" animated />
-                  <!-- {{ completion }} / {{ goal }}
-                </b-progress>  -->
+                <b-progress :value="completion" :max="goal" class="w-75" animated >
+                  {{ completion }} / {{ goal }}
+                </b-progress> 
               </v-ons-col>  
               <v-ons-col width="10%">
                <v-ons-icon icon="fa-angle-double-right" @click="activityEnd('skipped')" size="30px"></v-ons-icon> 
@@ -145,12 +138,6 @@ export default {
     },
     indexActivite() {
        return this.$store.state.releve.indexActivite
-    },
-    score() {
-      return this.$store.state.releve.score
-    },
-    username() {
-      return this.$store.state.user.name
     }
   },
   watch : {
@@ -191,6 +178,10 @@ export default {
           //attribution des trophées
           } else if (this.currentActivity.mecaniques[i].nom == 'trophee') {
             alert("Nouveau trophée : " + this.currentActivity.mecaniques[i].titre)
+            var trophee = new Object()
+            trophee.path = this.currentActivity.mecaniques[i].image
+            trophee.nom = this.currentActivity.mecaniques[i].titre
+            this.$store.commit('releve/addTrophie', trophee)
           }
         }
       }
@@ -250,8 +241,8 @@ export default {
         if (this.currentMission.mecaniques[i].nom == 'score') {
           for (let j = 0; j < this.currentMission.mecaniques[i].actions.length; j++) {
             var action = this.currentMission.mecaniques[i].actions[j].code
-            var value = this.currentMission.mecaniques[i].actions[j].nbPoint
-            this.$store.commit('releve/addActionTransActivite', action, value)
+            var nbPoint = this.currentMission.mecaniques[i].actions[j].nbPoint
+            this.$store.commit('releve/addActionTransActivite', action + "#" + nbPoint)
           }
         }
       }

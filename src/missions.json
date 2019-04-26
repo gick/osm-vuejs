@@ -11,13 +11,13 @@
 				]		
 			},
 			{ "nom" : "trophee", "trophees" : [
-				{"titre" : "Une mission terminée", "image" : "./path",
+				{"titre" : "Une mission terminée", "image" : "trophee1.jpg",
 					"condition" : {"nbMissionReussie" : 1}
 				},
-				{"titre" : "Deux missions terminées", "image" : "./path",
+				{"titre" : "Deux missions terminées", "image" : "trophee1.jpg",
 					"condition" : {"nbMissionReussie" : 2}
 				},
-				{"titre" : "Trois missions terminées", "image" : "./path",
+				{"titre" : "Trois missions terminées", "image" : "trophee1.jpg",
 					"condition" : {"nbMissionReussie" : 3}
 				}
 			]}
@@ -27,7 +27,7 @@
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 10},
-					{ "nom" : "trophee", "titre" : "Mission 1 faite", "image" : "./path", 
+					{ "nom" : "trophee", "titre" : "Mission 1 faite", "image" : "trophee1.jpg", 
 						"condition" : {"statutMission" : "done"}	
 					}
 			],
@@ -40,7 +40,7 @@
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 12},
-					{ "nom" : "trophee", "titre" : "Mission 2 faite", "image" : "./path", 
+					{ "nom" : "trophee", "titre" : "Mission 2 faite", "image" : "trophee1.jpg", 
 						"condition" : {"statutMission" : "done"}	
 					}
 			],
@@ -48,13 +48,13 @@
 				{"nbArbre" : 2},
 				{"tempsLimite" : 120}
 			],
-			"espece" : "Acer Negundo"
+			"espece" : "Acer negundo"
 			},
 			{"typeActivite" : "PHOTOGRAPHIER_GENRE",
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 12},
-					{ "nom" : "trophee", "titre" : "Mission 1 faite", "image" : "./path", 
+					{ "nom" : "trophee", "titre" : "Mission 1 faite", "image" : "trophee1.jpg", 
 						"condition" : {"statutMission" : "done"}	
 					}
 			],
@@ -69,21 +69,21 @@
 		{"mecaniques" : [
 			{ "nom" : "score" ,
 				"actions" : [
-					{"code" : "O", "nbPoint" : 5},
-					{"code" : "CG", "nbPoint" : 7},
-					{"code" : "CE", "nbPoint" : 7},
-					{"code" : "CN", "nbPoint" : 7},
-					{"code" : "V", "nbPoint" : 3}
+					{"code" : "IDENTIFICATION", "nbPoint" : 5},
+					{"code" : "COMPLETER_GENRE", "nbPoint" : 7},
+					{"code" : "COMPLETER_ESPECE", "nbPoint" : 7},
+					{"code" : "COMPLETER_NOM", "nbPoint" : 7},
+					{"code" : "VALIDATION", "nbPoint" : 3}
 				]		
 			},
 			{ "nom" : "trophee", "trophees" : [
-				{"titre" : "Une mission terminée", "image" : "./path",
+				{"titre" : "Une mission terminée", "image" : "trophee1.jpg",
 					"condition" : {"nbMissionReussie" : 1}
 				},
-				{"titre" : "Deux missions terminées", "image" : "./path",
+				{"titre" : "Deux missions terminées", "image" : "trophee1.jpg",
 					"condition" : {"nbMissionReussie" : 2}
 				},
-				{"titre" : "Trois missions terminées", "image" : "./path",
+				{"titre" : "Trois missions terminées", "image" : "trophee1.jpg",
 					"condition" : {"nbMissionReussie" : 3}
 				}
 			]}
@@ -93,7 +93,7 @@
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 10},
-					{ "nom" : "trophee", "titre" : "Mission 1 faite", "image" : "./path", 
+					{ "nom" : "trophee", "titre" : "Mission 1 faite", "image" : "trophee1.jpg", 
 						"condition" : {"statutMission" : "done"}	
 					}
 			],
@@ -106,7 +106,7 @@
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 12},
-					{ "nom" : "trophee", "titre" : "Mission 2 faite", "image" : "./path", 
+					{ "nom" : "trophee", "titre" : "Mission 2 faite", "image" : "trophee1.jpg", 
 						"condition" : {"statutMission" : "done"}	
 					}
 			],
@@ -114,13 +114,13 @@
 				{"nbArbre" : 1},
 				{"tempsLimite" : 120}
 			],
-			"espece" : "Acer Negundo"
+			"espece" : "Acer negundo"
 			},
 			{"typeActivite" : "PHOTOGRAPHIER_ESPECE",
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 12},
-					{ "nom" : "trophee", "titre" : "Mission 1 faite", "image" : "./path", 
+					{ "nom" : "trophee", "titre" : "Mission 1 faite", "image" : "trophee1.jpg", 
 						"condition" : {"statutMission" : "done"}	
 					}
 			],
@@ -128,7 +128,7 @@
 				{"nbArbre" : 2},
 				{"tempsLimite" : 120}
 			],
-			"espece" : "Acer Negundo"
+			"espece" : "Acer negundo"
 			}
 		]}
 	]

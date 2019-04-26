@@ -25,6 +25,7 @@
 import Pusher from "pusher-js";
 import Map from "./pages/Map.vue";
 import Home from "./pages/Home.vue";
+import Profile from "./pages/Profile.vue"
 import Arboretum from "./pages/Arboretum.vue";
 import Releve from "./pages/Releves.vue";
 import Folia from "./pages/Folia.vue";
@@ -121,6 +122,12 @@ export default {
           label: "Mission",
           icon: "ion-home",
           page: Home,
+          theme: red
+        },
+        {
+          label: "Profil",
+          icon: "ion-person",
+          page: Profile,
           theme: red
         },
         {

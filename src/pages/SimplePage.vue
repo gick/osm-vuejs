@@ -198,21 +198,35 @@ export default {
         });
     },
     complete() {
+      var actions = []
       let releve = this.releve;
       if (!this.modify) {
+        actions.push("IDENTIFICATION")
         this.releve.coordinates = this.coordinates;
         this.$store.dispatch("releve/setObservation", releve);
         this.$store.commit("navigator/pop");
-        if (this.image != null) {
-          this.$store.commit("releve/photoAjoutee", this.specie);
+        if (this.releve.image != null) {
+          this.$store.commit("releve/photoAjoutee", this.releve.specie);
+          actions.push("PHOTOGRAPHIER")
+        }
+        if (this.releve.specie) {
+          actions.push("COMPLETER_ESPECE")
+        }
+        if (this.releve.common) {
+          actions.push("COMPLETER_NOM")
+        }
+        if (this.releve.genus) {
+          actions.push("COMPLETER_GENRE")
         }
       } else {
         this.$store.dispatch("releve/modifyObservation", releve);
         this.$store.commit("navigator/pop");
-        if (this.image != null && this.imageHasChange) {
-          this.$store.commit("releve/photoAjoutee", this.specie);
+        if (this.releve.image != null && this.imageHasChange) {
+          this.$store.commit("releve/photoAjoutee", this.releve.specie);
+          actions.push("PHOTOGRAPHIER")
         }
       }
+      this.$store.commit("releve/pointsActions", actions)
     },
     cancel() {
       this.$store.commit("navigator/pop");
