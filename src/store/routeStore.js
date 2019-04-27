@@ -101,7 +101,7 @@ export default {
         goal: 0,
         chgtActivity : 0,
         score : 0,
-        trophies: []
+        trophies: [],
         identificationMode: false,
         verificationMode: false
       },
@@ -149,21 +149,12 @@ export default {
         modify(state, newReleve) {
           let index = state.releves.findIndex(releve => releve._id == newReleve._id)
           if (index != -1) {
-<<<<<<< HEAD
            // state.releves[index].test='truc'    
             state.releves.splice(index,1,newReleve)
             state.releves[index].prev=newReleve.prev
             var indexRelevePrecedent = state.releves[index].prev.length -1
             updateCompletion(state, "modify/validate", state.releves[index].prev[indexRelevePrecedent].specie)
           }    
-=======
-            // state.releves[index].test='truc'
-            state.releves.splice(index, 1, newReleve)
-            state.releves[index].prev = newReleve.prev
-            // updateCompletion(state, "modify/validate", state.releves[index].specie)
-
-          }
->>>>>>> adc88e029c67f88a9aef6409b2f9f3a028ea264b
 
         },
         addMultiple(state, observations) {
@@ -280,13 +271,8 @@ export default {
               }
             }
           })
-<<<<<<< HEAD
         }     
       }   
-=======
-        }
-      }
->>>>>>> adc88e029c67f88a9aef6409b2f9f3a028ea264b
     },
 
     splitter: {
@@ -431,18 +417,11 @@ function updateCompletion(state, operation, specie) {
   if (specie == null || specie == '') {
     return
   }
-<<<<<<< HEAD
+
   var typeAction = state.activite.typeActivite.split('_')[0]
   if ((typeAction == 'IDENTIFIER' && operation == 'add') ||
       (typeAction == 'VERIFIER' && operation == 'modify/validate') ||
       (typeAction == 'PHOTOGRAPHIER' && operation == 'photo' )) {
-    
-=======
-  var typeAction = state.activite.typeActivite.split('')[0]
-  if ((typeAction == 'A' && operation == 'add') ||
-    (typeAction == 'B' && operation == 'modify/validate') ||
-    (typeAction == 'C' && operation == 'photo')) {
->>>>>>> adc88e029c67f88a9aef6409b2f9f3a028ea264b
 
     if (!state.differentSpecie.includes(specie)) {
       state.differentSpecie.push(specie)
@@ -451,7 +430,6 @@ function updateCompletion(state, operation, specie) {
     if (!state.differentGender.includes(specie.split(' ')[0])) {
       state.differentGender.push(specie.split(' ')[0])
     }
-<<<<<<< HEAD
         
     var numAction = state.activite.typeActivite.split('_')[1]
 
@@ -464,30 +442,11 @@ function updateCompletion(state, operation, specie) {
     } else if (numAction == 'ESPECESDIFFERENTES'){
       state.completion = state.differentSpecie.length;
     } else if (numAction == 'GENRESDIFFERENTS'){
-=======
-
-    var numAction = state.activite.typeActivite.split('')[1]
-
-    if (numAction == '1') {
-      state.completion++;
-    } else if (numAction == '2' && state.activite.espece == specie) {
-      state.completion++;
-    } else if (numAction == '3' && specie.indexOf(state.activite.genre) == 0) {
-      state.completion++;
-    } else if (numAction == '4') {
-      state.completion = state.differentSpecie.length;
-    } else if (numAction == '5') {
->>>>>>> adc88e029c67f88a9aef6409b2f9f3a028ea264b
       state.completion = state.differentGender.length;
     }
 
-<<<<<<< HEAD
     if (state.completion == state.goal) {          
       state.chgtActivity++;
-=======
-    if (state.completion == state.goal) {
-      state.activiteEnCours++;
->>>>>>> adc88e029c67f88a9aef6409b2f9f3a028ea264b
     }
   }
 }
