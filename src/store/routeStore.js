@@ -49,9 +49,9 @@ export default {
         add(state, specie) {
           state.species.push(specie)
         },
-        addMultiple(state,releves){
-          for(var releve of releves){
-            if(releve.specie){
+        addMultiple(state, releves) {
+          for (var releve of releves) {
+            if (releve.specie) {
               state.species.push(releve.specie)
             }
           }
@@ -96,16 +96,24 @@ export default {
         differentGender: new Array(),
         mission: null,
         activite: null,
-        indexActivite : 0,
+        indexActivite: 0,
         completion: 0,
         goal: 0,
         chgtActivity : 0,
         score : 0,
         trophies: []
+        identificationMode: false,
+        verificationMode: false
       },
       mutations: {
         photoAjoutee(state, specie) {
           updateCompletion(state, "photo", specie)
+        },
+        setIdentificationMode(state, mode) {
+          state.identificationMode = mode
+        },
+        setVerificationMode(state, mode) {
+          state.verificationMode = mode
         },
         setCompletion(state, completion) {
           state.completion = completion;
@@ -127,7 +135,7 @@ export default {
         },
         add(state, releve) {
           state.releves.push(releve)
-          updateCompletion(state, "add", releve.specie)            
+          updateCompletion(state, "add", releve.specie)
         },
         addActionTransActivite(state, params){
           state.actionsTransActivite.set(params.split('#')[0], params.split('#')[1])
@@ -141,12 +149,21 @@ export default {
         modify(state, newReleve) {
           let index = state.releves.findIndex(releve => releve._id == newReleve._id)
           if (index != -1) {
+<<<<<<< HEAD
            // state.releves[index].test='truc'    
             state.releves.splice(index,1,newReleve)
             state.releves[index].prev=newReleve.prev
             var indexRelevePrecedent = state.releves[index].prev.length -1
             updateCompletion(state, "modify/validate", state.releves[index].prev[indexRelevePrecedent].specie)
           }    
+=======
+            // state.releves[index].test='truc'
+            state.releves.splice(index, 1, newReleve)
+            state.releves[index].prev = newReleve.prev
+            // updateCompletion(state, "modify/validate", state.releves[index].specie)
+
+          }
+>>>>>>> adc88e029c67f88a9aef6409b2f9f3a028ea264b
 
         },
         addMultiple(state, observations) {
@@ -160,7 +177,7 @@ export default {
 
           let index = state.releves.findIndex(releve => releve._id == currentReleve._id)
           if (index != -1) {
-            state.releves.splice(index,1,currentReleve)
+            state.releves.splice(index, 1, currentReleve)
           }
         },
         delete(state) {
@@ -183,29 +200,74 @@ export default {
         }
       },
       actions: {
-        validateObservation({commit},releve){
+        validateObservation({
+          commit
+        }, releve) {
           axios.defaults.withCredentials = true
-          axios.post('/api/validate', {releve:releve})
-          .then(function(response){
-            commit('validate',response.data.observation)
-          })
+
+          if(releve.verificationValue.verification){
+            releve.validated=true
+            releve.verificationValue.success=true
+            axios.post('/api/verification', {
+              releve: releve
+            })
+            .then(function (response) {
+              commit('validate', releve)
+            })
+          }
+          else{
+          axios.post('/api/validate', {
+              releve: releve
+            })
+            .then(function (response) {
+              commit('validate', response.data.observation)
+            })
+          }
+        },
+        modifyObservation({
+          commit
+        }, newReleve) {
+          axios.defaults.withCredentials = true
+          if (newReleve.verificationValue.verification) {
+            axios.post('/api/verification', {
+                releve: newReleve
+              })
+              .then(function () {
+                newReleve.verificationValue.success=true
+                commit('modify', newReleve)
+              })
+          } else {
+            axios.post('/api/modifyObservation', {
+                releve: newReleve
+              })
+              .then(function (response) {
+                commit('modify', response.data.observation)
+              })
+          }
 
         },
-        modifyObservation({commit},newReleve){
+        identification({
+          state,
+          commit
+        }, releve) {
           axios.defaults.withCredentials = true
-
-          axios.post('/api/modifyObservation', {releve:newReleve})
-          .then(function(response){
-            commit('modify',response.data.observation)
+          axios.post('/api/identification', {
+            releve: releve
           })
-
         },
         setObservation({
+          state,
           commit
         }, releve) {
 
          // commit('add', releve)
           axios.defaults.withCredentials = true
+          if (state.identificationMode) {
+            releve.identificationMode = true
+          }
+          if (state.verificationMode) {
+            releve.verificationMode = true
+          }
           axios.post('/api/observation', {
             releve
           }).then(function (response) {
@@ -218,8 +280,13 @@ export default {
               }
             }
           })
+<<<<<<< HEAD
         }     
       }   
+=======
+        }
+      }
+>>>>>>> adc88e029c67f88a9aef6409b2f9f3a028ea264b
     },
 
     splitter: {
@@ -323,7 +390,25 @@ export default {
     }
 
     ,
+    users:{
+      strict: true,
+      namespaced: true,
+      state:{
+        userList:[]
+      },
+      mutations: {
+        addUser(state, user) {
+          let index=state.userList.findIndex(val=>val.id==user.id)
+          if(index==-1)
+          state.userList.push(user);
+        },
+        removeUser(state,user){
+          let index=state.userList.findIndex(val=>val.id==user.id)
+          state.userList.splice(index,1)
+        }
+      }
 
+    },
     tabbar: {
       strict: true,
       namespaced: true,
@@ -346,19 +431,27 @@ function updateCompletion(state, operation, specie) {
   if (specie == null || specie == '') {
     return
   }
+<<<<<<< HEAD
   var typeAction = state.activite.typeActivite.split('_')[0]
   if ((typeAction == 'IDENTIFIER' && operation == 'add') ||
       (typeAction == 'VERIFIER' && operation == 'modify/validate') ||
       (typeAction == 'PHOTOGRAPHIER' && operation == 'photo' )) {
     
+=======
+  var typeAction = state.activite.typeActivite.split('')[0]
+  if ((typeAction == 'A' && operation == 'add') ||
+    (typeAction == 'B' && operation == 'modify/validate') ||
+    (typeAction == 'C' && operation == 'photo')) {
+>>>>>>> adc88e029c67f88a9aef6409b2f9f3a028ea264b
 
     if (!state.differentSpecie.includes(specie)) {
       state.differentSpecie.push(specie)
     }
-          
+
     if (!state.differentGender.includes(specie.split(' ')[0])) {
       state.differentGender.push(specie.split(' ')[0])
     }
+<<<<<<< HEAD
         
     var numAction = state.activite.typeActivite.split('_')[1]
 
@@ -371,13 +464,30 @@ function updateCompletion(state, operation, specie) {
     } else if (numAction == 'ESPECESDIFFERENTES'){
       state.completion = state.differentSpecie.length;
     } else if (numAction == 'GENRESDIFFERENTS'){
-      state.completion = state.differentGender.length;
-    } 
+=======
 
+    var numAction = state.activite.typeActivite.split('')[1]
+
+    if (numAction == '1') {
+      state.completion++;
+    } else if (numAction == '2' && state.activite.espece == specie) {
+      state.completion++;
+    } else if (numAction == '3' && specie.indexOf(state.activite.genre) == 0) {
+      state.completion++;
+    } else if (numAction == '4') {
+      state.completion = state.differentSpecie.length;
+    } else if (numAction == '5') {
+>>>>>>> adc88e029c67f88a9aef6409b2f9f3a028ea264b
+      state.completion = state.differentGender.length;
+    }
+
+<<<<<<< HEAD
     if (state.completion == state.goal) {          
       state.chgtActivity++;
+=======
+    if (state.completion == state.goal) {
+      state.activiteEnCours++;
+>>>>>>> adc88e029c67f88a9aef6409b2f9f3a028ea264b
     }
-  }  
+  }
 }
-
-

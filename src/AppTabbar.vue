@@ -5,7 +5,7 @@
       <v-ons-toolbar-button
         slot="right"
         modifier="white-content"
-        @click="$store.commit('splitter/toggle'); showTip(null, 'Try dragging from right edge!')"
+        @click="$store.commit('splitter/toggle');"
       >
         <v-ons-icon icon="ion-navicon, material:md-menu"></v-ons-icon>
       </v-ons-toolbar-button>
@@ -47,31 +47,68 @@ export default {
       topPosition: 0
     };
   },
-  mounted() {
-    Pusher.logToConsole = true;
+  mounted() {},
+  watch: {
+    userID() {
+      Pusher.logToConsole = true;
 
-    var pusher = new Pusher("f204a3eb6cfeb87e594b", {
-      cluster: "eu",
-      forceTLS: true
-    });
+      var pusher = new Pusher("f204a3eb6cfeb87e594b", {
+        cluster: "eu",
+        forceTLS: true,
+        authEndpoint: "/api/pusher/auth"
+      });
+      var userChannel = pusher.subscribe("presence-channel");
+      userChannel.bind(
+        "pusher:member_removed",
+        function(member) {
+          // for example:
+          this.$store.commit("users/removeUser", member);
+        }.bind(this)
+      );
 
-    var channel = pusher.subscribe("observation");
-    channel.bind("new_obs", function(data) {
-      if(data.osmId==this.userID){
-        return
-      }
-      else{
-        this.$store.commit('releve/add',data)
-      }}.bind(this))
-    channel.bind("modify_obs", function(data) {
-      if(data.modifierId==this.userID){
-        return
-      }
-      else{
-        this.$store.commit('releve/modify',data)
-      }
+      userChannel.bind(
+        "pusher:member_added",
+        function(member) {
+          // for example:
+          this.$store.commit("users/addUser", member);
+        }.bind(this)
+      );
 
-  }.bind(this));
+      userChannel.bind(
+        "pusher:subscription_succeeded",
+        function(members) {
+          // for example
+          members.each(
+            function(member) {
+              console.log(member);
+              this.$store.commit("users/addUser", member);
+            }.bind(this)
+          );
+        }.bind(this)
+      );
+
+      var channel = pusher.subscribe("observation");
+      channel.bind(
+        "new_obs",
+        function(data) {
+          if (data.osmId == this.userID) {
+            return;
+          } else {
+            this.$store.commit("releve/add", data);
+          }
+        }.bind(this)
+      );
+      channel.bind(
+        "modify_obs",
+        function(data) {
+          if (data.modifierId == this.userID) {
+            return;
+          } else {
+            this.$store.commit("releve/modify", data);
+          }
+        }.bind(this)
+      );
+    }
   },
   methods: {
     onSwipe(index, animationOptions) {
@@ -141,8 +178,12 @@ export default {
           icon: "ion-edit",
           page: Releve,
           theme: purple,
-          badge: this.$store.state.releve.releves.filter(value=>value.osmId==this.userID).length
-            ? this.$store.state.releve.releves.filter(value=>value.osmId==this.userID).length
+          badge: this.$store.state.releve.releves.filter(
+            value => value.osmId == this.userID
+          ).length
+            ? this.$store.state.releve.releves.filter(
+                value => value.osmId == this.userID
+              ).length
             : null
         },
         {
@@ -154,8 +195,8 @@ export default {
         }
       ];
     },
-    userID(){
-      return this.$store.state.user.id
+    userID() {
+      return this.$store.state.user.id;
     },
     index: {
       get() {

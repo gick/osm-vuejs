@@ -2,6 +2,7 @@ import 'onsenui/css/onsenui.css'; // Onsen UI basic CSS
 // import 'onsenui/css/onsen-css-components.css'; // Default Onsen UI CSS components
 import './onsen-css-components.css'; // Onsen UI CSS components source for custom themes (requires cssnext)
 import './vue-onsenui-kitchensink.css'; // CSS specific to this app
+import Toasted from 'vue-toasted';
 
 import Vue from 'vue';
 import Vuex from 'vuex';
@@ -39,7 +40,7 @@ Vue.use(new VueSocketIO({
   } ,
 }))
 window.location.hash = "#de";
-
+Vue.use(Toasted)
 Vue.use(Vuex);
 Vue.use(VueOnsen);
 Vue.use(BootstrapVue)
