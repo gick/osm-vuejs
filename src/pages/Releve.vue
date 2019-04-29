@@ -95,6 +95,7 @@ export default {
       this.$root.$emit("changeCenter", this.releve.coordinates);
     },
     validate() {
+      this.$store.commit("releve/pointsActions", ["VALIDATION"])
       this.$store.dispatch("releve/validateObservation", this.releve);
       this.$toasted.show("Votre validation à été prise en compte", {fullWidth:true, position:"bottom-center",duration: 2000 }); // Shows from 0s to 2s
     },

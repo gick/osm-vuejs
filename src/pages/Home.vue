@@ -1,7 +1,6 @@
 <template>
   <v-ons-page> 
-      <br>
-      <br>
+      
     </p>
       <v-ons-card v-show="!$store.state.user.id">
       <div  class="title">Authentifiez vous!</div>
@@ -11,7 +10,6 @@
         <v-ons-button @click="authenticate">Authenticate</v-ons-button>
       </div>
     </v-ons-card>
-
 
     <v-ons-card v-show="$store.state.user.id">
       <div class="title">
@@ -29,12 +27,12 @@
               <v-ons-col>
                 {{item.intitule}}  
                 <br>
-                <b-progress :value="completion" :max="goal" class="w-75" animated />
-                  <!-- {{ completion }} / {{ goal }}
-                </b-progress>  -->
+                <b-progress :value="completion" :max="goal" class="w-75" animated >
+                  {{ completion }} / {{ goal }}
+                </b-progress> 
               </v-ons-col>  
               <v-ons-col width="10%">
-               <v-ons-icon icon="fa-angle-double-right" @click="activitySkipped" size="30px"></v-ons-icon> 
+               <v-ons-icon icon="fa-angle-double-right" @click="activityEnd('skipped')" size="30px"></v-ons-icon> 
              </v-ons-col>
             </v-ons-row>            
           </v-ons-card>
@@ -77,7 +75,6 @@ function Activite(intitule, statut) {
 export default {
   data() {
     return {
-      username:'',
       activites: [],
       pages: [
         {
@@ -136,22 +133,17 @@ export default {
     currentActivity() {
       return this.$store.state.releve.activite;
     },
-    activiteEnCours() {
-      return this.$store.state.releve.activiteEnCours
+    chgtActivity() {
+      return this.$store.state.releve.chgtActivity
     },
     indexActivite() {
        return this.$store.state.releve.indexActivite
     }
   },
   watch : {
-     'activiteEnCours': {
+     'chgtActivity': {
         handler: function(){
-          this.activites[this.indexActivite].statut = 'done'
-          if (this.indexActivite + 1 ==  this.currentMission.activites.length) {
-           this.newMission()
-          } else {
-            this.newActivity()
-          }
+          this.activityEnd('done')
         },
         deep : true
       }
@@ -176,9 +168,45 @@ export default {
         }
       });
     },
-    activitySkipped() {
-      this.activites[this.indexActivite].statut = 'skipped'
+    activityEnd(statut) {
+      this.activites[this.indexActivite].statut = statut
+      if (statut == 'done') {
+        for (let i = 0; i < this.currentActivity.mecaniques.length; i++) {
+          //attribution des points
+          if (this.currentActivity.mecaniques[i].nom == 'score') {
+            this.$store.commit('releve/addPoints', this.currentActivity.mecaniques[i].nbPoint)
+          //attribution des trophées
+          } else if (this.currentActivity.mecaniques[i].nom == 'trophee') {
+            var trophee = new Object()
+            trophee.path = this.currentActivity.mecaniques[i].image
+            trophee.nom = this.currentActivity.mecaniques[i].titre
+            this.$store.commit('releve/addTrophie', trophee)
+            this.$toasted.show("Nouveau trophée '" + trophee.nom + "'", {fullWidth:true, position:"bottom-center",duration: 2000 });
+          }
+        }
+      }
       if (this.indexActivite + 1 ==  this.currentMission.activites.length) {
+          for (let i = 0; i < this.currentMission.mecaniques.length; i++) {
+          //attribution des trophées
+          if (this.currentMission.mecaniques[i].nom == 'trophee') {
+            var nbActivitesReussies = 0
+            for (let j = 0 ; j < this.activites.length ; j++) {
+              if (this.activites[j].statut == 'done') {
+                nbActivitesReussies++
+              }
+            }
+            for (let j = 0 ; j < this.currentMission.mecaniques[i].trophees.length; j++) {
+              if (nbActivitesReussies >= this.currentMission.mecaniques[i].trophees[j].condition.nbMissionReussie) {
+                var trophee = new Object()
+                trophee.path = this.currentMission.mecaniques[i].trophees[j].image
+                trophee.nom = this.currentMission.mecaniques[i].trophees[j].titre
+                this.$store.commit('releve/addTrophie', trophee)
+                this.$toasted.show("Nouveau trophée '" + trophee.nom + "'", {fullWidth:true, position:"bottom-center",duration: 2000 });
+              }
+            }
+            
+          }
+        }
         this.newMission()
       } else {
         this.newActivity()
@@ -188,38 +216,36 @@ export default {
       //recuperation d'une mission aleatoire dans le JSON
       let random = Math.floor(Math.random() * missions.missions.length);  
       this.$store.commit('releve/setMission', missions.missions[random])
-     // this.$store.state.releve.mission = missions.missions[random];
       this.$store.commit('releve/setIndexActivite', -1)
-     // this.$store.state.releve.indexActivite = -1 
       this.activites = []
 
       for (let i = 0; i < this.currentMission.activites.length; i++) {
         
         var typeActivite;
-        switch (this.currentMission.activites[i].typeActivite.split('')[0]) {
-          case 'A' : 
+        switch (this.currentMission.activites[i].typeActivite.split('_')[0]) {
+          case 'IDENTIFIER' : 
           typeActivite = 'Identifie'
           break;
-        case 'B' :
+        case 'VERIFIER' :
           typeActivite = 'Modifie ou valide'
           break;
-        case 'C' :
+        case 'PHOTOGRAPHIER' :
           typeActivite = 'Prend une photo de'
           break;
         }
         var sousCategorieActivite;
-        switch (this.currentMission.activites[i].typeActivite.split('')[1]) {
-          case '2' :
+        switch (this.currentMission.activites[i].typeActivite.split('_')[1]) {
+          case 'ESPECE' :
             sousCategorieActivite = " de l'espece " + this.currentMission.activites[i].espece
             break;
-          case '3' :
+          case 'GENRE' :
             sousCategorieActivite = ' du genre ' + this.currentMission.activites[i].genre
             break;
-          case '4' :
-            sousCategorieActivite = " d'especes differentes"
+          case 'ESPECESDIFFERENTES' :
+            sousCategorieActivite = " d'espèces différentes"
             break;
-          case '5' :
-            sousCategorieActivite = ' de genres differents'
+          case 'GENRESDIFFERENTS' :
+            sousCategorieActivite = ' de genres différents'
             break;
           default : 
             sousCategorieActivite = ''
@@ -227,37 +253,32 @@ export default {
 
         var nbAction = this.currentMission.activites[i].conditionDeFin[0].nbArbre
         this.$store.commit('releve/setGoal', nbAction)
-       // this.$store.state.releve.goal = nbAction
         var arbre = nbAction > 1 ? " arbres" : " arbre"
         this.activites.push(new Activite(typeActivite + " " + nbAction + arbre + sousCategorieActivite,"toDo"));
       }
+
+      for (let i = 0; i < this.currentMission.mecaniques.length; i++) {
+        if (this.currentMission.mecaniques[i].nom == 'score') {
+          for (let j = 0; j < this.currentMission.mecaniques[i].actions.length; j++) {
+            var action = this.currentMission.mecaniques[i].actions[j].code
+            var nbPoint = this.currentMission.mecaniques[i].actions[j].nbPoint
+            this.$store.commit('releve/addActionTransActivite', action + "#" + nbPoint)
+          }
+        }
+      }
+
       this.newActivity()
     },
 
     newActivity() {
       this.$store.commit('releve/setCompletion', 0)
-     //  this.$store.state.releve.completion = 0
-     this.$store.commit('releve/clearSets')
-      /* this.$store.state.releve.differentSpecieAdded.length = 0
-       this.$store.state.releve.differentGenderAdded.length = 0
-       this.$store.state.releve.differentSpeciePhotographed.length = 0
-       this.$store.state.releve.differentGenderPhotographed.length = 0
-       this.$store.state.releve.differentSpecieChecked.length = 0
-       this.$store.state.releve.differentGenderChecked.length = 0*/
-       this.$store.commit('releve/setIndexActivite', this.indexActivite + 1)
-       //this.$store.state.releve.indexActivite++
-       this.$store.commit('releve/setActivite', this.currentMission.activites[this.indexActivite])
-       //this.$store.state.releve.activite = this.currentMission.activites[this.indexActivite]
-
-      //recuperation du type d'activite
+      this.$store.commit('releve/clearSets')
+      this.$store.commit('releve/setIndexActivite', this.indexActivite + 1)
+      this.$store.commit('releve/setActivite', this.currentMission.activites[this.indexActivite])
 
       var nbAction = this.currentMission.activites[this.indexActivite].conditionDeFin[0].nbArbre
       this.$store.commit('releve/setGoal', nbAction)
-      //this.$store.state.releve.goal = nbAction
       this.activites[this.indexActivite].statut = 'onGoing'
-      /*for (let i = 0; i < this.currentMission.mecaniques.length; i++) {
-        document.getElementById("consigneMission").innerHTML += "<p>" + this.currentMission.mecaniques[i].nom + "</p>"
-      } */
     }
   }
 };

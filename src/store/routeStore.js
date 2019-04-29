@@ -91,6 +91,7 @@ export default {
       namespaced: true,
       state: {
         releves: [],
+        actionsTransActivite: new Map(),
         differentSpecie: new Array(),
         differentGender: new Array(),
         mission: null,
@@ -98,7 +99,9 @@ export default {
         indexActivite: 0,
         completion: 0,
         goal: 0,
-        activiteEnCours: 0,
+        chgtActivity : 0,
+        score : 0,
+        trophies: [],
         identificationMode: false,
         verificationMode: false
       },
@@ -127,19 +130,31 @@ export default {
         setMission(state, mission) {
           state.mission = mission
         },
+        addPoints(state, nbPoint) {
+          state.score += nbPoint
+        },
         add(state, releve) {
           state.releves.push(releve)
           updateCompletion(state, "add", releve.specie)
         },
+        addActionTransActivite(state, params){
+          state.actionsTransActivite.set(params.split('#')[0], params.split('#')[1])
+        },
+        addTrophie(state, trophie) {
+          state.trophies.push(trophie)
+        },
+        clearActionsTransActivite(state) {
+          state.actionsTransActivite.clear()
+        },
         modify(state, newReleve) {
           let index = state.releves.findIndex(releve => releve._id == newReleve._id)
           if (index != -1) {
-            // state.releves[index].test='truc'
-            state.releves.splice(index, 1, newReleve)
-            state.releves[index].prev = newReleve.prev
-            // updateCompletion(state, "modify/validate", state.releves[index].specie)
-
-          }
+           // state.releves[index].test='truc'    
+            state.releves.splice(index,1,newReleve)
+            state.releves[index].prev=newReleve.prev
+            var indexRelevePrecedent = state.releves[index].prev.length -1
+            updateCompletion(state, "modify/validate", state.releves[index].prev[indexRelevePrecedent].specie)
+          }    
 
         },
         addMultiple(state, observations) {
@@ -164,6 +179,16 @@ export default {
         clearSets(state) {
           state.differentSpecie.length = 0
           state.differentGender.length = 0
+        },
+        pointsActions(state, actions) {
+          for (let i = 0; i< actions.length; i++) {
+            if (state.actionsTransActivite.has(actions[i])) {
+              var nbPoint = parseInt(state.actionsTransActivite.get(actions[i]))
+              console.log("Vous avez obtenu " + nbPoint + " points bonus pour " + actions[i])
+            //  this.$toasted.show("Vous avez obtenu " + nbPoint + " points bonus pour " + actions[i], {fullWidth:true, position:"bottom-center",duration: 2000 });
+              state.score += nbPoint
+            }
+          }
         }
       },
       actions: {
@@ -226,6 +251,8 @@ export default {
           state,
           commit
         }, releve) {
+
+         // commit('add', releve)
           axios.defaults.withCredentials = true
           if (state.identificationMode) {
             releve.identificationMode = true
@@ -245,8 +272,8 @@ export default {
               }
             }
           })
-        }
-      }
+        }     
+      }   
     },
 
     splitter: {
@@ -385,14 +412,17 @@ export default {
 
 };
 
+
 function updateCompletion(state, operation, specie) {
+
   if (specie == null || specie == '') {
     return
   }
-  var typeAction = state.activite.typeActivite.split('')[0]
-  if ((typeAction == 'A' && operation == 'add') ||
-    (typeAction == 'B' && operation == 'modify/validate') ||
-    (typeAction == 'C' && operation == 'photo')) {
+
+  var typeAction = state.activite.typeActivite.split('_')[0]
+  if ((typeAction == 'IDENTIFIER' && operation == 'add') ||
+      (typeAction == 'VERIFIER' && operation == 'modify/validate') ||
+      (typeAction == 'PHOTOGRAPHIER' && operation == 'photo' )) {
 
     if (!state.differentSpecie.includes(specie)) {
       state.differentSpecie.push(specie)
@@ -401,23 +431,23 @@ function updateCompletion(state, operation, specie) {
     if (!state.differentGender.includes(specie.split(' ')[0])) {
       state.differentGender.push(specie.split(' ')[0])
     }
+        
+    var numAction = state.activite.typeActivite.split('_')[1]
 
-    var numAction = state.activite.typeActivite.split('')[1]
-
-    if (numAction == '1') {
+    if (numAction == 'ARBRE'){
       state.completion++;
-    } else if (numAction == '2' && state.activite.espece == specie) {
+    } else if (numAction == 'ESPECE' && state.activite.espece.toUpperCase() == specie.toUpperCase()){
+        state.completion++;
+    } else if (numAction == 'GENRE' && specie.indexOf(state.activite.genre) == 0){
       state.completion++;
-    } else if (numAction == '3' && specie.indexOf(state.activite.genre) == 0) {
-      state.completion++;
-    } else if (numAction == '4') {
+    } else if (numAction == 'ESPECESDIFFERENTES'){
       state.completion = state.differentSpecie.length;
-    } else if (numAction == '5') {
+    } else if (numAction == 'GENRESDIFFERENTS'){
       state.completion = state.differentGender.length;
     }
 
-    if (state.completion == state.goal) {
-      state.activiteEnCours++;
+    if (state.completion == state.goal) {          
+      state.chgtActivity++;
     }
   }
 }

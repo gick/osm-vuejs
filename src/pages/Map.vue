@@ -221,8 +221,8 @@ export default {
     currentMission() {
       return this.$store.state.releve.mission;
     },
-    activiteEnCours() {
-      return this.$store.state.releve.activiteEnCours;
+    chgtActivity() {
+      return this.$store.state.releve.chgtActivity;
     },
     indexActivite() {
       return this.$store.state.releve.indexActivite;
@@ -233,7 +233,7 @@ export default {
   },
 
   watch: {
-    activiteEnCours: {
+    chgtActivity: {
       handler: function(newMision, oldMission) {
         if (this.indexActivite + 1 == this.nbActivite) {
           this.missionOver = true;
