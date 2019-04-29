@@ -185,6 +185,7 @@ export default {
             if (state.actionsTransActivite.has(actions[i])) {
               var nbPoint = parseInt(state.actionsTransActivite.get(actions[i]))
               console.log("Vous avez obtenu " + nbPoint + " points bonus pour " + actions[i])
+            //  this.$toasted.show("Vous avez obtenu " + nbPoint + " points bonus pour " + actions[i], {fullWidth:true, position:"bottom-center",duration: 2000 });
               state.score += nbPoint
             }
           }

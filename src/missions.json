@@ -11,13 +11,16 @@
 				]		
 			},
 			{ "nom" : "trophee", "trophees" : [
-				{"titre" : "Une mission terminée", "image" : "trophee4.jpg",
+				{"titre" : "Une activité terminée", "image" : "trophee4.jpg",
 					"condition" : {"nbMissionReussie" : 1}
 				},
-				{"titre" : "Deux missions terminées", "image" : "trophee4.jpg",
+				{"titre" : "Deux activités terminées", "image" : "trophee4.jpg",
 					"condition" : {"nbMissionReussie" : 2}
 				},
-				{"titre" : "Trois missions terminées", "image" : "trophee4.jpg",
+				{"titre" : "Trois activités terminées", "image" : "trophee4.jpg",
+					"condition" : {"nbMissionReussie" : 3}
+				},
+				{"titre" : "Mission accomplie", "image" : "trophee4.jpg",
 					"condition" : {"nbMissionReussie" : 3}
 				}
 			]}
@@ -27,7 +30,7 @@
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 10},
-					{ "nom" : "trophee", "titre" : "Mission 1 faite", "image" : "trophee1.jpg", 
+					{ "nom" : "trophee", "titre" : "Activité 1 faite", "image" : "trophee1.jpg", 
 						"condition" : {"statutMission" : "done"}	
 					}
 			],
@@ -40,7 +43,7 @@
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 12},
-					{ "nom" : "trophee", "titre" : "Mission 2 faite", "image" : "trophee2.jpg", 
+					{ "nom" : "trophee", "titre" : "Activité 2 faite", "image" : "trophee2.jpg", 
 						"condition" : {"statutMission" : "done"}	
 					}
 			],
@@ -54,7 +57,7 @@
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 12},
-					{ "nom" : "trophee", "titre" : "Mission 3 faite", "image" : "trophee3.jpg", 
+					{ "nom" : "trophee", "titre" : "Activité 3 faite", "image" : "trophee3.jpg", 
 						"condition" : {"statutMission" : "done"}	
 					}
 			],
@@ -77,13 +80,13 @@
 				]		
 			},
 			{ "nom" : "trophee", "trophees" : [
-				{"titre" : "Une mission terminée", "image" : "trophee4.jpg",
+				{"titre" : "Une activité terminée", "image" : "trophee4.jpg",
 					"condition" : {"nbMissionReussie" : 1}
 				},
-				{"titre" : "Deux missions terminées", "image" : "trophee4.jpg",
+				{"titre" : "Deux activités terminées", "image" : "trophee4.jpg",
 					"condition" : {"nbMissionReussie" : 2}
 				},
-				{"titre" : "Trois missions terminées", "image" : "trophee4.jpg",
+				{"titre" : "Trois activités terminées", "image" : "trophee4.jpg",
 					"condition" : {"nbMissionReussie" : 3}
 				}
 			]}
@@ -93,7 +96,7 @@
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 10},
-					{ "nom" : "trophee", "titre" : "Mission 1 faite", "image" : "trophee1.jpg", 
+					{ "nom" : "trophee", "titre" : "Activité 1 faite", "image" : "trophee1.jpg", 
 						"condition" : {"statutMission" : "done"}	
 					}
 			],
@@ -106,7 +109,7 @@
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 12},
-					{ "nom" : "trophee", "titre" : "Mission 2 faite", "image" : "trophee2.jpg", 
+					{ "nom" : "trophee", "titre" : "Activité 2 faite", "image" : "trophee2.jpg", 
 						"condition" : {"statutMission" : "done"}	
 					}
 			],
@@ -120,7 +123,7 @@
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 12},
-					{ "nom" : "trophee", "titre" : "Mission 3 faite", "image" : "trophee3.jpg", 
+					{ "nom" : "trophee", "titre" : "Activité 3 faite", "image" : "trophee3.jpg", 
 						"condition" : {"statutMission" : "done"}	
 					}
 			],

@@ -112,12 +112,22 @@ export default {
       genus: "",
       specie: "",
       currentSpecie: 0,
-      modify: false
+      modify: false,
+      oldReleve: {
+        genus: "",
+        common: "",
+        specie: ""
+      }
     };
   },
   components: {
     Autocomplete,
     PictureInput
+  },
+  mounted() {
+    this.oldReleve.genus = this.releve.genus
+    this.oldReleve.common = this.releve.common
+    this.oldReleve.specie = this.releve.specie
   },
   computed: {
     completed() {
@@ -224,6 +234,27 @@ export default {
         if (this.releve.image != null && this.imageHasChange) {
           this.$store.commit("releve/photoAjoutee", this.releve.specie);
           actions.push("PHOTOGRAPHIER")
+        }
+        if (this.oldReleve.specie != this.releve.specie) {
+          if (this.oldReleve.specie != null && this.releve.specie == null) {
+            actions.push("SUPPRIMER_ESPECE")
+          } else {
+             actions.push("COMPLETER_ESPECE")
+          }   
+        }
+        if (this.oldReleve.genus != this.releve.genus) {
+          if (this.oldReleve.genus != null && this.releve.genus == null) {
+            actions.push("SUPPRIMER_GENRE")
+          } else {
+             actions.push("COMPLETER_GENRE")
+          } 
+        }
+        if (this.oldReleve.common != this.releve.common) {
+          if (this.oldReleve.specie != null && this.releve.specie == null) {
+            actions.push("SUPPRIMER_NOM")
+          } else {
+            actions.push("COMPLETER_NOM")
+          } 
         }
       }
       this.$store.commit("releve/pointsActions", actions)

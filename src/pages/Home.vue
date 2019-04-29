@@ -181,6 +181,7 @@ export default {
             trophee.path = this.currentActivity.mecaniques[i].image
             trophee.nom = this.currentActivity.mecaniques[i].titre
             this.$store.commit('releve/addTrophie', trophee)
+            this.$toasted.show("Nouveau trophée '" + trophee.nom + "'", {fullWidth:true, position:"bottom-center",duration: 2000 });
           }
         }
       }
@@ -200,6 +201,7 @@ export default {
                 trophee.path = this.currentMission.mecaniques[i].trophees[j].image
                 trophee.nom = this.currentMission.mecaniques[i].trophees[j].titre
                 this.$store.commit('releve/addTrophie', trophee)
+                this.$toasted.show("Nouveau trophée '" + trophee.nom + "'", {fullWidth:true, position:"bottom-center",duration: 2000 });
               }
             }
             
@@ -240,10 +242,10 @@ export default {
             sousCategorieActivite = ' du genre ' + this.currentMission.activites[i].genre
             break;
           case 'ESPECESDIFFERENTES' :
-            sousCategorieActivite = " d'especes differentes"
+            sousCategorieActivite = " d'espèces différentes"
             break;
           case 'GENRESDIFFERENTS' :
-            sousCategorieActivite = ' de genres differents'
+            sousCategorieActivite = ' de genres différents'
             break;
           default : 
             sousCategorieActivite = ''
