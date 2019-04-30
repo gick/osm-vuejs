@@ -4,7 +4,15 @@
       		<v-ons-row>
         		<v-ons-col>{{ username }}</v-ons-col>
         		<v-ons-col style="text-align: right">Score : {{ score }}</v-ons-col>
-      		</v-ons-row>    
+      		</v-ons-row> 
+      		<v-ons-row>
+        		<!-- <v-ons-col>
+        			0<img src="./trophees/trophy.png">
+        		</v-ons-col>
+        		<v-ons-col>
+        			0<img src="./trophees/question_mark.png">
+        		</v-ons-col> -->
+      		</v-ons-row>  
     	</v-ons-card>
     	<v-card>
 	    		<v-ons-card v-for="trophie in trophies">
