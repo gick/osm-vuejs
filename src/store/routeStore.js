@@ -103,9 +103,17 @@ export default {
         score : 0,
         trophies: [],
         identificationMode: false,
-        verificationMode: false
+        verificationMode: false,
+        journal: [],
+        notifProfil: 0
       },
       mutations: {
+        addNotifProfil(state, nbNotif) {
+          state.notifProfil += nbNotif
+        },
+        clearNotifProfil(state) {
+          state.notifProfil = 0
+        },
         setIdentificationMode(state, mode) {
           state.identificationMode = mode
         },
@@ -143,9 +151,13 @@ export default {
         },
         addTrophie(state, trophie) {
           state.trophies.unshift(trophie)
+          state.notifProfil++
         },
         clearActionsTransActivite(state) {
           state.actionsTransActivite.clear()
+        },
+        updateJournal(state, line) {
+          state.journal.unshift(line)
         },
         modify(state, newReleve) {
           let index = state.releves.findIndex(releve => releve._id == newReleve._id)
@@ -188,7 +200,10 @@ export default {
           for (let i = 0; i< actions.length; i++) {
             if (state.actionsTransActivite.has(actions[i])) {
               var nbPoint = parseInt(state.actionsTransActivite.get(actions[i]))
-              console.log("Vous avez obtenu " + nbPoint + " points bonus pour " + actions[i])
+              var line = new Object()
+              line.action = actions[i]
+              line.nbPoint = nbPoint
+              state.journal.unshift(line)
             //  this.$toasted.show("Vous avez obtenu " + nbPoint + " points bonus pour " + actions[i], {fullWidth:true, position:"bottom-center",duration: 2000 });
               state.score += nbPoint
             }
@@ -241,7 +256,7 @@ export default {
                 commit('modify', response.data.observation)
               })
           }
-          commit("pointsActions", extractActions(newReleve))
+          commit("pointsActions", extractActions(newReleve,false))
         },
         identification({
           state,
@@ -277,7 +292,7 @@ export default {
               }
             }
           })
-          commit("pointsActions", extractActions(releve))
+          commit("pointsActions", extractActions(releve, true))
         }  
 
       }   

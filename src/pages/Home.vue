@@ -174,14 +174,23 @@ export default {
         for (let i = 0; i < this.currentActivity.mecaniques.length; i++) {
           //attribution des points
           if (this.currentActivity.mecaniques[i].nom == 'score') {
-            this.$store.commit('releve/addPoints', this.currentActivity.mecaniques[i].nbPoint)
+            var line = new Object()
+            line.nbPoint = this.currentActivity.mecaniques[i].nbPoint
+            line.action = "ACTIVITE_REUSSIE"
+            this.$store.commit('releve/addPoints', line.nbPoint)
+            this.$store.commit('releve/updateJournal', line)
           //attribution des trophées
           } else if (this.currentActivity.mecaniques[i].nom == 'trophee') {
             var trophee = new Object()
             trophee.path = this.currentActivity.mecaniques[i].image
             trophee.nom = this.currentActivity.mecaniques[i].titre
             this.$store.commit('releve/addTrophie', trophee)
-            this.$toasted.show("Nouveau trophée '" + trophee.nom + "'", {fullWidth:true, position:"bottom-center",duration: 2000 });
+            let toast = this.$toasted.show("Nouveau trophée '" + trophee.nom + "'", { 
+              fullWidth : true,
+              position: "bottom-center", 
+              duration : 5000,
+              icon : "trophy"
+            });
           }
         }
       }
@@ -201,7 +210,12 @@ export default {
                 trophee.path = this.currentMission.mecaniques[i].listeDeTrophees[j].image
                 trophee.nom = this.currentMission.mecaniques[i].listeDeTrophees[j].titre
                 this.$store.commit('releve/addTrophie', trophee)
-                this.$toasted.show("Nouveau trophée '" + trophee.nom + "'", {fullWidth:true, position:"bottom-center",duration: 2000 });
+                let toast = this.$toasted.show("Nouveau trophée '" + trophee.nom + "'", { 
+                  fullWidth : true,
+                  position: "bottom-center", 
+                  duration : 5000,
+                  icon : "trophy"
+                });
               }
             } 
           }
