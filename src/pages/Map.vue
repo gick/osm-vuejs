@@ -42,20 +42,20 @@
           color="blue"
         />
         <l-circle
-          @click="circleClick(circle)"
+          @click="validateObservation(circle)"
           className="pulse"
-          v-for="(circle,index) in verificationTodo"
+          v-for="(circle,index) in observationsOther"
           custom="10"
-          v-bind:key="index+'verification'"
+          v-bind:key="index+'observationOther'"
           :lat-lng="circle.coordinates"
           :radius="6"
           color="lime"
         />
         <l-circle
           @click="circleClick(circle)"
-          v-for="(circle,index) in verificationDone"
+          v-for="(circle,index) in observationsOtherDone"
           custom="10"
-          v-bind:key="index+'verificationDone'"
+          v-bind:key="index+'observationOtherDone'"
           :lat-lng="circle.coordinates"
           :radius="6"
           color="lime"
@@ -192,8 +192,7 @@ export default {
     observations() {
       return this.$store.state.releve.releves
       .filter(value=>!value.identificationValue.identification)
-      .filter(value=>!value.verificationValue.verification)
-
+      .filter(value=>value.osmId==this.userId)
     },
     identifications(){
       return this.$store.state.releve.releves.filter(value=>value.identificationValue.identification);
@@ -204,17 +203,19 @@ export default {
     identificationsDone(){
       return this.identifications.filter(value=>value.identificationValue.success);
     },
-    verifications(){
-      return this.$store.state.releve.releves.filter(value=>value.verificationValue.verification);
+    observationsOther(){
+      return this.$store.state.releve.releves
+      .filter(value=>!value.identificationValue.identification)
+      .filter(value=>value.osmId!=this.userId)
+      .filter(value=>!value.contributor.includes(this.userId))
     },
-    verificationTodo(){
-      return this.verifications.filter(value=>!value.verificationValue.success);
+    observationsOtherDone(){
+      return this.$store.state.releve.releves
+      .filter(value=>!value.identificationValue.identification)
+      .filter(value=>value.osmId!=this.userId)
+      .filter(value=>value.contributor.includes(this.userId))
     },
-    verificationDone(){
-      return this.verifications.filter(value=>value.verificationValue.success);
-    }
 
-    ,
     osmData() {
       return this.$store.state.osmData.data;
     },
@@ -368,7 +369,23 @@ export default {
         this.circleClicked = false;
       });
     },
+    validateObservation(releve){
+        this.circleClicked = true;
+        this.$store.commit("navigator/push", {
+          extends: SimplePage,
+          data() {
+            return {
+              releve: releve,
+              validation:true
+            };
+          }
+        });
+      
+      this.$nextTick(() => {
+        this.circleClicked = false;
+      });
 
+    },
     onMapClick(evt) {
       console.log(evt);
       if (this.circleClicked) {

@@ -15,15 +15,17 @@
         <div class="center">
           <autocomplete
             ref="species"
+            :disable-input="noTree"
             :source="specieSource"
             inputClass="inputClass"
             results-display="Species"
             results-value="Numbers"
             placeholder="Nom de l'espèce"
-            v-model="currentSpecie"
             :initial-display="releve.specie"
-            @selected="specieSelected">
-          </autocomplete>
+            @selected="specieSelected"
+            @nothingSelected="releve.specie=''"
+            @clear="releve.specie=''"
+          ></autocomplete>
         </div>
       </v-ons-list-item>
       <v-ons-list-item>
@@ -37,8 +39,11 @@
             inputClass="inputClass"
             results-display="name"
             placeholder="Nom du genre"
+            :disable-input="noTree"
             :initial-display="releve.genus"
             @selected="genusSelected"
+            @nothingSelected="releve.genus=''"
+            @clear="releve.genus=''"
           ></autocomplete>
         </div>
       </v-ons-list-item>
@@ -49,15 +54,47 @@
         <div class="center">
           <autocomplete
             ref="common"
+            :disable-input="noTree"
             :source="specieSource"
             inputClass="inputClass"
             results-display="verna1"
             placeholder="Nom commun"
             results-value="Numbers"
-            v-model="common"
             :initial-display="releve.common"
             @selected="commonSelected"
+            @nothingSelected="releve.common=''"
+            @clear="releve.common=''"
           ></autocomplete>
+        </div>
+      </v-ons-list-item>
+      <v-ons-list-item>
+        <div class="left">
+          <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>Hauteur
+        </div>
+        <div class="center">
+          <v-ons-select :disabled="noTree" style="margin-left:15px;" v-model="selectedHeigh">
+            <option v-for="heigh in heights" :value="heigh">{{ heigh }}</option>
+          </v-ons-select>
+        </div>
+      </v-ons-list-item>
+      <v-ons-list-item>
+        <div class="left">
+          <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>Diamètre de la couronne  
+        </div>
+        <div class="center">
+          <v-ons-select :disabled="noTree" style="margin-left:15px;" v-model="selectedCrown">
+            <option v-for="heigh in heights" :value="heigh">{{ heigh }}</option>
+          </v-ons-select>
+        </div>
+      </v-ons-list-item>
+      <v-ons-list-item>
+        <div class="left">
+          <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>Arbre non présent  
+        </div>
+        <div class="center">
+          <v-ons-switch
+            v-model="noTree">
+          </v-ons-switch>
         </div>
       </v-ons-list-item>
 
@@ -70,6 +107,7 @@
           :removable="true"
           height="600"
           margin="16"
+          :disabled="noTree"
           accept="image/*"
           capture="camera"
           size="10"
@@ -99,20 +137,31 @@ import Identification from "./Identification.vue";
 import imageCompression from "browser-image-compression";
 import genusList from "../js/genus.js";
 import speciesList from "../js/species.js";
-import specieVernac from "../js/species_vernac.js"
+import specieVernac from "../js/species_vernac.js";
 export default {
   data() {
     return {
       releve: {},
-      image: null,
-      common: "",
+      noTree:false,
+      selectedHeight:0,
+      selectedCrown:0,
+      heights: [
+        "Inconnue",
+        "Moins de 4m",
+        "4 à 8m",
+        "8 à 12m",
+        "12 à 16m",
+        "16 à 20m",
+        "20 à 24m",
+        "24 à 28m",
+        "28 à 32m",
+        "Plus de 32m"
+      ],
       source: speciesList,
-      genusList:genusList,
-      specieSource:specieVernac,
-      genus: "",
-      specie: "",
-      currentSpecie: 0,
+      genusList: genusList,
+      specieSource: specieVernac,
       modify: false,
+      validate: false,
       oldReleve: {
         genus: "",
         common: "",
@@ -125,9 +174,9 @@ export default {
     PictureInput
   },
   mounted() {
-    this.oldReleve.genus = this.releve.genus
-    this.oldReleve.common = this.releve.common
-    this.oldReleve.specie = this.releve.specie
+    this.oldReleve.genus = this.releve.genus;
+    this.oldReleve.common = this.releve.common;
+    this.oldReleve.specie = this.releve.specie;
   },
   computed: {
     completed() {
@@ -140,40 +189,27 @@ export default {
     }
   },
   methods: {
-    noResult(e){
-      console.log(e)
+    noResult(e) {
+      console.log(e);
     },
-    commonSelected(common){
-      this.releve.common=common.display
-      this.releve.specie=common.selectedObject.Species
-      this.releve.genus=common.selectedObject.genus
-      this.$refs.species._data.display=this.releve.specie
-      this.$refs.genus._data.display=this.releve.genus
+    commonSelected(common) {
+      this.releve.common = common.display;
+      this.releve.specie = common.selectedObject.Species;
+      this.releve.genus = common.selectedObject.genus;
+      this.$refs.species._data.display = this.releve.specie;
+      this.$refs.genus._data.display = this.releve.genus;
     },
     specieSelected(specie) {
       this.releve.specie = specie.display;
-      this.releve.common=specie.selectedObject.verna1
-      this.releve.genus=specie.selectedObject.genus
-      this.$refs.common._data.display=this.releve.common
-      this.$refs.genus._data.display=this.releve.genus
+      this.releve.common = specie.selectedObject.verna1;
+      this.releve.genus = specie.selectedObject.genus;
+      this.$refs.common._data.display = this.releve.common;
+      this.$refs.genus._data.display = this.releve.genus;
     },
     genusSelected(genus) {
       this.releve.genus = genus.display;
     },
 
-    identify() {
-      this.$store.commit("navigator/push", {
-        extends: Identification,
-        data() {
-          return {
-            toolbarInfo: {
-              backLabel: "Home",
-              title: "key"
-            }
-          };
-        }
-      });
-    },
     onChange() {
       this.imageHasChange = true;
       var that = this;
@@ -208,56 +244,56 @@ export default {
         });
     },
     complete() {
-      var actions = []
+      var actions = [];
       let releve = this.releve;
       if (!this.modify) {
-        actions.push("IDENTIFICATION")
+        actions.push("IDENTIFICATION");
         this.releve.coordinates = this.coordinates;
         this.$store.dispatch("releve/setObservation", releve);
         this.$store.commit("navigator/pop");
         if (this.releve.image != null) {
           this.$store.commit("releve/photoAjoutee", this.releve.specie);
-          actions.push("PHOTOGRAPHIER")
+          actions.push("PHOTOGRAPHIER");
         }
         if (this.releve.specie) {
-          actions.push("COMPLETER_ESPECE")
+          actions.push("COMPLETER_ESPECE");
         }
         if (this.releve.common) {
-          actions.push("COMPLETER_NOM")
+          actions.push("COMPLETER_NOM");
         }
         if (this.releve.genus) {
-          actions.push("COMPLETER_GENRE")
+          actions.push("COMPLETER_GENRE");
         }
       } else {
         this.$store.dispatch("releve/modifyObservation", releve);
         this.$store.commit("navigator/pop");
         if (this.releve.image != null && this.imageHasChange) {
           this.$store.commit("releve/photoAjoutee", this.releve.specie);
-          actions.push("PHOTOGRAPHIER")
+          actions.push("PHOTOGRAPHIER");
         }
         if (this.oldReleve.specie != this.releve.specie) {
           if (this.oldReleve.specie != null && this.releve.specie == null) {
-            actions.push("SUPPRIMER_ESPECE")
+            actions.push("SUPPRIMER_ESPECE");
           } else {
-             actions.push("COMPLETER_ESPECE")
-          }   
+            actions.push("COMPLETER_ESPECE");
+          }
         }
         if (this.oldReleve.genus != this.releve.genus) {
           if (this.oldReleve.genus != null && this.releve.genus == null) {
-            actions.push("SUPPRIMER_GENRE")
+            actions.push("SUPPRIMER_GENRE");
           } else {
-             actions.push("COMPLETER_GENRE")
-          } 
+            actions.push("COMPLETER_GENRE");
+          }
         }
         if (this.oldReleve.common != this.releve.common) {
           if (this.oldReleve.specie != null && this.releve.specie == null) {
-            actions.push("SUPPRIMER_NOM")
+            actions.push("SUPPRIMER_NOM");
           } else {
-            actions.push("COMPLETER_NOM")
-          } 
+            actions.push("COMPLETER_NOM");
+          }
         }
       }
-      this.$store.commit("releve/pointsActions", actions)
+      this.$store.commit("releve/pointsActions", actions);
     },
     cancel() {
       this.$store.commit("navigator/pop");

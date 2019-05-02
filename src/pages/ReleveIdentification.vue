@@ -83,7 +83,7 @@
         <v-ons-list-item>
             <div class="center">Nom vernaculaire identifiée par l'expert : {{releve.common}}</div>
             <div v-if="releve.common==releve.identificationValue.common" class="right">Bravo!</div>
-            <div v-if="releve.common!=releve.identificationValue.genus" class="right">Raté!</div>
+            <div v-if="releve.common!=releve.identificationValue.common" class="right">Raté!</div>
         </v-ons-list-item>
     </v-ons-list>
     <section style="margin: 16px">
