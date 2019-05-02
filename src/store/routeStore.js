@@ -103,11 +103,19 @@ export default {
         score : 0,
         trophies: [],
         identificationMode: false,
-        verificationMode: false
+        verificationMode: false,
+        journal: [],
+        notifProfil: 0
       },
       mutations: {
-        photoAjoutee(state, specie) {
-          updateCompletion(state, "photo", specie)
+        addNotifProfil(state, nbNotif) {
+          if (state.nbNotif == null) {
+            state.nbNotif = 0
+          }
+          state.notifProfil += nbNotif
+        },
+        clearNotifProfil(state) {
+          state.notifProfil = null
         },
         setIdentificationMode(state, mode) {
           state.identificationMode = mode
@@ -135,16 +143,24 @@ export default {
         },
         add(state, releve) {
           state.releves.push(releve)
-          updateCompletion(state, "add", releve.specie)
+          if (releve.image) {
+            updateCompletion(state, "add_photo", releve.specie)
+          } else {
+             updateCompletion(state, "add", releve.specie)
+          }      
         },
         addActionTransActivite(state, params){
           state.actionsTransActivite.set(params.split('#')[0], params.split('#')[1])
         },
         addTrophie(state, trophie) {
-          state.trophies.push(trophie)
+          state.trophies.unshift(trophie)
+          state.notifProfil++
         },
         clearActionsTransActivite(state) {
           state.actionsTransActivite.clear()
+        },
+        updateJournal(state, line) {
+          state.journal.unshift(line)
         },
         modify(state, newReleve) {
           let index = state.releves.findIndex(releve => releve._id == newReleve._id)
@@ -153,9 +169,12 @@ export default {
             state.releves.splice(index,1,newReleve)
             state.releves[index].prev=newReleve.prev
             var indexRelevePrecedent = state.releves[index].prev.length -1
-            updateCompletion(state, "modify/validate", state.releves[index].prev[indexRelevePrecedent].specie)
-          }    
-
+            if (newReleve.image) {
+              updateCompletion(state, "modify/validate_photo", state.releves[index].prev[indexRelevePrecedent].specie)
+            } else {
+              updateCompletion(state, "modify/validate", state.releves[index].prev[indexRelevePrecedent].specie)
+            } 
+          }   
         },
         addMultiple(state, observations) {
           for (var observation of observations) {
@@ -184,7 +203,10 @@ export default {
           for (let i = 0; i< actions.length; i++) {
             if (state.actionsTransActivite.has(actions[i])) {
               var nbPoint = parseInt(state.actionsTransActivite.get(actions[i]))
-              console.log("Vous avez obtenu " + nbPoint + " points bonus pour " + actions[i])
+              var line = new Object()
+              line.action = actions[i]
+              line.nbPoint = nbPoint
+              state.journal.unshift(line)
             //  this.$toasted.show("Vous avez obtenu " + nbPoint + " points bonus pour " + actions[i], {fullWidth:true, position:"bottom-center",duration: 2000 });
               state.score += nbPoint
             }
@@ -203,6 +225,8 @@ export default {
             .then(function (response) {
               commit('validate', response.data.observation)
             })
+
+          commit("pointsActions", ["VALIDER"])    
         },
         modifyObservation({
           commit
@@ -214,6 +238,7 @@ export default {
               .then(function (response) {
                 commit('modify', response.data.observation)
               })
+          commit("pointsActions", extractActions(newReleve,false))
         },
         identification({
           state,
@@ -246,7 +271,9 @@ export default {
               }
             }
           })
-        }     
+          commit("pointsActions", extractActions(releve, true))
+        }  
+
       }   
     },
 
@@ -393,10 +420,10 @@ function updateCompletion(state, operation, specie) {
     return
   }
 
-  var typeAction = state.activite.typeActivite.split('_')[0]
-  if ((typeAction == 'IDENTIFIER' && operation == 'add') ||
-      (typeAction == 'VERIFIER' && operation == 'modify/validate') ||
-      (typeAction == 'PHOTOGRAPHIER' && operation == 'photo' )) {
+  var action = state.activite.typeActivite.action
+  if ((action == 'IDENTIFIER' && operation.includes('add')) ||
+      (action == 'VERIFIER' && operation.includes('modify/validate')) ||
+      (action == 'PHOTOGRAPHIER' && operation.includes('photo'))) {
 
     if (!state.differentSpecie.includes(specie)) {
       state.differentSpecie.push(specie)
@@ -406,17 +433,17 @@ function updateCompletion(state, operation, specie) {
       state.differentGender.push(specie.split(' ')[0])
     }
         
-    var numAction = state.activite.typeActivite.split('_')[1]
+    var objet = state.activite.typeActivite.objet
 
-    if (numAction == 'ARBRE'){
+    if (objet == 'ARBRE'){
       state.completion++;
-    } else if (numAction == 'ESPECE' && state.activite.espece.toUpperCase() == specie.toUpperCase()){
+    } else if (objet == 'ESPECE' && state.activite.espece.toUpperCase() == specie.toUpperCase()){
         state.completion++;
-    } else if (numAction == 'GENRE' && specie.indexOf(state.activite.genre) == 0){
+    } else if (objet == 'GENRE' && specie.indexOf(state.activite.genre) == 0){
       state.completion++;
-    } else if (numAction == 'ESPECESDIFFERENTES'){
+    } else if (objet == 'ESPECESDIFFERENTES'){
       state.completion = state.differentSpecie.length;
-    } else if (numAction == 'GENRESDIFFERENTS'){
+    } else if (objet == 'GENRESDIFFERENTS'){
       state.completion = state.differentGender.length;
     }
 
@@ -424,4 +451,24 @@ function updateCompletion(state, operation, specie) {
       state.chgtActivity++;
     }
   }
+}
+
+function extractActions(releve, identification) {
+  var actions = []
+  if (identification) {
+    actions.push("IDENTIFIER") 
+  }
+  if (releve.specie) {
+    actions.push("COMPLETER_ESPECE") 
+  }
+  if (releve.genus) {
+    actions.push("COMPLETER_GENRE")
+  } 
+  if (releve.common) {
+    actions.push("COMPLETER_NOM")
+  }
+  if (releve.image) {
+    actions.push("PHOTOGRAPHIER")
+  }
+  return actions
 }

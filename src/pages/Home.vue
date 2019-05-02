@@ -174,14 +174,23 @@ export default {
         for (let i = 0; i < this.currentActivity.mecaniques.length; i++) {
           //attribution des points
           if (this.currentActivity.mecaniques[i].nom == 'score') {
-            this.$store.commit('releve/addPoints', this.currentActivity.mecaniques[i].nbPoint)
+            var line = new Object()
+            line.nbPoint = this.currentActivity.mecaniques[i].nbPoint
+            line.action = "ACTIVITE_REUSSIE"
+            this.$store.commit('releve/addPoints', line.nbPoint)
+            this.$store.commit('releve/updateJournal', line)
           //attribution des trophées
           } else if (this.currentActivity.mecaniques[i].nom == 'trophee') {
             var trophee = new Object()
             trophee.path = this.currentActivity.mecaniques[i].image
             trophee.nom = this.currentActivity.mecaniques[i].titre
             this.$store.commit('releve/addTrophie', trophee)
-            this.$toasted.show("Nouveau trophée '" + trophee.nom + "'", {fullWidth:true, position:"bottom-center",duration: 2000 });
+            let toast = this.$toasted.show("Nouveau trophée '" + trophee.nom + "'", { 
+              fullWidth : true,
+              position: "bottom-center", 
+              duration : 5000,
+              icon : "trophy"
+            });
           }
         }
       }
@@ -195,16 +204,20 @@ export default {
                 nbActivitesReussies++
               }
             }
-            for (let j = 0 ; j < this.currentMission.mecaniques[i].trophees.length; j++) {
-              if (nbActivitesReussies >= this.currentMission.mecaniques[i].trophees[j].condition.nbMissionReussie) {
+            for (let j = 0 ; j < this.currentMission.mecaniques[i].listeDeTrophees.length; j++) {
+              if (nbActivitesReussies >= this.currentMission.mecaniques[i].listeDeTrophees[j].condition.nbMissionReussie) {
                 var trophee = new Object()
-                trophee.path = this.currentMission.mecaniques[i].trophees[j].image
-                trophee.nom = this.currentMission.mecaniques[i].trophees[j].titre
+                trophee.path = this.currentMission.mecaniques[i].listeDeTrophees[j].image
+                trophee.nom = this.currentMission.mecaniques[i].listeDeTrophees[j].titre
                 this.$store.commit('releve/addTrophie', trophee)
-                this.$toasted.show("Nouveau trophée '" + trophee.nom + "'", {fullWidth:true, position:"bottom-center",duration: 2000 });
+                let toast = this.$toasted.show("Nouveau trophée '" + trophee.nom + "'", { 
+                  fullWidth : true,
+                  position: "bottom-center", 
+                  duration : 5000,
+                  icon : "trophy"
+                });
               }
-            }
-            
+            } 
           }
         }
         this.newMission()
@@ -221,40 +234,40 @@ export default {
 
       for (let i = 0; i < this.currentMission.activites.length; i++) {
         
-        var typeActivite;
-        switch (this.currentMission.activites[i].typeActivite.split('_')[0]) {
+        var action;
+        switch (this.currentMission.activites[i].typeActivite.action) {
           case 'IDENTIFIER' : 
-          typeActivite = 'Identifie'
+          action = 'Identifie'
           break;
         case 'VERIFIER' :
-          typeActivite = 'Modifie ou valide'
+          action = 'Modifie ou valide'
           break;
         case 'PHOTOGRAPHIER' :
-          typeActivite = 'Prend une photo de'
+          action = 'Prend une photo de'
           break;
         }
-        var sousCategorieActivite;
-        switch (this.currentMission.activites[i].typeActivite.split('_')[1]) {
+        var objet;
+        switch (this.currentMission.activites[i].typeActivite.objet) {
           case 'ESPECE' :
-            sousCategorieActivite = " de l'espece " + this.currentMission.activites[i].espece
+            objet = " de l'espece " + this.currentMission.activites[i].espece
             break;
           case 'GENRE' :
-            sousCategorieActivite = ' du genre ' + this.currentMission.activites[i].genre
+            objet = ' du genre ' + this.currentMission.activites[i].genre
             break;
           case 'ESPECESDIFFERENTES' :
-            sousCategorieActivite = " d'espèces différentes"
+            objet = " d'espèces différentes"
             break;
           case 'GENRESDIFFERENTS' :
-            sousCategorieActivite = ' de genres différents'
+            objet = ' de genres différents'
             break;
           default : 
-            sousCategorieActivite = ''
+            objet = ''
         }
 
         var nbAction = this.currentMission.activites[i].conditionDeFin[0].nbArbre
         this.$store.commit('releve/setGoal', nbAction)
         var arbre = nbAction > 1 ? " arbres" : " arbre"
-        this.activites.push(new Activite(typeActivite + " " + nbAction + arbre + sousCategorieActivite,"toDo"));
+        this.activites.push(new Activite(action + " " + nbAction + arbre + objet,"toDo"));
       }
 
       for (let i = 0; i < this.currentMission.mecaniques.length; i++) {

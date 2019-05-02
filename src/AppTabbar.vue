@@ -165,7 +165,8 @@ export default {
           label: "Profil",
           icon: "ion-person",
           page: Profile,
-          theme: red
+          theme: red,
+          badge: this.$store.state.releve.notifProfil == 0 ? null :  this.$store.state.releve.notifProfil
         },
         {
           label: "Arboretum",

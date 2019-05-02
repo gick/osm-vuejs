@@ -40,7 +40,9 @@ Vue.use(new VueSocketIO({
   } ,
 }))
 window.location.hash = "#de";
-Vue.use(Toasted)
+Vue.use(Toasted, {
+    iconPack : 'fontawesome' // set your iconPack, defaults to material. material|fontawesome|custom-class
+});
 Vue.use(Vuex);
 Vue.use(VueOnsen);
 Vue.use(BootstrapVue)

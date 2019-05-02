@@ -3,14 +3,15 @@
 		{"mecaniques" : [
 			{ "nom" : "score" ,
 				"actions" : [
-					{"code" : "IDENTIFICATION", "nbPoint" : 5},
+					{"code" : "IDENTIFIER", "nbPoint" : 5},
 					{"code" : "COMPLETER_GENRE", "nbPoint" : 7},
 					{"code" : "COMPLETER_ESPECE", "nbPoint" : 7},
 					{"code" : "COMPLETER_NOM", "nbPoint" : 7},
-					{"code" : "VALIDATION", "nbPoint" : 3}
+					{"code" : "PHOTOGRAPHIER", "nbPoint" : 7},
+					{"code" : "VALIDER", "nbPoint" : 3}
 				]		
 			},
-			{ "nom" : "trophee", "trophees" : [
+			{ "nom" : "trophee", "listeDeTrophees" : [
 				{"titre" : "Une activité terminée", "image" : "trophee4.jpg",
 					"condition" : {"nbMissionReussie" : 1}
 				},
@@ -26,7 +27,7 @@
 			]}
 		],
 		"activites" : [
-			{"typeActivite" : "IDENTIFIER_ARBRE",
+			{"typeActivite" : {"action" : "IDENTIFIER", "objet" : "ARBRE"},
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 10},
@@ -39,7 +40,7 @@
 				{"tempsLimite" : 120}
 			]
 			},
-			{"typeActivite" : "VERIFIER_ESPECE",
+			{"typeActivite" : {"action" : "VERIFIER", "objet" : "ESPECE"},
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 12},
@@ -53,7 +54,7 @@
 			],
 			"espece" : "Acer negundo"
 			},
-			{"typeActivite" : "PHOTOGRAPHIER_GENRE",
+			{"typeActivite" : {"action" : "PHOTOGRAPHIER", "objet" : "GENRE"},
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 12},
@@ -72,14 +73,15 @@
 		{"mecaniques" : [
 			{ "nom" : "score" ,
 				"actions" : [
-					{"code" : "IDENTIFICATION", "nbPoint" : 5},
+					{"code" : "IDENTIFIER", "nbPoint" : 5},
 					{"code" : "COMPLETER_GENRE", "nbPoint" : 7},
 					{"code" : "COMPLETER_ESPECE", "nbPoint" : 7},
 					{"code" : "COMPLETER_NOM", "nbPoint" : 7},
-					{"code" : "VALIDATION", "nbPoint" : 3}
+					{"code" : "PHOTOGRAPHIER", "nbPoint" : 7},
+					{"code" : "VALIDER", "nbPoint" : 3}
 				]		
 			},
-			{ "nom" : "trophee", "trophees" : [
+			{ "nom" : "trophee", "listeDeTrophees" : [
 				{"titre" : "Une activité terminée", "image" : "trophee4.jpg",
 					"condition" : {"nbMissionReussie" : 1}
 				},
@@ -92,7 +94,7 @@
 			]}
 		],
 		"activites" : [
-			{"typeActivite" : "IDENTIFIER_ESPECESDIFFERENTES",
+			{"typeActivite" : {"action" : "IDENTIFIER", "objet" : "ESPECESDIFFERENTES"},
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 10},
@@ -105,7 +107,7 @@
 				{"tempsLimite" : 120}
 			]
 			},
-			{"typeActivite" : "VERIFIER_ARBRE",
+			{"typeActivite" : {"action" : "VERIFIER", "objet" : "ARBRE"},
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 12},
@@ -119,7 +121,7 @@
 			],
 			"espece" : "Acer negundo"
 			},
-			{"typeActivite" : "PHOTOGRAPHIER_ESPECE",
+			{"typeActivite" : {"action" : "PHOTOGRAPHIER", "objet" : "ESPECE"},
 				"mecaniques" : [
 					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
 					{ "nom" : "score" , "nbPoint" : 12},

@@ -161,22 +161,12 @@ export default {
       genusList: genusList,
       specieSource: specieVernac,
       modify: false,
-      validate: false,
-      oldReleve: {
-        genus: "",
-        common: "",
-        specie: ""
-      }
+      validate: false
     };
   },
   components: {
     Autocomplete,
     PictureInput
-  },
-  mounted() {
-    this.oldReleve.genus = this.releve.genus;
-    this.oldReleve.common = this.releve.common;
-    this.oldReleve.specie = this.releve.specie;
   },
   computed: {
     completed() {
@@ -211,7 +201,6 @@ export default {
     },
 
     onChange() {
-      this.imageHasChange = true;
       var that = this;
       //this.image = this.$refs.pictureInput.image;
       // console.log(this.image.length)
@@ -244,56 +233,15 @@ export default {
         });
     },
     complete() {
-      var actions = [];
       let releve = this.releve;
       if (!this.modify) {
-        actions.push("IDENTIFICATION");
         this.releve.coordinates = this.coordinates;
         this.$store.dispatch("releve/setObservation", releve);
         this.$store.commit("navigator/pop");
-        if (this.releve.image != null) {
-          this.$store.commit("releve/photoAjoutee", this.releve.specie);
-          actions.push("PHOTOGRAPHIER");
-        }
-        if (this.releve.specie) {
-          actions.push("COMPLETER_ESPECE");
-        }
-        if (this.releve.common) {
-          actions.push("COMPLETER_NOM");
-        }
-        if (this.releve.genus) {
-          actions.push("COMPLETER_GENRE");
-        }
       } else {
         this.$store.dispatch("releve/modifyObservation", releve);
-        this.$store.commit("navigator/pop");
-        if (this.releve.image != null && this.imageHasChange) {
-          this.$store.commit("releve/photoAjoutee", this.releve.specie);
-          actions.push("PHOTOGRAPHIER");
-        }
-        if (this.oldReleve.specie != this.releve.specie) {
-          if (this.oldReleve.specie != null && this.releve.specie == null) {
-            actions.push("SUPPRIMER_ESPECE");
-          } else {
-            actions.push("COMPLETER_ESPECE");
-          }
-        }
-        if (this.oldReleve.genus != this.releve.genus) {
-          if (this.oldReleve.genus != null && this.releve.genus == null) {
-            actions.push("SUPPRIMER_GENRE");
-          } else {
-            actions.push("COMPLETER_GENRE");
-          }
-        }
-        if (this.oldReleve.common != this.releve.common) {
-          if (this.oldReleve.specie != null && this.releve.specie == null) {
-            actions.push("SUPPRIMER_NOM");
-          } else {
-            actions.push("COMPLETER_NOM");
-          }
-        }
+        this.$store.commit("navigator/pop");   
       }
-      this.$store.commit("releve/pointsActions", actions);
     },
     cancel() {
       this.$store.commit("navigator/pop");
