@@ -72,7 +72,7 @@
           <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>Hauteur
         </div>
         <div class="center">
-          <v-ons-select :disabled="noTree" style="margin-left:15px;" v-model="selectedHeigh">
+          <v-ons-select :disabled="noTree" style="margin-left:15px;" v-model="selectedHeight">
             <option v-for="heigh in heights" :value="heigh">{{ heigh }}</option>
           </v-ons-select>
         </div>
