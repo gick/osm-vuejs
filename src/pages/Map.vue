@@ -192,7 +192,7 @@ export default {
     observations() {
       return this.$store.state.releve.releves
       .filter(value=>!value.identificationValue.identification)
-      .filter(value=>value.osmId==this.userId)
+      .filter(value=>value.osmId==this.userID)
     },
     identifications(){
       return this.$store.state.releve.releves.filter(value=>value.identificationValue.identification);
@@ -206,7 +206,7 @@ export default {
     observationsOther(){
       return this.$store.state.releve.releves
       .filter(value=>!value.identificationValue.identification)
-      .filter(value=>value.osmId!=this.userId)
+      .filter(value=>value.osmId!=this.userID)
       .filter(value=>!value.contributor.includes(this.userId))
     },
     observationsOtherDone(){
