@@ -28,11 +28,10 @@
           </p>
           <v-ons-button
             @click="modify"
-            :disabled="releve.verificationValue.success"
             style="margin: 6px 0"
           >Modifier</v-ons-button>
           <v-ons-button
-            :disabled="releve.validated || releve.verificationValue.success"
+            :disabled="releve.validated"
             @click="validate"
             style="margin: 6px 0"
           >Information correctes</v-ons-button>
