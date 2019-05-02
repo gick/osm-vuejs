@@ -19,7 +19,7 @@
    
     <v-ons-card>
     	<v-ons-list-header>Journal</v-ons-list-header>
-    	<v-ons-list style="height:200px; overflow: auto">
+    	<v-ons-list style="max-height:200px; overflow: auto">
     		<v-ons-list-item v-for="line in journal">
     			<v-ons-row>
     				<v-ons-col>

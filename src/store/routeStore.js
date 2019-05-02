@@ -109,10 +109,13 @@ export default {
       },
       mutations: {
         addNotifProfil(state, nbNotif) {
+          if (state.nbNotif == null) {
+            state.nbNotif = 0
+          }
           state.notifProfil += nbNotif
         },
         clearNotifProfil(state) {
-          state.notifProfil = 0
+          state.notifProfil = null
         },
         setIdentificationMode(state, mode) {
           state.identificationMode = mode
