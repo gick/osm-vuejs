@@ -219,46 +219,25 @@ export default {
         }, releve) {
           axios.defaults.withCredentials = true
 
-          if(releve.verificationValue.verification){
-            releve.validated=true
-            releve.verificationValue.success=true
-            axios.post('/api/verification', {
-              releve: releve
-            })
-            .then(function (response) {
-              commit('validate', releve)
-            })
-          }
-          else{
           axios.post('/api/validate', {
               releve: releve
             })
             .then(function (response) {
               commit('validate', response.data.observation)
             })
-          }
-          commit("releve/pointsActions", extractActions(["VALIDER"]))
+
+          commit("pointsActions", ["VALIDER"])    
         },
         modifyObservation({
           commit
         }, newReleve) {
           axios.defaults.withCredentials = true
-          if (newReleve.verificationValue.verification) {
-            axios.post('/api/verification', {
-                releve: newReleve
-              })
-              .then(function () {
-                newReleve.verificationValue.success=true
-                commit('modify', newReleve)
-              })
-          } else {
             axios.post('/api/modifyObservation', {
                 releve: newReleve
               })
               .then(function (response) {
                 commit('modify', response.data.observation)
               })
-          }
           commit("pointsActions", extractActions(newReleve,false))
         },
         identification({
@@ -279,9 +258,6 @@ export default {
           axios.defaults.withCredentials = true
           if (state.identificationMode) {
             releve.identificationMode = true
-          }
-          if (state.verificationMode) {
-            releve.verificationMode = true
           }
           axios.post('/api/observation', {
             releve
