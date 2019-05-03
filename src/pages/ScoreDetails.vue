@@ -12,9 +12,9 @@
     		</v-ons-col>
     		<v-ons-col style="text-align: right">
     			{{score}}
+    			<v-ons-icon icon="fa-star" style="color:#cca108"></v-ons-icon> 
     		</v-ons-col>
-    	</v-ons-row>
-    	 
+    	</v-ons-row>   	 
     </v-ons-card>
    
     <v-ons-card>
@@ -26,7 +26,8 @@
     					{{ line.action }}
     				</v-ons-col>
     				<v-ons-col style="text-align: right">
-    					+{{ line.nbPoint }}
+    					{{ line.nbPoint }}
+    					<v-ons-icon icon="fa-star" style="color:#cca108"></v-ons-icon> 
     				</v-ons-col>
     			</v-ons-row>  
     		</v-ons-list-item>
@@ -42,7 +43,8 @@
     					{{action}}
     				</v-ons-col>
     				<v-ons-col style="text-align: right">
-    					+{{actionsTransActivite.get(action)}}
+    					{{actionsTransActivite.get(action)}}
+    					<v-ons-icon icon="fa-star" style="color:#cca108"></v-ons-icon> 
     				</v-ons-col>	 
     			</v-ons-row>
     		</v-ons-list-item>
@@ -52,7 +54,8 @@
     					ACTIVITE_REUSSIE
     				</v-ons-col>
     				<v-ons-col style="text-align: right">
-    					+?
+    					?
+    					<v-ons-icon icon="fa-star" style="color:#cca108"></v-ons-icon> 
     				</v-ons-col>	 
     			</v-ons-row>
     		</v-ons-list-item>

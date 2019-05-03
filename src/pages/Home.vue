@@ -138,6 +138,9 @@ export default {
     },
     indexActivite() {
        return this.$store.state.releve.indexActivite
+    },
+    trophies() {
+      return this.$store.state.releve.trophies
     }
   },
   watch : {
@@ -180,17 +183,17 @@ export default {
             this.$store.commit('releve/addPoints', line.nbPoint)
             this.$store.commit('releve/updateJournal', line)
           //attribution des trophées
-          } else if (this.currentActivity.mecaniques[i].nom == 'trophee') {
-            var trophee = new Object()
-            trophee.path = this.currentActivity.mecaniques[i].image
-            trophee.nom = this.currentActivity.mecaniques[i].titre
-            this.$store.commit('releve/addTrophie', trophee)
-            let toast = this.$toasted.show("Nouveau trophée '" + trophee.nom + "'", { 
-              fullWidth : true,
-              position: "bottom-center", 
-              duration : 5000,
-              icon : "trophy"
-            });
+          } else if (this.currentActivity.mecaniques[i].nom == 'trophee') {  
+            let nom = this.currentActivity.mecaniques[i].titre
+            if (!this.tropheeDejaGagne(nom)) {     
+              this.$store.commit('releve/winTrophy', nom)
+              let toast = this.$toasted.show("Nouveau trophée '" + nom + "'", { 
+                fullWidth : true,
+                position: "bottom-center", 
+                duration : 5000,
+                icon : "trophy"
+              });
+            }
           }
         }
       }
@@ -206,16 +209,17 @@ export default {
             }
             for (let j = 0 ; j < this.currentMission.mecaniques[i].listeDeTrophees.length; j++) {
               if (nbActivitesReussies >= this.currentMission.mecaniques[i].listeDeTrophees[j].condition.nbMissionReussie) {
-                var trophee = new Object()
-                trophee.path = this.currentMission.mecaniques[i].listeDeTrophees[j].image
-                trophee.nom = this.currentMission.mecaniques[i].listeDeTrophees[j].titre
-                this.$store.commit('releve/addTrophie', trophee)
-                let toast = this.$toasted.show("Nouveau trophée '" + trophee.nom + "'", { 
+                let nom = this.currentMission.mecaniques[i].listeDeTrophees[j].titre
+                if (!this.tropheeDejaGagne(nom)) {
+                  this.$store.commit('releve/winTrophy', nom)
+                  let toast = this.$toasted.show("Nouveau trophée '" + nom + "'", { 
                   fullWidth : true,
                   position: "bottom-center", 
                   duration : 5000,
                   icon : "trophy"
                 });
+                }
+                
               }
             } 
           }
@@ -264,6 +268,16 @@ export default {
             objet = ''
         }
 
+        for (let j = 0; j < this.currentMission.activites[i].mecaniques.length; j++) {
+          if (this.currentMission.activites[i].mecaniques[j].nom == 'trophee') {
+            var trophee = new Object()
+            trophee.path = this.currentMission.activites[i].mecaniques[j].image
+            trophee.nom = this.currentMission.activites[i].mecaniques[j].titre
+            trophee.obtenu = false
+            this.$store.commit('releve/addTrophie', trophee)
+          }
+        }
+
         var nbAction = this.currentMission.activites[i].conditionDeFin[0].nbArbre
         this.$store.commit('releve/setGoal', nbAction)
         var arbre = nbAction > 1 ? " arbres" : " arbre"
@@ -273,11 +287,20 @@ export default {
       for (let i = 0; i < this.currentMission.mecaniques.length; i++) {
         if (this.currentMission.mecaniques[i].nom == 'score') {
           for (let j = 0; j < this.currentMission.mecaniques[i].actions.length; j++) {
-            var action = this.currentMission.mecaniques[i].actions[j].code
-            var nbPoint = this.currentMission.mecaniques[i].actions[j].nbPoint
-            this.$store.commit('releve/addActionTransActivite', action + "#" + nbPoint)
+            var param = new Object()
+            param.action = this.currentMission.mecaniques[i].actions[j].code
+            param.nbPoint = this.currentMission.mecaniques[i].actions[j].nbPoint
+            this.$store.commit('releve/addActionTransActivite', param)
           }
-        }
+        } else if (this.currentMission.mecaniques[i].nom == 'trophee') {
+            for (let j = 0 ; j < this.currentMission.mecaniques[i].listeDeTrophees.length; j++) {
+                var trophee = new Object()
+                trophee.path = this.currentMission.mecaniques[i].listeDeTrophees[j].image
+                trophee.nom = this.currentMission.mecaniques[i].listeDeTrophees[j].titre
+                trophee.obtenu = false
+                this.$store.commit('releve/addTrophie', trophee)
+            } 
+          }
       }
 
       this.newActivity()
@@ -292,6 +315,15 @@ export default {
       var nbAction = this.currentMission.activites[this.indexActivite].conditionDeFin[0].nbArbre
       this.$store.commit('releve/setGoal', nbAction)
       this.activites[this.indexActivite].statut = 'onGoing'
+    },
+    tropheeDejaGagne(trophyName) {
+      var res = false
+      for (let i = 0 ; i < this.trophies.length; i++) {
+        if (this.trophies[i].nom == trophyName && this.trophies[i].obtenu == true) {
+          res = true
+        } 
+      }
+      return res
     }
   }
 };

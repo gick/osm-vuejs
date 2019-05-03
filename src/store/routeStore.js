@@ -149,12 +149,22 @@ export default {
              updateCompletion(state, "add", releve.specie)
           }      
         },
-        addActionTransActivite(state, params){
-          state.actionsTransActivite.set(params.split('#')[0], params.split('#')[1])
+        addActionTransActivite(state, param){
+          state.actionsTransActivite.set(param.action, param.nbPoint)
         },
         addTrophie(state, trophie) {
-          state.trophies.unshift(trophie)
-          state.notifProfil++
+          for (let i = 0 ; i < state.trophies.length; i++) {
+            if (state.trophies[i].nom == trophie.nom) return
+          }
+          state.trophies.push(trophie)
+        },
+        winTrophy(state, trophyName) {
+          for (let i = 0; i<state.trophies.length; i++) {
+            if (state.trophies[i].nom == trophyName && state.trophies[i].obtenu == false) {
+              state.trophies[i].obtenu = true
+              state.notifProfil++
+            }
+          }  
         },
         clearActionsTransActivite(state) {
           state.actionsTransActivite.clear()
