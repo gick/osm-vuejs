@@ -4,7 +4,7 @@
       Temps restant : {{ hours2digits }}:{{ minutes2digits }}:{{ secondes2digits }}
       <v-ons-progress-circular :value=progress></v-ons-progress-circular>
     </p>
-    <v-ons-button v-show="timer==null" @click="play">Démarrer l'activité'</v-ons-button>  
+    <v-ons-button v-show="timer==null" @click="play">Démarrer l'activité</v-ons-button>  
   </div>
  
 </template>
