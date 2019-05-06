@@ -58,11 +58,6 @@
 </template>
 
 <script>
-import PullHook from "./PullHook.vue";
-import Dialogs from "./Dialogs.vue";
-import Buttons from "./Buttons.vue";
-import Carousel from "./Carousel.vue";
-import InfiniteScroll from "./InfiniteScroll.vue";
 import Progress from "./Progress.vue";
 import SimplePage from "./SimplePage.vue";
 import missions from "../missions.json";
@@ -76,45 +71,6 @@ export default {
   data() {
     return {
       activites: [],
-      pages: [
-        {
-          component: SimplePage,
-          label: "Simple Page",
-          desc: "Just to test adding a simple page."
-        },
-        {
-          component: PullHook,
-          label: "Pull Hook",
-          desc: 'Simple "pull to refresh" functionality to update data.'
-        },
-        {
-          component: Dialogs,
-          label: "Dialogs",
-          desc:
-            "Components and utility methods to display many types of dialogs."
-        },
-        {
-          component: Buttons,
-          label: "Buttons",
-          desc:
-            "Different styles for buttons, floating action buttons and speed dials."
-        },
-        {
-          component: Carousel,
-          label: "Carousel",
-          desc: "Customizable carousel that can be optionally fullscreen."
-        },
-        {
-          component: InfiniteScroll,
-          label: "Infinite Scroll",
-          desc: 'Two types of infinite lists: "Load More" and "Lazy Repeat".'
-        },
-        {
-          component: Progress,
-          label: "Progress",
-          desc: "Linear progress, circular progress and spinners."
-        }
-      ]
     };
   },
   mounted() {

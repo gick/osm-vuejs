@@ -163,6 +163,10 @@ import ReleveOSM from "./ReleveOSM.vue";
 import ReleveIdentification from "./ReleveIdentification.vue";
 //Utility function extracting all contributors id 
 // including from prev
+
+
+//TODO Mettre bouton flottant sur la carte pour le centrage
+// carte à 100% height
 let extractContributor=function(releve){
   let extractValidator=item=>item.validation.map(val=>val.id)
   let extractModifier=item=>item.modifierId

@@ -9,20 +9,25 @@ export default {
       strict: true,
       namespaced: true,
       state: {
-          identification:false,
-          verification:false,
-          heights: [
-            "Inconnue",
-            "Moins de 4m",
-            "4 à 8m",
-            "8 à 12m",
-            "12 à 16m",
-            "16 à 20m",
-            "20 à 24m",
-            "24 à 28m",
-            "28 à 32m",
-            "Plus de 32m"
-          ],
+        identification: false,
+        verification: false,
+        confidenceValues: [
+          'Non renseigné',
+          'Peu confiant',
+          'Confiant',
+        ],
+        heights: [
+          "Inconnue",
+          "Moins de 4m",
+          "4 à 8m",
+          "8 à 12m",
+          "12 à 16m",
+          "16 à 20m",
+          "20 à 24m",
+          "24 à 28m",
+          "28 à 32m",
+          "Plus de 32m"
+        ],
       }
     },
     osmData: {
@@ -186,16 +191,16 @@ export default {
         updateJournal(state, line) {
           state.journal.unshift(line)
         },
-        removeObservation(state,releve){
+        removeObservation(state, releve) {
           let index = state.releves.findIndex(val => val._id == releve._id)
-          if(index!=-1){
-            state.releves.splice(index,1)
+          if (index != -1) {
+            state.releves.splice(index, 1)
           }
         },
-        setNoTree(state,releve){
+        setNoTree(state, releve) {
           let index = state.releves.findIndex(val => val._id == releve._id)
-          if(index!=-1){
-            state.releves[index].noTree=releve.noTree
+          if (index != -1) {
+            state.releves[index].noTree = releve.noTree
           }
         },
         modify(state, newReleve) {
@@ -208,7 +213,7 @@ export default {
             if (newReleve.image) {
               updateCompletion(state, "modify/validate_photo", state.releves[index].prev[indexRelevePrecedent].specie)
             } else {
-           //   updateCompletion(state, "modify/validate", state.releves[index].prev[indexRelevePrecedent].specie)
+              //   updateCompletion(state, "modify/validate", state.releves[index].prev[indexRelevePrecedent].specie)
             }
           }
         },
@@ -285,33 +290,39 @@ export default {
             })
           commit("pointsActions", extractActions(newReleve, false))
         },
-        setNoTree({commit},releve){
+        setNoTree({
+          commit
+        }, releve) {
           axios.defaults.withCredentials = true
           axios.post('/api/noTree', {
-            releve: releve
-          })
-          .then(function(response){
-            commit('setNoTree',response.data.observation)
-          })
+              releve: releve
+            })
+            .then(function (response) {
+              commit('setNoTree', response.data.observation)
+            })
         },
-        unsetNoTree({commit},releve){
+        unsetNoTree({
+          commit
+        }, releve) {
           axios.defaults.withCredentials = true
           axios.post('/api/unsetNoTree', {
-            releve: releve
-          })
-          .then(function(response){
-            commit('setNoTree',response.data.observation)
-          })
+              releve: releve
+            })
+            .then(function (response) {
+              commit('setNoTree', response.data.observation)
+            })
         },
 
-        remove({commit},releve){
+        remove({
+          commit
+        }, releve) {
           axios.defaults.withCredentials = true
           axios.post('/api/remove', {
-            releve: releve
-          })
-          .then(function(response){
-            commit('removeObservation',releve)
-          })
+              releve: releve
+            })
+            .then(function (response) {
+              commit('removeObservation', releve)
+            })
 
         },
         identification({
@@ -374,9 +385,9 @@ export default {
       state: {
         name: null,
         id: null,
-        isAnon:false,
-        formerName:null,
-        formerId:null,
+        isAnon: false,
+        formerName: null,
+        formerId: null,
       },
       mutations: {
         set(state, user) {
@@ -384,14 +395,14 @@ export default {
           state.id = user.id
         },
         changeIdentity(state, user) {
-          state.formerName=state.name
-          state.formerId=state.id
+          state.formerName = state.name
+          state.formerId = state.id
           state.name = user.name
           state.id = user.id
         },
-        restoreIdentity(state){
-          state.name=state.formerName
-          state.id=state.formerId
+        restoreIdentity(state) {
+          state.name = state.formerName
+          state.id = state.formerId
         }
 
       },
@@ -409,22 +420,36 @@ export default {
             id: null
           });
         },
-        setAnonymous({commit,state}){
-          state.isAnon=true
+        setAnonymous({
+          commit,
+          state
+        }) {
+          state.isAnon = true
           axios.post('/api/anonymous')
-          .then(function(response){
-            let {username, userId}=response.data
-            commit('changeIdentity',{name:username,id:userId})
-          })
+            .then(function (response) {
+              let {
+                username,
+                userId
+              } = response.data
+              commit('changeIdentity', {
+                name: username,
+                id: userId
+              })
+            })
         },
-        restoreSession({state,commit}){
-          state.isAnon=false
-          axios.post('/api/restoreSession',{id:state.formerId,username:state.formerName})
-          .then(function(response){
-            commit('restoreIdentity')
-          })
-        }
-        ,
+        restoreSession({
+          state,
+          commit
+        }) {
+          state.isAnon = false
+          axios.post('/api/restoreSession', {
+              id: state.formerId,
+              username: state.formerName
+            })
+            .then(function (response) {
+              commit('restoreIdentity')
+            })
+        },
         loadObservation({
           commit
         }) {

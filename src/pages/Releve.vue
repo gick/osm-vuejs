@@ -12,6 +12,7 @@
           <ons-list-item v-show="releve.common">Nom commun : {{releve.common}}</ons-list-item>
           <ons-list-item v-show="releve.height">Hauteur : {{releve.height}}</ons-list-item>
           <ons-list-item v-show="releve.crown">Diamètre de la couronne : {{releve.crown}}</ons-list-item>
+          <ons-list-item v-show="releve.confidence">Degré de confiance de l'observateur : {{releve.confidence}}</ons-list-item>
           <ons-list-item v-show="releve.noTree.length>0">Utilisateurs déclarant ce relevé douteux (sans arbre) : {{releve.noTree.length}}</ons-list-item>
 
           <ons-list-item

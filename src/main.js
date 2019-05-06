@@ -3,6 +3,11 @@ import 'onsenui/css/onsenui.css'; // Onsen UI basic CSS
 import './onsen-css-components.css'; // Onsen UI CSS components source for custom themes (requires cssnext)
 import './vue-onsenui-kitchensink.css'; // CSS specific to this app
 import Toasted from 'vue-toasted';
+import LogRocket from 'logrocket';
+LogRocket.init('mpgeqr/albiziapp');
+import createPlugin from 'logrocket-vuex';
+
+const logrocketPlugin = createPlugin(LogRocket);
 
 import Vue from 'vue';
 import Vuex from 'vuex';
@@ -62,7 +67,7 @@ Vue.component('b-progress-bar', BProgressBar);
 new Vue({
   el: '#app',
   render: h => h(AppNavigator),
-  store: new Vuex.Store(storeLike),
+  store: new Vuex.Store(storeLike,{  plugins: [logrocketPlugin]  }),
   beforeCreate() {
     // Shortcut for Material Design
     Vue.prototype.md = this.$ons.platform.isAndroid();
