@@ -20,6 +20,7 @@
 </template>
 
 <script>
+//TODO vue grille avec item grisé/vue switch
 export default {
   data() {
     return {

@@ -10,7 +10,6 @@
 <script>
 var osmAuth = require('osm-auth');
 import AppSplitter from './AppSplitter.vue';
-import Carousel from './pages/Carousel.vue'
 export default {
   beforeCreate() {
         this.$store.commit('navigator/push', AppSplitter);

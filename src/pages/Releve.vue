@@ -1,7 +1,7 @@
 <template>
   <v-ons-page>
     <custom-toolbar backLabel="Retour"></custom-toolbar>
-    <ons-card>
+    <ons-card v-if="releve">
       <div class="title">Relevé</div>
       <div class="content">
         <ons-list>
@@ -9,11 +9,15 @@
           <ons-list-item v-show="releve.authorName">Auteur du relevé : {{releve.authorName}}</ons-list-item>
           <ons-list-item v-show="releve.specie">Espèce : {{releve.specie}}</ons-list-item>
           <ons-list-item v-show="releve.genus">Genre : {{releve.genus}}</ons-list-item>
+          <ons-list-item v-show="releve.common">Nom commun : {{releve.common}}</ons-list-item>
+          <ons-list-item v-show="releve.height">Hauteur : {{releve.height}}</ons-list-item>
+          <ons-list-item v-show="releve.crown">Diamètre de la couronne : {{releve.crown}}</ons-list-item>
+          <ons-list-item v-show="releve.confidence">Degré de confiance de l'observateur : {{releve.confidence}}</ons-list-item>
+          <ons-list-item v-show="releve.noTree.length>0">Utilisateurs déclarant ce relevé douteux (sans arbre) : {{releve.noTree.length}}</ons-list-item>
 
           <ons-list-item
             v-show="releve.validation.length-1"
           >Nombre de validations : {{releve.validation.length-1}}</ons-list-item>
-          <ons-list-item v-show="releve.common">Nom commun : {{releve.common}}</ons-list-item>
           <ons-list-item
             v-show="releve.modifierName"
           >Dernière modification par : {{releve.modifierName}}</ons-list-item>
@@ -23,20 +27,29 @@
         <section style="margin: 16px">
           <p class="center">
             Vous pouvez
-            <b>modifier</b> le relevé ou bien
-            <b>confirmer que les informations sont correctes</b>
+            <b>modifier</b> le relevé
+            <b>ou bien confirmer que les informations sont correctes</b>
           </p>
-          <v-ons-button
-            @click="modify"
-            style="margin: 6px 0"
-          >Modifier</v-ons-button>
-          <v-ons-button
-            :disabled="releve.validated"
-            @click="validate"
-            style="margin: 6px 0"
-          >Information correctes</v-ons-button>
+          <v-ons-button @click="modify" :disabled="noTreeValue" style="margin: 6px 0">Modifier</v-ons-button>
+          <v-ons-button :disabled="validated || noTreeValue" @click="validate" style="margin: 6px 0">Confirmer</v-ons-button>
           <v-ons-button v-if="visualize" @click="visualizeReleve" style="margin: 6px 0">Voir</v-ons-button>
         </section>
+        <section style="margin: 16px">
+          <p class="center">
+            Si aucun arbre n'est présent,
+            <b>vous pouvez tagger ce relevé douteux</b>
+          </p>
+          <v-ons-switch
+            v-model="noTreeValue"
+            :disabled="allowNoTree"
+            style="margin: 6px 0"
+          ></v-ons-switch>
+        </section>
+        <section style="margin: 16px">
+          <p class="center">Supprimer le relevé, cette opération est définitive!</p>
+          <v-ons-button @click="removeObs" :disabled="!allowRemove" style="margin: 6px 0">Supprimer</v-ons-button>
+        </section>
+
         <section v-if="releve.prev.length>0" style="margin: 16px">
           <v-ons-list>
             <v-ons-list-item expandable>
@@ -85,6 +98,35 @@ export default {
   computed: {
     releve() {
       return this.$store.state.releve.releves.find(rel => rel._id == this.id);
+    },
+    noTreeValue: {
+      get() {
+        let el = this.releve.noTree.filter(val => val.osmId == this.userID);
+        return el.length ? true : false;
+      },
+      set(newval) {
+        if (newval) {
+          this.$store.dispatch("releve/setNoTree", this.releve);
+        } else {
+          this.$store.dispatch("releve/unsetNoTree", this.releve);
+        }
+      }
+    },
+    userID() {
+      return this.$store.state.user.id;
+    },
+    validated() {
+      let val = this.releve.validation.find(val => val.id == this.userID);
+      return val ? true : false;
+    },
+    allowNoTree() {
+      return (
+        this.releve.osmId == this.userID ||
+        this.releve.modifierId == this.userID || this.validated
+      );
+    },
+    allowRemove() {
+      return this.releve.osmId == this.userID && this.releve.prev.length == 0;
     }
   },
   methods: {
@@ -95,10 +137,20 @@ export default {
     },
     validate() {
       this.$store.dispatch("releve/validateObservation", this.releve);
-      this.$toasted.show("Votre validation à été prise en compte", {fullWidth:true, position:"bottom-center",duration: 2000 }); // Shows from 0s to 2s
+      this.$toasted.show("Votre validation à été prise en compte", {
+        fullWidth: true,
+        position: "bottom-center",
+        duration: 2000
+      }); // Shows from 0s to 2s
     },
-    mutate() {
-      this.releve.prev.push({ test: "d" });
+    removeObs() {
+      this.$store.dispatch("releve/remove", this.releve);
+      this.$store.commit("navigator/pop");
+      this.$toasted.show("Votre relevé a été supprimé", {
+        fullWidth: true,
+        position: "bottom-center",
+        duration: 2000
+      }); // Shows from 0s to 2s
     },
     modify() {
       this.$store.commit("navigator/push", {

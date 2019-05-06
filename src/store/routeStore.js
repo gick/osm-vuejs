@@ -5,6 +5,31 @@ import missions from "../missions.json"
 var osmAuth = require("osm-auth");
 export default {
   modules: {
+    commonData: {
+      strict: true,
+      namespaced: true,
+      state: {
+        identification: false,
+        verification: false,
+        confidenceValues: [
+          'Non renseigné',
+          'Peu confiant',
+          'Confiant',
+        ],
+        heights: [
+          "Inconnue",
+          "Moins de 4m",
+          "4 à 8m",
+          "8 à 12m",
+          "12 à 16m",
+          "16 à 20m",
+          "20 à 24m",
+          "24 à 28m",
+          "28 à 32m",
+          "Plus de 32m"
+        ],
+      }
+    },
     osmData: {
       strict: true,
       namespaced: true,
@@ -99,8 +124,8 @@ export default {
         indexActivite: 0,
         completion: 0,
         goal: 0,
-        chgtActivity : 0,
-        score : 0,
+        chgtActivity: 0,
+        score: 0,
         trophies: [],
         identificationMode: false,
         verificationMode: false,
@@ -146,11 +171,23 @@ export default {
           if (releve.image) {
             updateCompletion(state, "add_photo", releve.specie, releve.genus)
           } else {
+<<<<<<< HEAD
              updateCompletion(state, "add", releve.specie, releve.genus)
           }      
         },
         addActionTransActivite(state, param){
           state.actionsTransActivite.set(param.action, param.nbPoint)
+=======
+            updateCompletion(state, "add", releve.specie)
+          }
+        },
+        addFromOutside(state, releve) {
+          state.releves.push(releve)
+        },
+
+        addActionTransActivite(state, params) {
+          state.actionsTransActivite.set(params.split('#')[0], params.split('#')[1])
+>>>>>>> 810ea189166f9846a664fe65f0f289fd3a12e154
         },
         addTrophie(state, trophie) {
           for (let i = 0 ; i < state.trophies.length; i++) {
@@ -172,6 +209,18 @@ export default {
         updateJournal(state, line) {
           state.journal.unshift(line)
         },
+        removeObservation(state, releve) {
+          let index = state.releves.findIndex(val => val._id == releve._id)
+          if (index != -1) {
+            state.releves.splice(index, 1)
+          }
+        },
+        setNoTree(state, releve) {
+          let index = state.releves.findIndex(val => val._id == releve._id)
+          if (index != -1) {
+            state.releves[index].noTree = releve.noTree
+          }
+        },
         modify(state, newReleve) {
           let index = state.releves.findIndex(releve => releve._id == newReleve._id)
           if (index != -1) {
@@ -180,13 +229,23 @@ export default {
             state.releves[index].prev=newReleve.prev
             var indexRelevePrecedent = state.releves[index].prev.length -1
             var relevePrecedent = state.releves[index].prev[indexRelevePrecedent]
+
             if (newReleve.image) {
               updateCompletion(state, "modify/validate_photo", relevePrecedent.specie, relevePrecedent.genus)
             } else {
-              updateCompletion(state, "modify/validate", relevePrecedent.specie, relevePrecedent.genus)
-            } 
-          }   
+              updateCompletion(state, "modify/validate", state.releves[index].prev[indexRelevePrecedent].specie)
+            }
+          }
         },
+        modifyFromOutside(state, newReleve) {
+          let index = state.releves.findIndex(releve => releve._id == newReleve._id)
+          if (index != -1) {
+            // state.releves[index].test='truc'    
+            state.releves.splice(index, 1, newReleve)
+            state.releves[index].prev = newReleve.prev
+          }
+        },
+
         addMultiple(state, observations) {
           for (var observation of observations) {
             state.releves.push(observation)
@@ -211,14 +270,14 @@ export default {
           state.differentGender.length = 0
         },
         pointsActions(state, actions) {
-          for (let i = 0; i< actions.length; i++) {
+          for (let i = 0; i < actions.length; i++) {
             if (state.actionsTransActivite.has(actions[i])) {
               var nbPoint = parseInt(state.actionsTransActivite.get(actions[i]))
               var line = new Object()
               line.action = actions[i]
               line.nbPoint = nbPoint
               state.journal.unshift(line)
-            //  this.$toasted.show("Vous avez obtenu " + nbPoint + " points bonus pour " + actions[i], {fullWidth:true, position:"bottom-center",duration: 2000 });
+              //  this.$toasted.show("Vous avez obtenu " + nbPoint + " points bonus pour " + actions[i], {fullWidth:true, position:"bottom-center",duration: 2000 });
               state.score += nbPoint
             }
           }
@@ -237,19 +296,54 @@ export default {
               commit('validate', response.data.observation)
             })
 
-          commit("pointsActions", ["VALIDER"])    
+          commit("pointsActions", ["VALIDER"])
         },
         modifyObservation({
           commit
         }, newReleve) {
           axios.defaults.withCredentials = true
-            axios.post('/api/modifyObservation', {
-                releve: newReleve
-              })
-              .then(function (response) {
-                commit('modify', response.data.observation)
-              })
-          commit("pointsActions", extractActions(newReleve,false))
+          axios.post('/api/modifyObservation', {
+              releve: newReleve
+            })
+            .then(function (response) {
+              commit('modify', response.data.observation)
+            })
+          commit("pointsActions", extractActions(newReleve, false))
+        },
+        setNoTree({
+          commit
+        }, releve) {
+          axios.defaults.withCredentials = true
+          axios.post('/api/noTree', {
+              releve: releve
+            })
+            .then(function (response) {
+              commit('setNoTree', response.data.observation)
+            })
+        },
+        unsetNoTree({
+          commit
+        }, releve) {
+          axios.defaults.withCredentials = true
+          axios.post('/api/unsetNoTree', {
+              releve: releve
+            })
+            .then(function (response) {
+              commit('setNoTree', response.data.observation)
+            })
+        },
+
+        remove({
+          commit
+        }, releve) {
+          axios.defaults.withCredentials = true
+          axios.post('/api/remove', {
+              releve: releve
+            })
+            .then(function (response) {
+              commit('removeObservation', releve)
+            })
+
         },
         identification({
           state,
@@ -265,7 +359,7 @@ export default {
           commit
         }, releve) {
 
-         // commit('add', releve)
+          // commit('add', releve)
           axios.defaults.withCredentials = true
           if (state.identificationMode) {
             releve.identificationMode = true
@@ -283,9 +377,9 @@ export default {
             }
           })
           commit("pointsActions", extractActions(releve, true))
-        }  
+        }
 
-      }   
+      }
     },
 
     splitter: {
@@ -311,12 +405,26 @@ export default {
       state: {
         name: null,
         id: null,
+        isAnon: false,
+        formerName: null,
+        formerId: null,
       },
       mutations: {
         set(state, user) {
           state.name = user.name
           state.id = user.id
+        },
+        changeIdentity(state, user) {
+          state.formerName = state.name
+          state.formerId = state.id
+          state.name = user.name
+          state.id = user.id
+        },
+        restoreIdentity(state) {
+          state.name = state.formerName
+          state.id = state.formerId
         }
+
       },
       actions: {
         logout({
@@ -331,6 +439,36 @@ export default {
             name: null,
             id: null
           });
+        },
+        setAnonymous({
+          commit,
+          state
+        }) {
+          state.isAnon = true
+          axios.post('/api/anonymous')
+            .then(function (response) {
+              let {
+                username,
+                userId
+              } = response.data
+              commit('changeIdentity', {
+                name: username,
+                id: userId
+              })
+            })
+        },
+        restoreSession({
+          state,
+          commit
+        }) {
+          state.isAnon = false
+          axios.post('/api/restoreSession', {
+              id: state.formerId,
+              username: state.formerName
+            })
+            .then(function (response) {
+              commit('restoreIdentity')
+            })
         },
         loadObservation({
           commit
@@ -389,21 +527,21 @@ export default {
     }
 
     ,
-    users:{
+    users: {
       strict: true,
       namespaced: true,
-      state:{
-        userList:[]
+      state: {
+        userList: []
       },
       mutations: {
         addUser(state, user) {
-          let index=state.userList.findIndex(val=>val.id==user.id)
-          if(index==-1)
-          state.userList.push(user);
+          let index = state.userList.findIndex(val => val.id == user.id)
+          if (index == -1)
+            state.userList.push(user);
         },
-        removeUser(state,user){
-          let index=state.userList.findIndex(val=>val.id==user.id)
-          state.userList.splice(index,1)
+        removeUser(state, user) {
+          let index = state.userList.findIndex(val => val.id == user.id)
+          state.userList.splice(index, 1)
         }
       }
 
@@ -428,10 +566,6 @@ export default {
 function updateCompletion(state, operation, specie, genus) {
 
   var action = state.activite.typeActivite.action
-
-  
-
- 
 
   if (action == 'LOCALISER' && operation.includes('add')) {
     state.completion++
@@ -473,14 +607,14 @@ function updateCompletion(state, operation, specie, genus) {
 function extractActions(releve, identification) {
   var actions = []
   if (identification) {
-    actions.push("IDENTIFIER") 
+    actions.push("IDENTIFIER")
   }
   if (releve.specie) {
-    actions.push("COMPLETER_ESPECE") 
+    actions.push("COMPLETER_ESPECE")
   }
   if (releve.genus) {
     actions.push("COMPLETER_GENRE")
-  } 
+  }
   if (releve.common) {
     actions.push("COMPLETER_NOM")
   }

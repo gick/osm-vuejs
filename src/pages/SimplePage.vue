@@ -69,11 +69,22 @@
       </v-ons-list-item>
       <v-ons-list-item>
         <div class="left">
+          <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>Degré de confiance
+        </div>
+        <div class="center">
+          <v-ons-select :disabled="noTree" style="margin-left:15px;" v-model="releve.confidence">
+            <option v-for="(confidence,index) in confidenceValues" :value="confidence"  v-bind:key="index+'confidence'">{{ confidence }}</option>
+          </v-ons-select>
+        </div>
+      </v-ons-list-item>
+
+      <v-ons-list-item>
+        <div class="left">
           <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>Hauteur
         </div>
         <div class="center">
-          <v-ons-select :disabled="noTree" style="margin-left:15px;" v-model="selectedHeight">
-            <option v-for="heigh in heights" :value="heigh">{{ heigh }}</option>
+          <v-ons-select :disabled="noTree" style="margin-left:15px;" v-model="releve.height">
+            <option v-for="(heigh,index) in heights" :value="heigh"  v-bind:key="index+'height'">{{ heigh }}</option>
           </v-ons-select>
         </div>
       </v-ons-list-item>
@@ -82,17 +93,17 @@
           <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>Diamètre de la couronne  
         </div>
         <div class="center">
-          <v-ons-select :disabled="noTree" style="margin-left:15px;" v-model="selectedCrown">
-            <option v-for="heigh in heights" :value="heigh">{{ heigh }}</option>
+          <v-ons-select :disabled="noTree"  style="margin-left:15px;" v-model="releve.crown">
+            <option v-for="(heigh,index) in heights" :value="heigh" v-bind:key="index+'crown'">{{ heigh }}</option>
           </v-ons-select>
         </div>
       </v-ons-list-item>
-      <v-ons-list-item>
+      <v-ons-list-item  v-if="validate" >
         <div class="left">
           <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>Arbre non présent  
         </div>
-        <div class="center">
-          <v-ons-switch
+        <div class="center" style="margin-left:15px;">
+          <v-ons-switch @change="releve.noTree=noTree"
             v-model="noTree">
           </v-ons-switch>
         </div>
@@ -144,19 +155,8 @@ export default {
       releve: {},
       noTree:false,
       selectedHeight:0,
+      selectedConfidence:'Non renseignée',
       selectedCrown:0,
-      heights: [
-        "Inconnue",
-        "Moins de 4m",
-        "4 à 8m",
-        "8 à 12m",
-        "12 à 16m",
-        "16 à 20m",
-        "20 à 24m",
-        "24 à 28m",
-        "28 à 32m",
-        "Plus de 32m"
-      ],
       source: speciesList,
       genusList: genusList,
       specieSource: specieVernac,
@@ -169,6 +169,12 @@ export default {
     PictureInput
   },
   computed: {
+    confidenceValues(){
+      return this.$store.state.commonData.confidenceValues
+    },
+    heights(){
+      return this.$store.state.commonData.heights
+    },
     completed() {
       if (this.genus.length) {
         return true;
