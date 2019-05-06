@@ -34,7 +34,8 @@
               <v-ons-col width="10%">
                <v-ons-icon icon="fa-angle-double-right" @click="activityEnd('skipped')" size="30px"></v-ons-icon> 
              </v-ons-col>
-            </v-ons-row>            
+            </v-ons-row>   
+            <countdown  v-if="totalSecondes!=0" :totalSecondes=totalSecondes @timeout="activityEnd('done')"></countdown>       
           </v-ons-card>
           <v-ons-card class=opaque v-show="(item.statut=='done')">
             ✓ {{item.intitule}}
@@ -76,6 +77,7 @@ export default {
   data() {
     return {
       activites: [],
+      totalSecondes : 0,
       pages: [
         {
           component: SimplePage,
@@ -240,15 +242,18 @@ export default {
         
         var action;
         switch (this.currentMission.activites[i].typeActivite.action) {
+          case 'LOCALISER' : 
+            action = 'Localise'
+            break;
           case 'IDENTIFIER' : 
-          action = 'Identifie'
-          break;
-        case 'VERIFIER' :
-          action = 'Modifie ou valide'
-          break;
-        case 'PHOTOGRAPHIER' :
-          action = 'Prend une photo de'
-          break;
+            action = 'Identifie'
+            break;
+          case 'VERIFIER' :
+            action = 'Modifie ou valide'
+            break;
+          case 'PHOTOGRAPHIER' :
+            action = 'Prend une photo de'
+            break;
         }
         var objet;
         switch (this.currentMission.activites[i].typeActivite.objet) {
@@ -268,6 +273,21 @@ export default {
             objet = ''
         }
 
+        var gameMode;
+        switch (this.currentMission.activites[i].gameMode) {
+          case 'classic' :
+            gameMode = ''
+            break;
+          case 'identification' :
+            gameMode = " à partir d'un relevé d'expert"
+            break;
+          case 'verification' :
+            gameMode = " à partir d'un relevé d'un autre utilisateur"
+            break;
+        }
+
+        var tempsLimite = ""
+
         for (let j = 0; j < this.currentMission.activites[i].mecaniques.length; j++) {
           if (this.currentMission.activites[i].mecaniques[j].nom == 'trophee') {
             var trophee = new Object()
@@ -275,13 +295,21 @@ export default {
             trophee.nom = this.currentMission.activites[i].mecaniques[j].titre
             trophee.obtenu = false
             this.$store.commit('releve/addTrophie', trophee)
+          } else if(this.currentMission.activites[i].mecaniques[j].nom == 'chronometreDescendant') {
+            tempsLimite = " en un temps limite"
           }
         }
 
         var nbAction = this.currentMission.activites[i].conditionDeFin[0].nbArbre
         this.$store.commit('releve/setGoal', nbAction)
-        var arbre = nbAction > 1 ? " arbres" : " arbre"
-        this.activites.push(new Activite(action + " " + nbAction + arbre + objet,"toDo"));
+
+        if (nbAction) {
+          var arbre = nbAction > 1 ? " arbres" : " arbre"
+          this.activites.push(new Activite(action + " " + nbAction + arbre + objet + gameMode + tempsLimite,"toDo"));
+        } else {
+          this.activites.push(new Activite(action + " un maximum d'arbre"+ objet + gameMode + tempsLimite,"toDo"));
+        }
+        
       }
 
       for (let i = 0; i < this.currentMission.mecaniques.length; i++) {
@@ -315,6 +343,15 @@ export default {
       var nbAction = this.currentMission.activites[this.indexActivite].conditionDeFin[0].nbArbre
       this.$store.commit('releve/setGoal', nbAction)
       this.activites[this.indexActivite].statut = 'onGoing'
+
+      for (let i = 0 ; i < this.currentMission.activites[this.indexActivite].conditionDeFin.length; i++) {
+        if (this.currentMission.activites[this.indexActivite].conditionDeFin[i].tempsLimite) {
+          this.totalSecondes = this.currentMission.activites[this.indexActivite].conditionDeFin[i].tempsLimite
+          break
+        } else {
+          this.totalSecondes = 0
+        }
+      }
     },
     tropheeDejaGagne(trophyName) {
       var res = false

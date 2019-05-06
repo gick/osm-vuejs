@@ -144,9 +144,9 @@ export default {
         add(state, releve) {
           state.releves.push(releve)
           if (releve.image) {
-            updateCompletion(state, "add_photo", releve.specie)
+            updateCompletion(state, "add_photo", releve.specie, releve.genus)
           } else {
-             updateCompletion(state, "add", releve.specie)
+             updateCompletion(state, "add", releve.specie, releve.genus)
           }      
         },
         addActionTransActivite(state, param){
@@ -179,10 +179,11 @@ export default {
             state.releves.splice(index,1,newReleve)
             state.releves[index].prev=newReleve.prev
             var indexRelevePrecedent = state.releves[index].prev.length -1
+            var relevePrecedent = state.releves[index].prev[indexRelevePrecedent]
             if (newReleve.image) {
-              updateCompletion(state, "modify/validate_photo", state.releves[index].prev[indexRelevePrecedent].specie)
+              updateCompletion(state, "modify/validate_photo", relevePrecedent.specie, relevePrecedent.genus)
             } else {
-              updateCompletion(state, "modify/validate", state.releves[index].prev[indexRelevePrecedent].specie)
+              updateCompletion(state, "modify/validate", relevePrecedent.specie, relevePrecedent.genus)
             } 
           }   
         },
@@ -193,7 +194,7 @@ export default {
         },
         validate(state, currentReleve) {
 
-          updateCompletion(state, "modify/validate", currentReleve.specie)
+          updateCompletion(state, "modify/validate", currentReleve.specie, currentReleve.genus)
 
           let index = state.releves.findIndex(releve => releve._id == currentReleve._id)
           if (index != -1) {
@@ -424,43 +425,49 @@ export default {
 };
 
 
-function updateCompletion(state, operation, specie) {
-
-  if (specie == null || specie == '') {
-    return
-  }
+function updateCompletion(state, operation, specie, genus) {
 
   var action = state.activite.typeActivite.action
-  if ((action == 'IDENTIFIER' && operation.includes('add')) ||
-      (action == 'VERIFIER' && operation.includes('modify/validate')) ||
-      (action == 'PHOTOGRAPHIER' && operation.includes('photo'))) {
 
-    if (!state.differentSpecie.includes(specie)) {
-      state.differentSpecie.push(specie)
-    }
+  
 
-    if (!state.differentGender.includes(specie.split(' ')[0])) {
-      state.differentGender.push(specie.split(' ')[0])
-    }
-        
-    var objet = state.activite.typeActivite.objet
+ 
 
-    if (objet == 'ARBRE'){
-      state.completion++;
-    } else if (objet == 'ESPECE' && state.activite.espece.toUpperCase() == specie.toUpperCase()){
-        state.completion++;
-    } else if (objet == 'GENRE' && specie.indexOf(state.activite.genre) == 0){
-      state.completion++;
-    } else if (objet == 'ESPECESDIFFERENTES'){
-      state.completion = state.differentSpecie.length;
-    } else if (objet == 'GENRESDIFFERENTS'){
-      state.completion = state.differentGender.length;
-    }
-
-    if (state.completion == state.goal) {          
-      state.chgtActivity++;
-    }
+  if (action == 'LOCALISER' && operation.includes('add')) {
+    state.completion++
   }
+    
+  else if ((action == 'IDENTIFIER' && operation.includes('add')) ||
+        (action == 'VERIFIER' && operation.includes('modify/validate')) ||
+        (action == 'PHOTOGRAPHIER' && operation.includes('photo'))) {
+
+      if (specie != null && !state.differentSpecie.includes(specie)) {
+        state.differentSpecie.push(specie)
+      }
+
+      if (genus != null && !state.differentGender.includes(genus)) {
+        state.differentGender.push(genus)
+      }
+          
+      var objet = state.activite.typeActivite.objet
+
+      if (objet == 'ARBRE'){
+        state.completion++;
+      } else if (objet == 'ESPECE' && specie != null && state.activite.espece.toUpperCase() == specie.toUpperCase()){
+        state.completion++;
+      } else if (objet == 'GENRE' && genus != null && state.activite.genre.toUpperCase() == genus.toUpperCase()){
+        state.completion++;
+      } else if (objet == 'ESPECESDIFFERENTES'){
+        state.completion = state.differentSpecie.length;
+      } else if (objet == 'GENRESDIFFERENTS'){
+        state.completion = state.differentGender.length;
+      } 
+  }
+      
+  if (state.completion == state.goal) {          
+    state.chgtActivity++;
+  }
+    
 }
 
 function extractActions(releve, identification) {
