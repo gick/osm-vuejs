@@ -73,10 +73,10 @@
                },
                "gameMode":"classic",
                "mecaniques":[  
-                  {  
-                     "nom":"chronometreAscendant",
+                 	{  
+                     "nom":"chronometreDescendant",
                      "conditionDeFin":"tempsLimite"
-                  },
+                  }, 
                   {  
                      "nom":"score",
                      "nbPoint":10
@@ -107,9 +107,9 @@
                "gameMode":"classic",
                "mecaniques":[  
                   {  
-                     "nom":"chronometreAscendant",
+                     "nom":"chronometreDescendant",
                      "conditionDeFin":"tempsLimite"
-                  },
+                  }, 
                   {  
                      "nom":"score",
                      "nbPoint":12
@@ -141,9 +141,9 @@
                "gameMode":"classic",
                "mecaniques":[  
                   {  
-                     "nom":"chronometreAscendant",
+                     "nom":"chronometreDescendant",
                      "conditionDeFin":"tempsLimite"
-                  },
+                  }, 
                   {  
                      "nom":"score",
                      "nbPoint":12

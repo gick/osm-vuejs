@@ -61,6 +61,9 @@ Vue.component('b-progress', BProgress);
 Vue.component('b-progress-bar', BProgressBar);
 Vue.component('countdown', Countdown);
 
+import Progress from 'vue-multiple-progress'
+Vue.component('VmProgress', Progress)
+
 new Vue({
   el: '#app',
   render: h => h(AppNavigator),

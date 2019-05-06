@@ -27,9 +27,12 @@
               <v-ons-col>
                 {{item.intitule}}  
                 <br>
-                <b-progress :value="completion" :max="goal" class="w-75" animated >
-                  {{ completion }} / {{ goal }}
-                </b-progress> 
+                <VmProgress v-if="goal>0" :percentage=progression stroke-width="10">
+                  {{completion}} / {{goal}}
+                </VmProgress>
+                <VmProgress v-else :percentage=progression stroke-width="10">
+                  {{completion}}
+                </VmProgress>
               </v-ons-col>  
               <v-ons-col width="10%">
                <v-ons-icon icon="fa-angle-double-right" @click="activityEnd('skipped')" size="30px"></v-ons-icon> 
@@ -45,6 +48,10 @@
           </v-ons-card>
         </div>
     </v-card>
+
+
+
+
 
 </v-ons-card>
    
@@ -143,6 +150,9 @@ export default {
     },
     trophies() {
       return this.$store.state.releve.trophies
+    },
+    progression() {
+      return  this.goal > 0 ? (this.completion / this.goal * 100) : 0
     }
   },
   watch : {
@@ -340,18 +350,19 @@ export default {
       this.$store.commit('releve/setIndexActivite', this.indexActivite + 1)
       this.$store.commit('releve/setActivite', this.currentMission.activites[this.indexActivite])
 
-      var nbAction = this.currentMission.activites[this.indexActivite].conditionDeFin[0].nbArbre
-      this.$store.commit('releve/setGoal', nbAction)
-      this.activites[this.indexActivite].statut = 'onGoing'
-
+      var totalSecondes = 0
+      var nbAction = -1
+      
       for (let i = 0 ; i < this.currentMission.activites[this.indexActivite].conditionDeFin.length; i++) {
         if (this.currentMission.activites[this.indexActivite].conditionDeFin[i].tempsLimite) {
-          this.totalSecondes = this.currentMission.activites[this.indexActivite].conditionDeFin[i].tempsLimite
-          break
-        } else {
-          this.totalSecondes = 0
+          totalSecondes = this.currentMission.activites[this.indexActivite].conditionDeFin[i].tempsLimite
+        } else if (this.currentMission.activites[this.indexActivite].conditionDeFin[i].nbArbre){
+          nbAction = this.currentMission.activites[this.indexActivite].conditionDeFin[i].nbArbre
         }
       }
+      this.$store.commit('releve/setGoal', nbAction)
+      this.totalSecondes = totalSecondes
+      this.activites[this.indexActivite].statut = 'onGoing'
     },
     tropheeDejaGagne(trophyName) {
       var res = false
