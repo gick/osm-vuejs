@@ -16,6 +16,25 @@
             <v-ons-switch v-model="verifCheck" @change="setVerificationMode"></v-ons-switch>
           </div>
         </v-ons-list-item>
+        <v-ons-list-item>
+          <div class="center">Mode anonyme (vos relevé seront vus comme ceux d'un autre joueur)</div>
+          <div class="right">
+            <v-ons-switch v-model="isAnon" @change="setAnonymous"></v-ons-switch>
+          </div>
+        </v-ons-list-item>
+        <v-ons-list-item>
+          <div class="center">Mode vérification des identification expertes</div>
+          <div class="right">
+            <v-ons-switch v-model="$store.state.commonData.identification"></v-ons-switch>
+          </div>
+        </v-ons-list-item>
+        <v-ons-list-item>
+          <div class="center">Mode vérification des relevé utilisateurs</div>
+          <div class="right">
+            <v-ons-switch v-model="$store.state.commonData.verification"></v-ons-switch>
+          </div>
+        </v-ons-list-item>
+
       </v-ons-list>
       <v-ons-list>
         <v-ons-list-title>Utilisateurs connectés</v-ons-list-title>
@@ -92,6 +111,7 @@ export default {
     return {
       identCheck: this.$store.state.releve.identificationMode,
       verifCheck: this.$store.state.releve.verificationMode,
+      isAnon:this.$store.state.user.isAnon,
       verificationsByUser: [],
       identificationByUser:[]
     };
@@ -99,9 +119,17 @@ export default {
   computed: {
     userList() {
       return this.$store.state.users.userList;
-    }
+    },
   },
   methods: {
+    setAnonymous(evt){
+      if(evt.value){
+        this.$store.dispatch('user/setAnonymous')
+      } else {
+        this.$store.dispatch('user/restoreSession')
+
+      }
+    },
     visualizeReleve(releve) {
       this.$store.commit("navigator/pop");
       this.$store.commit("tabbar/set", 0);

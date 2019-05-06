@@ -91,23 +91,63 @@ export default {
       channel.bind(
         "new_obs",
         function(data) {
-          if (data.osmId == this.userID) {
+          let {userId,observation}=data
+          if (userId == this.userID) {
             return;
-          } else {
-            this.$store.commit("releve/add", data);
-          }
+          } 
+            this.$store.commit("releve/addFromOutside", observation);
+          
         }.bind(this)
       );
       channel.bind(
         "modify_obs",
         function(data) {
-          if (data.modifierId == this.userID) {
+          let {userId,observation}=data
+          if (userId == this.userID) {
             return;
-          } else {
-            this.$store.commit("releve/modify", data);
-          }
+          } 
+          this.$store.commit("releve/modifyFromOutside", observation);
+          
         }.bind(this)
       );
+      channel.bind(
+        "invalidate_tree",
+        function(data) {
+        let {userId,observation}=data
+        if (userId == this.userID) {
+            return;
+        } 
+
+        this.$store.commit("releve/setNoTree", observation);
+          
+        }.bind(this)
+      );
+      channel.bind(
+        "uninvalidate_tree",
+        function(data) {
+        let {userId,observation}=data
+        if (userId == this.userID) {
+            return;
+        } 
+
+        this.$store.commit("releve/setNoTree", observation);
+          
+        }.bind(this)
+      );
+
+      channel.bind(
+        "remove_obs",
+        function(data) {
+        let {userId,observation}=data
+        if (userId == this.userID) {
+            return;
+        } 
+
+        this.$store.commit("releve/removeObservation", observation);
+          
+        }.bind(this)
+      );
+
     }
   },
   methods: {

@@ -42,8 +42,8 @@
           color="blue"
         />
         <l-circle
-          @click="validateObservation(circle)"
-          className="pulse"
+          @click="circleClick(circle)"
+          className=""
           v-for="(circle,index) in observationsOther"
           custom="10"
           v-bind:key="index+'observationOther'"
@@ -51,6 +51,18 @@
           :radius="6"
           color="lime"
         />
+
+        <l-circle
+          @click="circleClick(circle)"
+          className="pulse"
+          v-for="(circle,index) in observationsOtherTodo"
+          custom="10"
+          v-bind:key="index+'observationOtherTodo'"
+          :lat-lng="circle.coordinates"
+          :radius="6"
+          color="lime"
+        />
+
         <l-circle
           @click="circleClick(circle)"
           v-for="(circle,index) in observationsOtherDone"
@@ -149,7 +161,20 @@ import SimplePage from "./SimplePage.vue";
 import Releve from "./Releve.vue";
 import ReleveOSM from "./ReleveOSM.vue";
 import ReleveIdentification from "./ReleveIdentification.vue";
-
+//Utility function extracting all contributors id 
+// including from prev
+let extractContributor=function(releve){
+  let extractValidator=item=>item.validation.map(val=>val.id)
+  let extractModifier=item=>item.modifierId
+  let author=releve.osmId
+  let notree=releve.noTree.map(val=>val.osmId)
+  let extractAll=function(acc,current){
+    return acc.concat(extractValidator(current)).concat(extractModifier(current))
+  }
+  let currentContributors=[releve].reduce(extractAll,notree.concat(author))
+  let allContributors=releve.prev.reduce(extractAll,currentContributors)
+  return [... new Set(allContributors)].filter(val=>val)
+}
 export default {
   components: {
     LCircle,
@@ -189,6 +214,14 @@ export default {
     userID() {
       return this.$store.state.user.id;
     },
+    identification(){
+        return this.$store.state.commonData.identification;
+    },
+    verification(){
+        return this.$store.state.commonData.verification;
+    }
+
+    ,
     observations() {
       return this.$store.state.releve.releves
       .filter(value=>!value.identificationValue.identification)
@@ -198,22 +231,38 @@ export default {
       return this.$store.state.releve.releves.filter(value=>value.identificationValue.identification);
     },
     identificationsTodo(){
+      if(this.identification)
       return this.identifications.filter(value=>!value.identificationValue.success);
+      return []
     },
     identificationsDone(){
+      if(this.identification)
       return this.identifications.filter(value=>value.identificationValue.success);
+      return []
     },
     observationsOther(){
+      if(!this.verification)
       return this.$store.state.releve.releves
       .filter(value=>!value.identificationValue.identification)
       .filter(value=>value.osmId!=this.userID)
-      .filter(value=>!value.contributor.includes(this.userId))
+      return []
     },
-    observationsOtherDone(){
+    observationsOtherTodo(){
+      if(this.verification)
       return this.$store.state.releve.releves
       .filter(value=>!value.identificationValue.identification)
-      .filter(value=>value.osmId!=this.userId)
-      .filter(value=>value.contributor.includes(this.userId))
+      .filter(value=>value.osmId!=this.userID)
+      .filter(value=>!extractContributor(value).includes(this.userID))
+      return []
+    }
+    ,
+    observationsOtherDone(){
+      if(this.verification)
+      return this.$store.state.releve.releves
+      .filter(value=>!value.identificationValue.identification)
+      .filter(value=>value.osmId!=this.userID)
+      .filter(value=>extractContributor(value).includes(this.userID))
+      return []
     },
 
     osmData() {
