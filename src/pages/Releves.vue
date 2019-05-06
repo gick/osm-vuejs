@@ -9,10 +9,10 @@
         @click="transition(releve)"
       >
         <div class="center">
-          <span class="list-item__title">Auteur : {{releve.authorName}}</span>
           <span class="list-item__subtitle">{{releve.specie}}</span>
           <span class="list-item__subtitle">{{releve.common}}</span>
         </div>
+        <badge-info  :ref="'rel'+releve._id" :releve="releve"></badge-info>
       </v-ons-list-item>
     </v-ons-list>
   </v-ons-page>
@@ -20,7 +20,12 @@
 
 <script>
 import Releve from "./Releve.vue";
+import BadgeInfo from "../partials/BadgeInfo.vue";
+
 export default {
+  components:{
+    BadgeInfo
+  },
   computed: {
     releves() {
       return this.$store.state.releve.releves.filter(
@@ -33,6 +38,8 @@ export default {
   },
   methods: {
     transition(releve) {
+      let ref='rel'+releve._id
+      this.$refs[ref][0].reset()
       this.$store.commit("navigator/push", {
         extends: Releve,
         data() {

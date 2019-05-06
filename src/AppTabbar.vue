@@ -25,7 +25,7 @@
 import Pusher from "pusher-js";
 import Map from "./pages/Map.vue";
 import Home from "./pages/Home.vue";
-import Profile from "./pages/Profile.vue"
+import Profile from "./pages/Profile.vue";
 import Arboretum from "./pages/Arboretum.vue";
 import Releve from "./pages/Releves.vue";
 import Folia from "./pages/Folia.vue";
@@ -91,63 +91,75 @@ export default {
       channel.bind(
         "new_obs",
         function(data) {
-          let {userId,observation}=data
+          let { userId, observation } = data;
           if (userId == this.userID) {
             return;
-          } 
-            this.$store.commit("releve/addFromOutside", observation);
-          
+          }
+          this.$store.commit("releve/addFromOutside", observation);
         }.bind(this)
       );
       channel.bind(
         "modify_obs",
         function(data) {
-          let {userId,observation}=data
+          let { userId, observation } = data;
           if (userId == this.userID) {
             return;
-          } 
+          }
           this.$store.commit("releve/modifyFromOutside", observation);
-          
         }.bind(this)
       );
       channel.bind(
         "invalidate_tree",
         function(data) {
-        let {userId,observation}=data
-        if (userId == this.userID) {
+          let { userId, observation } = data;
+          if (userId == this.userID) {
             return;
-        } 
+          }
 
-        this.$store.commit("releve/setNoTree", observation);
-          
+          this.$store.commit("releve/setNoTree", observation);
         }.bind(this)
       );
       channel.bind(
+        "validate_obs",
+        function(data) {
+          let { userId, observation } = data;
+          if (userId == this.userID) {
+            return;
+          }
+          if (this.userID == observation.osmId) {
+            this.$toasted.show("Un de vos relevé à été validé", {
+              fullWidth: true,
+              position: "bottom-center",
+              duration: 2000
+            }); // Shows from 0s to 2s
+          }
+          this.$store.commit("releve/validateFromOutside", observation);
+        }.bind(this)
+      );
+
+      channel.bind(
         "uninvalidate_tree",
         function(data) {
-        let {userId,observation}=data
-        if (userId == this.userID) {
+          let { userId, observation } = data;
+          if (userId == this.userID) {
             return;
-        } 
+          }
 
-        this.$store.commit("releve/setNoTree", observation);
-          
+          this.$store.commit("releve/setNoTree", observation);
         }.bind(this)
       );
 
       channel.bind(
         "remove_obs",
         function(data) {
-        let {userId,observation}=data
-        if (userId == this.userID) {
+          let { userId, observation } = data;
+          if (userId == this.userID) {
             return;
-        } 
+          }
 
-        this.$store.commit("releve/removeObservation", observation);
-          
+          this.$store.commit("releve/removeObservation", observation);
         }.bind(this)
       );
-
     }
   },
   methods: {
@@ -206,7 +218,10 @@ export default {
           icon: "ion-person",
           page: Profile,
           theme: red,
-          badge: this.$store.state.releve.notifProfil == 0 ? null :  this.$store.state.releve.notifProfil
+          badge:
+            this.$store.state.releve.notifProfil == 0
+              ? null
+              : this.$store.state.releve.notifProfil
         },
         {
           label: "Arboretum",

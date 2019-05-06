@@ -35,21 +35,29 @@ export default {
       this.$store.commit("splitter/toggle");
     },
     admin() {
-      this.$store.commit("navigator/push", {
-        extends: Admin,
-        data() {
-          return {
-            toolbarInfo: {
-              backLabel: "Home",
-              title: "key"
-            }
-          };
-        }
-      });
-      this.$store.commit("splitter/toggle");
-
-    }
-  },
+      this.$ons.notification
+        .prompt("Mot de passe", {})
+        .then(function(response) {
+          if (response == "calamar") {
+            this.$store.commit("navigator/push", {
+              extends: Admin,
+              data() {
+                return {
+                  toolbarInfo: {
+                    backLabel: "Home",
+                    title: "key"
+                  }
+                };
+              }
+            });
+            this.$store.commit("splitter/toggle");
+          } else {
+            this.$ons.notification.alert("Votre tentative d'intrusion a été enregistré")
+          }
+        }.bind(this))
+        
+    
+  }},
   data() {
     return {
       access: [

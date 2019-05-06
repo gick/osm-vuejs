@@ -6,7 +6,7 @@
         :zoom="zoom"
         :center="center"
         :options="mapOptions"
-        style="height: 60vh"
+        style="height: 100vh; width: 100vw;"
         @update:center="centerUpdate"
         @click="onMapClick"
         @locationfound="locationfound"
@@ -118,6 +118,10 @@
         </v-ons-page>
       </v-ons-dialog>
     </div>
+    <v-ons-fab @click="centerMap" modifier="mini" position='bottom right'>
+  <v-ons-icon icon="md-pin"></v-ons-icon>
+</v-ons-fab>
+
   </v-ons-page>
 </template>
 <style>
