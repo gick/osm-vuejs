@@ -171,23 +171,14 @@ export default {
           if (releve.image) {
             updateCompletion(state, "add_photo", releve.specie, releve.genus)
           } else {
-<<<<<<< HEAD
              updateCompletion(state, "add", releve.specie, releve.genus)
           }      
-        },
-        addActionTransActivite(state, param){
-          state.actionsTransActivite.set(param.action, param.nbPoint)
-=======
-            updateCompletion(state, "add", releve.specie)
-          }
         },
         addFromOutside(state, releve) {
           state.releves.push(releve)
         },
-
-        addActionTransActivite(state, params) {
-          state.actionsTransActivite.set(params.split('#')[0], params.split('#')[1])
->>>>>>> 810ea189166f9846a664fe65f0f289fd3a12e154
+        addActionTransActivite(state, param){
+          state.actionsTransActivite.set(param.action, param.nbPoint)
         },
         addTrophie(state, trophie) {
           for (let i = 0 ; i < state.trophies.length; i++) {
@@ -349,6 +340,7 @@ export default {
           state,
           commit
         }, releve) {
+          updateCompletion(state, "identification", releve.specie, releve.genus)
           axios.defaults.withCredentials = true
           axios.post('/api/identification', {
             releve: releve
@@ -565,37 +557,50 @@ export default {
 
 function updateCompletion(state, operation, specie, genus) {
 
-  var action = state.activite.typeActivite.action
+  var gameMode = state.activite.gameMode
 
-  if (action == 'LOCALISER' && operation.includes('add')) {
-    state.completion++
-  }
-    
-  else if ((action == 'IDENTIFIER' && operation.includes('add')) ||
-        (action == 'VERIFIER' && operation.includes('modify/validate')) ||
-        (action == 'PHOTOGRAPHIER' && operation.includes('photo'))) {
+  if (gameMode == 'verification') {
+    if (operation == 'verification') state.completion++
+  } else if (gameMode == 'identification') {
+    if (operation == 'identification') state.completion++
+  } else if (gameMode == 'classic') {
 
-      if (specie != null && !state.differentSpecie.includes(specie)) {
-        state.differentSpecie.push(specie)
-      }
+    var action = state.activite.typeActivite.action
 
-      if (genus != null && !state.differentGender.includes(genus)) {
-        state.differentGender.push(genus)
-      }
-          
-      var objet = state.activite.typeActivite.objet
+    if (action == 'LOCALISER' && operation.includes('add')) {
+      state.completion++
+    }
 
-      if (objet == 'ARBRE'){
-        state.completion++;
-      } else if (objet == 'ESPECE' && specie != null && state.activite.espece.toUpperCase() == specie.toUpperCase()){
-        state.completion++;
-      } else if (objet == 'GENRE' && genus != null && state.activite.genre.toUpperCase() == genus.toUpperCase()){
-        state.completion++;
-      } else if (objet == 'ESPECESDIFFERENTES'){
-        state.completion = state.differentSpecie.length;
-      } else if (objet == 'GENRESDIFFERENTS'){
-        state.completion = state.differentGender.length;
-      } 
+    else if (action == 'LOCALISER' && operation.includes('add')) {
+      state.completion++
+    }
+      
+    else if ((action == 'IDENTIFIER' && operation.includes('add')) ||
+          (action == 'VERIFIER' && operation.includes('modify/validate')) ||
+          (action == 'PHOTOGRAPHIER' && operation.includes('photo'))) {
+
+        if (specie != null && !state.differentSpecie.includes(specie)) {
+          state.differentSpecie.push(specie)
+        }
+
+        if (genus != null && !state.differentGender.includes(genus)) {
+          state.differentGender.push(genus)
+        }
+            
+        var objet = state.activite.typeActivite.objet
+
+        if (objet == 'ARBRE'){
+          state.completion++;
+        } else if (objet == 'ESPECE' && specie != null && state.activite.espece.toUpperCase() == specie.toUpperCase()){
+          state.completion++;
+        } else if (objet == 'GENRE' && genus != null && state.activite.genre.toUpperCase() == genus.toUpperCase()){
+          state.completion++;
+        } else if (objet == 'ESPECESDIFFERENTES'){
+          state.completion = state.differentSpecie.length;
+        } else if (objet == 'GENRESDIFFERENTS'){
+          state.completion = state.differentGender.length;
+        } 
+    }
   }
       
   if (state.completion == state.goal) {          
