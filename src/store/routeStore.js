@@ -2,6 +2,7 @@ import {
   cpus
 } from "os";
 import missions from "../missions.json"
+import LogRocket from 'logrocket';
 var osmAuth = require("osm-auth");
 export default {
   modules: {
@@ -251,6 +252,13 @@ export default {
             state.releves.splice(index, 1, currentReleve)
           }
         },
+        validateFromOutside(state,observation){
+          let index = state.releves.findIndex(releve => releve._id == observation._id)
+          if (index != -1) {
+            state.releves.splice(index, 1, observation)
+          }
+
+        },
         delete(state) {
           if (state.releve.length > 1) {
             state.releve.pop();
@@ -403,6 +411,7 @@ export default {
       },
       mutations: {
         set(state, user) {
+          LogRocket.identify(user.id,{name:user.name})
           state.name = user.name
           state.id = user.id
         },
