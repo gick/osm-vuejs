@@ -29,6 +29,14 @@ export default {
           "28 à 32m",
           "Plus de 32m"
         ],
+      },
+      mutations: {
+        setVerificationMode(state, mode) {
+          state.verification = mode
+        },
+        setIdentificationMode(state, mode) {
+          state.identification = mode
+        }
       }
     },
     osmData: {
@@ -222,10 +230,12 @@ export default {
             var indexRelevePrecedent = state.releves[index].prev.length -1
             var relevePrecedent = state.releves[index].prev[indexRelevePrecedent]
 
+            var differentID = !(newReleve.osmId == newReleve.modifierId)
+
             if (newReleve.image) {
-              updateCompletion(state, "modify/validate_photo", relevePrecedent.specie, relevePrecedent.genus)
+              updateCompletion(state, "modify/validate_photo", relevePrecedent.specie, relevePrecedent.genus, differentID)
             } else {
-              updateCompletion(state, "modify/validate", state.releves[index].prev[indexRelevePrecedent].specie)
+              updateCompletion(state, "modify/validate", state.releves[index].prev[indexRelevePrecedent].specie, state.releves[index].prev[indexRelevePrecedent].genus, differentID)
             }
           }
         },
@@ -243,9 +253,9 @@ export default {
             state.releves.push(observation)
           }
         },
-        validate(state, currentReleve) {
+        validate(state, currentReleve) { 
 
-          updateCompletion(state, "modify/validate", currentReleve.specie, currentReleve.genus)
+          updateCompletion(state, "modify/validate", currentReleve.specie, currentReleve.genus, true)
 
           let index = state.releves.findIndex(releve => releve._id == currentReleve._id)
           if (index != -1) {
@@ -564,12 +574,12 @@ export default {
 };
 
 
-function updateCompletion(state, operation, specie, genus) {
+function updateCompletion(state, operation, specie, genus, differentID) {
 
   var gameMode = state.activite.gameMode
 
-  if (gameMode == 'verification') {
-    if (operation == 'verification') state.completion++
+  if (gameMode == 'verification' && differentID) {
+    if (operation.includes('modify/validate')) state.completion++
   } else if (gameMode == 'identification') {
     if (operation == 'identification') state.completion++
   } else if (gameMode == 'classic') {

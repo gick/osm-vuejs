@@ -119,8 +119,17 @@
       </v-ons-dialog>
     </div>
     <v-ons-fab @click="centerMap" modifier="mini" position='bottom right'>
-  <v-ons-icon icon="md-pin"></v-ons-icon>
-</v-ons-fab>
+      <v-ons-icon icon="md-pin"></v-ons-icon>
+    </v-ons-fab>
+
+  <ons-bottom-toolbar style="background-color:#F44336">
+      <center style="color:white">
+        {{consigne}}
+        <br>
+        <p v-if="goal>0"> {{completion}}/{{goal}}</p>
+        <p v-else> {{completion}}</p>  
+      </center>  
+  </ons-bottom-toolbar>
 
   </v-ons-page>
 </template>
@@ -194,6 +203,7 @@ export default {
   },
   data() {
     return {
+      consigne: "",
       missionOver: false,
       activityOver: false,
       newCircle: null,
@@ -287,6 +297,12 @@ export default {
     },
     nbActivite() {
       return this.$store.state.releve.mission.activites.length;
+    },
+    completion() {
+      return this.$store.state.releve.completion;
+    },
+    goal() {
+      return this.$store.state.releve.goal;
     }
   },
 
@@ -298,6 +314,31 @@ export default {
         } else {
           this.activityOver = true;
         }
+      },
+      deep: true
+    },
+    indexActivite: {
+      handler: function(newIndex, oldIndex) {
+        if (this.newIndex == -1) {
+          return ""
+        }
+        var consigne = ""
+        if (this.currentMission.activites[newIndex].gameMode == 'classic') {
+          if (this.currentMission.activites[newIndex].typeActivite.action == 'LOCALISER') {
+            consigne = "Localisez des arbres"
+          } else if (this.currentMission.activites[newIndex].typeActivite.action == 'IDENTIFIER') {
+            consigne = "Identifiez des arbres"
+          } else if (this.currentMission.activites[newIndex].typeActivite.action == 'VERIFIER') {
+            consigne = "Modifiez ou validez des relevés"
+          } if (this.currentMission.activites[newIndex].typeActivite.action == 'PHOTOGRAPHIER') {
+            consigne = "Photographiez des arbres"
+          }
+        } else if (this.currentMission.activites[newIndex].gameMode == 'identification') {
+          consigne = "Identifiez des relevés expert"
+        } else if (this.currentMission.activites[newIndex].gameMode == 'verification') {
+          consigne = "Modifiez ou validez des relevés"
+        }
+        this.consigne=consigne
       },
       deep: true
     }

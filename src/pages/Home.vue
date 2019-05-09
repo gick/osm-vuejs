@@ -1,7 +1,23 @@
 <template>
-  <v-ons-page> 
+  <v-ons-page>  
+
+   <v-ons-alert-dialog modifier="rowfooter"
+      :title="'Êtes-vous sûr de vouloir passer cette activité ?'"
+      :footer="{
+        Annuler: () => showDialog = false,
+        Passer() {activityEnd('skipped'); showDialog = false }
+      }"
+      :visible.sync="showDialog"
+    >
+      Cette action est irréversible
+    </v-ons-alert-dialog> 
+
+   <!--  <v-ons-dialog :visible.sync="showDialog">
       
-    </p>
+      <v-ons-button @click="showDialog = false">Annuler</v-ons-button>
+      <v-ons-button @click="activityEnd('skipped'); showDialog = false">Passer la mission</v-ons-button>
+    </v-ons-dialog> -->
+
       <v-ons-card v-show="!$store.state.user.id">
       <div  class="title">Authentifiez vous!</div>
       <div class="content">
@@ -35,7 +51,7 @@
                 </VmProgress>
               </v-ons-col>  
               <v-ons-col width="10%">
-               <v-ons-icon icon="fa-angle-double-right" @click="activityEnd('skipped')" size="30px"></v-ons-icon> 
+               <v-ons-icon icon="fa-angle-double-right" @click="showDialog = true" size="30px"></v-ons-icon> 
              </v-ons-col>
             </v-ons-row>   
             <countdown  v-if="totalSecondes!=0" :totalSecondes=totalSecondes @timeout="activityEnd('done')"></countdown>       
@@ -79,6 +95,7 @@ export default {
   data() {
     return {
       activites: [],
+      showDialog: false,
       totalSecondes : 0
     };
   },
@@ -140,6 +157,8 @@ export default {
       });
     },
     activityEnd(statut) {
+      this.$store.commit('commonData/setVerificationMode', false)
+      this.$store.commit('commonData/setIdentificationMode', false)
       this.activites[this.indexActivite].statut = statut
       if (statut == 'done') {
         for (let i = 0; i < this.currentActivity.mecaniques.length; i++) {
@@ -209,16 +228,16 @@ export default {
         var action;
         switch (this.currentMission.activites[i].typeActivite.action) {
           case 'LOCALISER' : 
-            action = 'Localise'
+            action = 'Localisez'
             break;
           case 'IDENTIFIER' : 
-            action = 'Identifie'
+            action = 'Identifiez'
             break;
           case 'VERIFIER' :
-            action = 'Modifie ou valide'
+            action = 'Modifiez ou validez'
             break;
           case 'PHOTOGRAPHIER' :
-            action = 'Prend une photo de'
+            action = 'Prenez une photo de'
             break;
         }
         var objet;
@@ -245,10 +264,10 @@ export default {
             gameMode = ''
             break;
           case 'identification' :
-            gameMode = " à partir d'un relevé d'expert"
+            gameMode = " à partir d'un relevé d'expert (cercle bleu clignotant)"
             break;
           case 'verification' :
-            gameMode = " à partir d'un relevé d'un autre utilisateur"
+            gameMode = " d'un autre utilisateur (cercle vert clignotant)"
             break;
         }
 
@@ -269,8 +288,10 @@ export default {
         var nbAction = this.currentMission.activites[i].conditionDeFin[0].nbArbre
         this.$store.commit('releve/setGoal', nbAction)
 
+        var arbre = (action == 'Modifiez ou validez') ? " relevé" : " arbre"
+
         if (nbAction) {
-          var arbre = nbAction > 1 ? " arbres" : " arbre"
+          arbre = nbAction > 1 ? arbre + "s" : arbre
           this.activites.push(new Activite(action + " " + nbAction + arbre + objet + gameMode + tempsLimite,"toDo"));
         } else {
           this.activites.push(new Activite(action + " un maximum d'arbre"+ objet + gameMode + tempsLimite,"toDo"));
@@ -316,6 +337,13 @@ export default {
           nbAction = this.currentMission.activites[this.indexActivite].conditionDeFin[i].nbArbre
         }
       }
+
+      if (this.currentMission.activites[this.indexActivite].gameMode == 'verification') {
+        this.$store.commit('commonData/setVerificationMode', true)
+      } else if (this.currentMission.activites[this.indexActivite].gameMode == 'identification') {
+        this.$store.commit('commonData/setIdentificationMode', true)
+      }
+
       this.$store.commit('releve/setGoal', nbAction)
       this.totalSecondes = totalSecondes
       this.activites[this.indexActivite].statut = 'onGoing'
