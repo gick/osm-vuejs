@@ -85,7 +85,7 @@
 </template>
 <script>
 import SimplePage from "./SimplePage.vue";
-
+// TODO cacher supprimer relevé si l'utilisateur ne peut pas le supprimer
 export default {
   data() {
     return {

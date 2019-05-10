@@ -1,3 +1,4 @@
+
 import 'onsenui/css/onsenui.css'; // Onsen UI basic CSS
 // import 'onsenui/css/onsen-css-components.css'; // Default Onsen UI CSS components
 import './onsen-css-components.css'; // Onsen UI CSS components source for custom themes (requires cssnext)
@@ -12,7 +13,6 @@ const logrocketPlugin = createPlugin(LogRocket);
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VueOnsen from 'vue-onsenui'; // For UMD
-import VueSocketIO from 'vue-socket.io'
 
 import BootstrapVue from 'bootstrap-vue' // For progressBar
 
@@ -21,12 +21,16 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import BProgress from 'bootstrap-vue/es/components/progress/progress'
 import BProgressBar from 'bootstrap-vue/es/components/progress/progress-bar'
+import vSelect from 'vue-select'
+
 
 // import VueOnsen from 'vue-onsenui/esm'; // For ESM
 // import * as OnsenComponents from './onsen-components'; // For ESM
 import storeLike from './store/routeStore';
 import CustomToolbar from './partials/CustomToolbar.vue';
 import AppNavigator from './AppNavigator.vue';
+import 'vue-select/dist/vue-select.css';
+
 import L from 'leaflet';
 delete L.Icon.Default.prototype._getIconUrl;
 Vue.config.devtools = true
@@ -35,19 +39,12 @@ L.Icon.Default.mergeOptions({
   iconUrl: require('leaflet/dist/images/marker-icon.png'),
   shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 });
-Vue.use(new VueSocketIO({
-  debug: true,
-  connection: 'https://albiziapp.reveries-project.fr/',
-  vuex: {
-      storeLike,
-      actionPrefix: 'SOCKET_',
-      mutationPrefix: 'SOCKET_'
-  } ,
-}))
 window.location.hash = "#de";
 Vue.use(Toasted, {
     iconPack : 'fontawesome' // set your iconPack, defaults to material. material|fontawesome|custom-class
 });
+Vue.component('v-select', vSelect)
+
 Vue.use(Vuex);
 Vue.use(VueOnsen);
 Vue.use(BootstrapVue)
@@ -57,7 +54,6 @@ window.addEventListener("hashchange", function(){
   
   // .... Do your thing here...
 });
-
 // Register components globally
 // Object.values(OnsenComponents).forEach(component => Vue.component(component.name, component)); // For ESM
 Vue.component('custom-toolbar', CustomToolbar); // Common toolbar

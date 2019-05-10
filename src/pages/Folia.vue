@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import {SSE} from '../js/sse.js'
 import imageCompression from "browser-image-compression";
 import VueSignaturePad from "vue-signature-pad";
 import FileUpload from "../FileUpload.vue";
@@ -61,7 +62,6 @@ export default {
       height: "0",
       currentStep: 0,
       foliaStarted: false,
-      socketID: "",
       foliaResult: [],
       draw: false,
       modalVisible:false
@@ -70,26 +70,6 @@ export default {
   components: {
     VueSignaturePad,
     FileUpload
-  },
-  sockets: {
-    connect: function(socket) {
-      console.log(socket);
-      console.log("socket connected");
-    },
-    foliaProgress: function(data) {
-      this.currentStep = this.currentStep + 4;
-    },
-    foliaResult: function(data) {
-      for (let specieResult of data) {
-        let specie = specieResult.split(",")[0].replace(/([A-Z])/g, " $1");
-        let result = Math.ceil(Number(specieResult.split(",")[1]));
-        this.foliaResult.push({ specie: specie, result: result });
-      }
-      console.log(data);
-    },
-    setID(socketID) {
-      this.socketID = socketID;
-    }
   },
   methods: {
     onBegin() {
@@ -147,6 +127,7 @@ export default {
     },
 
     sendImages() {
+
       this.modalVisible=false
       let { status, data } = this.$refs.signaturePad.saveSignature();
       this.foliaStarted = true;
@@ -162,11 +143,9 @@ export default {
           Number(this.height.replace("px", "")),
           "image/jpeg"
         ).then(imageData => {
-          axios.post("/setupImages", {
-            trace: dataURI,
-            leaf: imageData,
-            socketID: this.socketID
-          });
+          var source=new SSE("http://localhost:8081/api/setupImages",{headers:{'Content-Type' :'application/json;charset=UTF-8'},payload:{trace:dataURI,leaf:imageData}})
+          source.stream()
+          console.log(source)
         });
       });
     },
