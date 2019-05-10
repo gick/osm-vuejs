@@ -125,6 +125,9 @@ export default {
       namespaced: true,
       state: {
         releves: [],
+        identificationMode: false,
+        verificationMode: false,
+        gamificationMode: true,
         actionsTransActivite: new Map(),
         differentSpecie: new Array(),
         differentGender: new Array(),
@@ -135,23 +138,9 @@ export default {
         goal: 0,
         chgtActivity: 0,
         score: 0,
-        trophies: [],
-        identificationMode: false,
-        verificationMode: false,
-        journal: [],
-        notifProfil: 0,
-        gamificationMode: true
+        journal: []
       },
       mutations: {
-        addNotifProfil(state, nbNotif) {
-          if (state.nbNotif == null) {
-            state.nbNotif = 0
-          }
-          state.notifProfil += nbNotif
-        },
-        clearNotifProfil(state) {
-          state.notifProfil = null
-        },
         setIdentificationMode(state, mode) {
           state.identificationMode = mode
         },
@@ -194,20 +183,6 @@ export default {
         },
         addActionTransActivite(state, param){
           state.actionsTransActivite.set(param.action, param.nbPoint)
-        },
-        addTrophie(state, trophie) {
-          for (let i = 0 ; i < state.trophies.length; i++) {
-            if (state.trophies[i].nom == trophie.nom) return
-          }
-          state.trophies.push(trophie)
-        },
-        winTrophy(state, trophyName) {
-          for (let i = 0; i<state.trophies.length; i++) {
-            if (state.trophies[i].nom == trophyName && state.trophies[i].obtenu == false) {
-              state.trophies[i].obtenu = true
-              state.notifProfil++
-            }
-          }  
         },
         clearActionsTransActivite(state) {
           state.actionsTransActivite.clear()
@@ -425,8 +400,34 @@ export default {
         isAnon: false,
         formerName: null,
         formerId: null,
+        notifProfil: 0,
+        trophies: []
       },
       mutations: {
+        addTrophie(state, trophie) {
+          for (let i = 0 ; i < state.trophies.length; i++) {
+            if (state.trophies[i].nom == trophie.nom) return
+          }
+          state.trophies.push(trophie)
+        },
+        winTrophy(state, trophyName) {
+          for (let i = 0; i<state.trophies.length; i++) {
+            if (state.trophies[i].nom == trophyName && state.trophies[i].obtenu == false) {
+              state.trophies[i].obtenu = true
+              state.notifProfil++
+              alert(state.notifProfil)
+            }
+          }  
+        },
+        addNotifProfil(state, nbNotif) {
+          if (state.nbNotif == null) {
+            state.nbNotif = 0
+          }
+          state.notifProfil += nbNotif
+        },
+        clearNotifProfil(state) {
+          state.notifProfil = null
+        },
         set(state, user) {
           LogRocket.identify(user.id,{name:user.name})
           state.name = user.name

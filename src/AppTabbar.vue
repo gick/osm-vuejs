@@ -243,9 +243,9 @@ export default {
           page: Profile,
           theme: red,
           badge:
-            this.$store.state.releve.notifProfil == 0
+            this.$store.state.user.notifProfil == 0
               ? null
-              : this.$store.state.releve.notifProfil
+              : this.$store.state.user.notifProfil
         };
         var arboretum =
         {

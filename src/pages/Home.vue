@@ -1,24 +1,7 @@
 <template>
-  <v-ons-page>  
+  <v-ons-page>   
 
-   <v-ons-alert-dialog modifier="rowfooter"
-      :title="'Êtes-vous sûr de vouloir passer cette activité ?'"
-      :footer="{
-        Annuler: () => showDialog = false,
-        Passer() {activityEnd('skipped'); showDialog = false }
-      }"
-      :visible.sync="showDialog"
-    >
-      Cette action est irréversible
-    </v-ons-alert-dialog> 
-
-   <!--  <v-ons-dialog :visible.sync="showDialog">
-      
-      <v-ons-button @click="showDialog = false">Annuler</v-ons-button>
-      <v-ons-button @click="activityEnd('skipped'); showDialog = false">Passer la mission</v-ons-button>
-    </v-ons-dialog> -->
-
-      <v-ons-card v-show="!$store.state.user.id">
+    <v-ons-card v-show="!$store.state.user.id">
       <div  class="title">Authentifiez vous!</div>
       <div class="content">
         <p>Bienvenue dans AlbiziApp</p>
@@ -35,10 +18,8 @@
 
     <v-card v-show="$store.state.user.id">
         <div v-for="item in activites">
-          <v-ons-card class=opaque v-show="(item.statut=='skipped')">
-            ❌ {{item.intitule}}
-          </v-ons-card>
-          <v-ons-card v-show="(item.statut=='onGoing')">
+
+          <v-ons-card v-if="(item.statut=='onGoing')">
             <v-ons-row>
               <v-ons-col>
                 {{item.intitule}}  
@@ -56,18 +37,24 @@
             </v-ons-row>   
             <countdown  v-if="totalSecondes!=0" :totalSecondes=totalSecondes @timeout="activityEnd('done')"></countdown>       
           </v-ons-card>
-          <v-ons-card class=opaque v-show="(item.statut=='done')">
-            ✓ {{item.intitule}}
+
+          <v-ons-card class=opaque v-else>
+             {{ displayActivity(item.statut, item.intitule) }}
           </v-ons-card>
-          <v-ons-card class=opaque v-show="(item.statut=='toDo')">
-            {{item.intitule}}
-          </v-ons-card>
+        
         </div>
     </v-card>
 
-
-
-
+    <v-ons-alert-dialog modifier="rowfooter"
+      :title="'Êtes-vous sûr de vouloir passer cette activité ?'"
+      :footer="{
+        Annuler: () => showDialog = false,
+        Passer() {activityEnd('skipped'); showDialog = false }
+      }"
+      :visible.sync="showDialog"
+    >
+      Cette action est irréversible
+    </v-ons-alert-dialog>
 
 </v-ons-card>
    
@@ -125,7 +112,7 @@ export default {
        return this.$store.state.releve.indexActivite
     },
     trophies() {
-      return this.$store.state.releve.trophies
+      return this.$store.state.user.trophies
     },
     progression() {
       return  this.goal > 0 ? (this.completion / this.goal * 100) : 0
@@ -176,7 +163,7 @@ export default {
           } else if (this.currentActivity.mecaniques[i].nom == 'trophee') {  
             let nom = this.currentActivity.mecaniques[i].titre
             if (!this.tropheeDejaGagne(nom)) {     
-              this.$store.commit('releve/winTrophy', nom)
+              this.$store.commit('user/winTrophy', nom)
               let toast = this.$toasted.show("Nouveau trophée '" + nom + "'", { 
                 fullWidth : true,
                 position: "bottom-center", 
@@ -202,7 +189,7 @@ export default {
                 if (nbActivitesReussies >= this.currentMission.mecaniques[i].listeDeTrophees[j].condition.nbMissionReussie) {
                   let nom = this.currentMission.mecaniques[i].listeDeTrophees[j].titre
                   if (!this.tropheeDejaGagne(nom)) {
-                    this.$store.commit('releve/winTrophy', nom)
+                    this.$store.commit('user/winTrophy', nom)
                     let toast = this.$toasted.show("Nouveau trophée '" + nom + "'", { 
                     fullWidth : true,
                     position: "bottom-center", 
@@ -234,7 +221,7 @@ export default {
             trophee.path = this.currentMission.activites[i].mecaniques[j].image
             trophee.nom = this.currentMission.activites[i].mecaniques[j].titre
             trophee.obtenu = false
-            this.$store.commit('releve/addTrophie', trophee)
+            this.$store.commit('user/addTrophie', trophee)
           } 
         }
 
@@ -261,7 +248,7 @@ export default {
                 trophee.path = this.currentMission.mecaniques[i].listeDeTrophees[j].image
                 trophee.nom = this.currentMission.mecaniques[i].listeDeTrophees[j].titre
                 trophee.obtenu = false
-                this.$store.commit('releve/addTrophie', trophee)
+                this.$store.commit('user/addTrophie', trophee)
             } 
           }
       }
@@ -313,6 +300,15 @@ export default {
         } 
       }
       return res
+    },
+    displayActivity(statut, intitule) {
+      if (statut == 'skipped') {
+        return "❌ " + intitule
+      } else if (statut == 'toDo') {
+        return intitule
+      } else if (statut == 'done') {
+        return "✓ " + intitule
+      }
     }
   }
 };

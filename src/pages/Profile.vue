@@ -48,7 +48,7 @@ export default {
       return this.$store.state.user.name
     },
     trophies() {
-    	return this.$store.state.releve.trophies
+    	return this.$store.state.user.trophies
     },
     tropheesObtenus() {
     	var res = 0
@@ -65,7 +65,7 @@ export default {
       });
   	},
   	resetBadge() {
-  		this.$store.commit('releve/clearNotifProfil')
+  		this.$store.commit('user/clearNotifProfil')
   	},
   	displayTrophiesDetails() {
   		this.$store.commit("navigator/push", {

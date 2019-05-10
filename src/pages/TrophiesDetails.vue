@@ -46,7 +46,7 @@ export default {
   },
   computed : {
     trophies() {
-    	return this.$store.state.releve.trophies
+    	return this.$store.state.user.trophies
     },
     tropheesObtenus() {
     	var res = 0

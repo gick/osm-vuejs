@@ -91,7 +91,7 @@
                   "action":"IDENTIFIER",
                   "objet":"GENRESDIFFERENTS"
                },
-               "consigne" : {"longue" : "Identifiez de 3 arbres de genres différents", "courte" : "Identifiez genres différents"},
+               "consigne" : {"longue" : "Identifiez 3 arbres de genres différents", "courte" : "Identifiez genres différents"},
                "gameMode":"classic",
                "mecaniques":[  
                   {  
