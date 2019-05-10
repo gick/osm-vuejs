@@ -1,144 +1,205 @@
-{
-	"missions" : [
-		{"mecaniques" : [
-			{ "nom" : "score" ,
-				"actions" : [
-					{"code" : "IDENTIFIER", "nbPoint" : 5},
-					{"code" : "COMPLETER_GENRE", "nbPoint" : 7},
-					{"code" : "COMPLETER_ESPECE", "nbPoint" : 7},
-					{"code" : "COMPLETER_NOM", "nbPoint" : 7},
-					{"code" : "PHOTOGRAPHIER", "nbPoint" : 7},
-					{"code" : "VALIDER", "nbPoint" : 3}
-				]		
-			},
-			{ "nom" : "trophee", "listeDeTrophees" : [
-				{"titre" : "Une activité terminée", "image" : "trophee4.jpg",
-					"condition" : {"nbMissionReussie" : 1}
-				},
-				{"titre" : "Deux activités terminées", "image" : "trophee4.jpg",
-					"condition" : {"nbMissionReussie" : 2}
-				},
-				{"titre" : "Trois activités terminées", "image" : "trophee4.jpg",
-					"condition" : {"nbMissionReussie" : 3}
-				},
-				{"titre" : "Mission accomplie", "image" : "trophee4.jpg",
-					"condition" : {"nbMissionReussie" : 3}
-				}
-			]}
-		],
-		"activites" : [
-			{"typeActivite" : {"action" : "IDENTIFIER", "objet" : "ARBRE"},
-				"mecaniques" : [
-					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-					{ "nom" : "score" , "nbPoint" : 10},
-					{ "nom" : "trophee", "titre" : "Activité 1 faite", "image" : "trophee1.jpg", 
-						"condition" : {"statutMission" : "done"}	
-					}
-			],
-			"conditionDeFin" : [
-				{"nbArbre" : 1},
-				{"tempsLimite" : 120}
-			]
-			},
-			{"typeActivite" : {"action" : "VERIFIER", "objet" : "ESPECE"},
-				"mecaniques" : [
-					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-					{ "nom" : "score" , "nbPoint" : 12},
-					{ "nom" : "trophee", "titre" : "Activité 2 faite", "image" : "trophee2.jpg", 
-						"condition" : {"statutMission" : "done"}	
-					}
-			],
-			"conditionDeFin" : [
-				{"nbArbre" : 2},
-				{"tempsLimite" : 120}
-			],
-			"espece" : "Acer negundo"
-			},
-			{"typeActivite" : {"action" : "PHOTOGRAPHIER", "objet" : "GENRE"},
-				"mecaniques" : [
-					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-					{ "nom" : "score" , "nbPoint" : 12},
-					{ "nom" : "trophee", "titre" : "Activité 3 faite", "image" : "trophee3.jpg", 
-						"condition" : {"statutMission" : "done"}	
-					}
-			],
-			"conditionDeFin" : [
-				{"nbArbre" : 3},
-				{"tempsLimite" : 120}
-			],
-			"genre" : "Alnus"
-			}
-		]},
-
-		{"mecaniques" : [
-			{ "nom" : "score" ,
-				"actions" : [
-					{"code" : "IDENTIFIER", "nbPoint" : 5},
-					{"code" : "COMPLETER_GENRE", "nbPoint" : 7},
-					{"code" : "COMPLETER_ESPECE", "nbPoint" : 7},
-					{"code" : "COMPLETER_NOM", "nbPoint" : 7},
-					{"code" : "PHOTOGRAPHIER", "nbPoint" : 7},
-					{"code" : "VALIDER", "nbPoint" : 3}
-				]		
-			},
-			{ "nom" : "trophee", "listeDeTrophees" : [
-				{"titre" : "Une activité terminée", "image" : "trophee4.jpg",
-					"condition" : {"nbMissionReussie" : 1}
-				},
-				{"titre" : "Deux activités terminées", "image" : "trophee4.jpg",
-					"condition" : {"nbMissionReussie" : 2}
-				},
-				{"titre" : "Trois activités terminées", "image" : "trophee4.jpg",
-					"condition" : {"nbMissionReussie" : 3}
-				}
-			]}
-		],
-		"activites" : [
-			{"typeActivite" : {"action" : "IDENTIFIER", "objet" : "ESPECESDIFFERENTES"},
-				"mecaniques" : [
-					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-					{ "nom" : "score" , "nbPoint" : 10},
-					{ "nom" : "trophee", "titre" : "Activité 1 faite", "image" : "trophee1.jpg", 
-						"condition" : {"statutMission" : "done"}	
-					}
-			],
-			"conditionDeFin" : [
-				{"nbArbre" : 2},
-				{"tempsLimite" : 120}
-			]
-			},
-			{"typeActivite" : {"action" : "VERIFIER", "objet" : "ARBRE"},
-				"mecaniques" : [
-					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-					{ "nom" : "score" , "nbPoint" : 12},
-					{ "nom" : "trophee", "titre" : "Activité 2 faite", "image" : "trophee2.jpg", 
-						"condition" : {"statutMission" : "done"}	
-					}
-			],
-			"conditionDeFin" : [
-				{"nbArbre" : 1},
-				{"tempsLimite" : 120}
-			],
-			"espece" : "Acer negundo"
-			},
-			{"typeActivite" : {"action" : "PHOTOGRAPHIER", "objet" : "ESPECE"},
-				"mecaniques" : [
-					{ "nom" : "chronometreAscendant" , "conditionDeFin" : "tempsLimite"},
-					{ "nom" : "score" , "nbPoint" : 12},
-					{ "nom" : "trophee", "titre" : "Activité 3 faite", "image" : "trophee3.jpg", 
-						"condition" : {"statutMission" : "done"}	
-					}
-			],
-			"conditionDeFin" : [
-				{"nbArbre" : 2},
-				{"tempsLimite" : 120}
-			],
-			"espece" : "Acer negundo"
-			}
-		]}
-	]
+{  
+   "missions":[  
+      {  
+         "mecaniques":[  
+            {  
+               "nom":"score",
+               "actions":[  
+                  {  
+                     "code":"IDENTIFIER",
+                     "nbPoint":5
+                  },
+                  {  
+                     "code":"COMPLETER_GENRE",
+                     "nbPoint":7
+                  },
+                  {  
+                     "code":"COMPLETER_ESPECE",
+                     "nbPoint":7
+                  },
+                  {  
+                     "code":"COMPLETER_NOM",
+                     "nbPoint":7
+                  },
+                  {  
+                     "code":"PHOTOGRAPHIER",
+                     "nbPoint":7
+                  },
+                  {  
+                     "code":"VALIDER",
+                     "nbPoint":3
+                  }
+               ]
+            },
+            {  
+               "nom":"trophee",
+               "listeDeTrophees":[  
+                  {  
+                     "titre":"Une activité terminée",
+                     "image":"trophee4.jpg",
+                     "condition":{  
+                        "nbMissionReussie":1
+                     }
+                  },
+                  {  
+                     "titre":"Deux activités terminées",
+                     "image":"trophee4.jpg",
+                     "condition":{  
+                        "nbMissionReussie":2
+                     }
+                  },
+                  {  
+                     "titre":"Trois activités terminées",
+                     "image":"trophee4.jpg",
+                     "condition":{  
+                        "nbMissionReussie":3
+                     }
+                  }
+               ]
+            }
+         ],
+         "activites":[  
+            {  
+               "typeActivite":{  
+                  "action":"LOCALISER",
+                  "objet":"ARBRE"
+               },
+               "consigne" : {"longue" : "Localisez 5 arbres", "courte" : "Localisez arbres"},
+               "gameMode":"classic",
+               "mecaniques":[  
+                  {  
+                     "nom":"score",
+                     "nbPoint":10
+                  },
+                  {  
+                     "nom":"trophee",
+                     "titre":"Activité 1 faite",
+                     "image":"trophee1.jpg",
+                     "condition":{  
+                        "statutMission":"done"
+                     }
+                  }
+               ],
+               "conditionDeFin":[  
+                  {  
+                     "nbArbre":5
+                  }
+               ]
+            },
+            {  
+               "typeActivite":{  
+                  "action":"IDENTIFIER",
+                  "objet":"GENRESDIFFERENTS"
+               },
+               "consigne" : {"longue" : "Identifiez 3 arbres de genres différents", "courte" : "Identifiez genres différents"},
+               "gameMode":"classic",
+               "mecaniques":[  
+                  {  
+                     "nom":"score",
+                     "nbPoint":12
+                  },
+                  {  
+                     "nom":"trophee",
+                     "titre":"Activité 2 faite",
+                     "image":"trophee2.jpg",
+                     "condition":{  
+                        "statutMission":"done"
+                     }
+                  }
+               ],
+               "conditionDeFin":[  
+                  {  
+                     "nbArbre":3
+                  }
+               ],
+               "espece":"Acer negundo"
+            },
+            {  
+               "typeActivite":{  
+                  "action":"IDENTIFIER",
+                  "objet":"ARBRE"
+               },
+               "consigne" : {"longue" :"Identifiez 3 arbres à partir d'un relevé d'expert (cercle bleu clignotant)", "courte" : "Identifiez arbres expert"},
+               "gameMode":"identification",
+               "mecaniques":[  
+                  {  
+                     "nom":"score",
+                     "nbPoint":12
+                  },
+                  {  
+                     "nom":"trophee",
+                     "titre":"Activité 3 faite",
+                     "image":"trophee3.jpg",
+                     "condition":{  
+                        "statutMission":"done"
+                     }
+                  }
+               ],
+               "conditionDeFin":[  
+                  {  
+                     "nbArbre":3
+                  }
+               ]
+            },
+            {  
+               "typeActivite":{  
+                  "action":"VERIFIER",
+                  "objet":"ARBRE"
+               },
+               "consigne" : {"longue" : "Modifiez ou validez 3 relevés d'un autre utilisateur (cercle vert clignotant)", "courte" : "Modifiez ou validez relevés"},
+               "gameMode":"verification",
+               "mecaniques":[  
+                  {  
+                     "nom":"score",
+                     "nbPoint":12
+                  },
+                  {  
+                     "nom":"trophee",
+                     "titre":"Activité 3 faite",
+                     "image":"trophee3.jpg",
+                     "condition":{  
+                        "statutMission":"done"
+                     }
+                  }
+               ],
+               "conditionDeFin":[  
+                  {  
+                     "nbArbre":3
+                  }
+               ]
+            },
+            {  
+               "typeActivite":{  
+                  "action":"LOCALISER",
+                  "objet":"ARBRE"
+               },
+               "consigne" : {"longue" : "Localisez un maximum d'arbre en un temps limite", "courte" : "Localisez arbres"},
+               "gameMode":"classic",
+               "mecaniques":[ 
+                	{  
+                     "nom":"chronometreDescendant",
+                     "conditionDeFin":"tempsLimite"
+                  }, 
+                  {  
+                     "nom":"score",
+                     "nbPoint":12
+                  },
+                  {  
+                     "nom":"trophee",
+                     "titre":"Activité 3 faite",
+                     "image":"trophee3.jpg",
+                     "condition":{  
+                        "statutMission":"done"
+                     }
+                  }
+               ],
+               "conditionDeFin":[  
+                  {  
+                     "tempsLimite":900
+                  }
+               ]
+            }
+         ]
+      }
+   ]
 }
-
-
-
-

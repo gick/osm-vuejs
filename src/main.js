@@ -26,6 +26,7 @@ import BProgressBar from 'bootstrap-vue/es/components/progress/progress-bar'
 // import * as OnsenComponents from './onsen-components'; // For ESM
 import storeLike from './store/routeStore';
 import CustomToolbar from './partials/CustomToolbar.vue';
+import Countdown from './partials/Countdown.vue';
 import AppNavigator from './AppNavigator.vue';
 import L from 'leaflet';
 delete L.Icon.Default.prototype._getIconUrl;
@@ -63,6 +64,10 @@ window.addEventListener("hashchange", function(){
 Vue.component('custom-toolbar', CustomToolbar); // Common toolbar
 Vue.component('b-progress', BProgress);
 Vue.component('b-progress-bar', BProgressBar);
+Vue.component('countdown', Countdown);
+
+import Progress from 'vue-multiple-progress'
+Vue.component('VmProgress', Progress)
 
 new Vue({
   el: '#app',

@@ -90,37 +90,40 @@
       <v-ons-card>
         <v-ons-button @click="centerMap">Centrer carte</v-ons-button>
       </v-ons-card>
-      <v-ons-dialog class="lorem-dialog" :visible.sync="missionOver">
-        <!-- Optional page. This could contain a Navigator as well. -->
-        <v-ons-page>
-          <v-ons-toolbar>
-            <div class="center">Mission terminée</div>
-          </v-ons-toolbar>
-          <p style="text-align: center">Vous avez terminé votre mission, place à la mission suivante</p>
-          <p style="text-align: center">
-            <v-ons-button modifier="light" @click="closeDialog">OK</v-ons-button>
-          </p>
-        </v-ons-page>
-      </v-ons-dialog>
 
-      <v-ons-dialog class="lorem-dialog" :visible.sync="activityOver">
-        <!-- Optional page. This could contain a Navigator as well. -->
-        <v-ons-page>
-          <v-ons-toolbar>
-            <div class="center">Activité terminée</div>
-          </v-ons-toolbar>
-          <p
-            style="text-align: center"
-          >Vous avez terminé votre activité, place à l'activité suivante</p>
-          <p style="text-align: center">
-            <v-ons-button modifier="light" @click="closeDialog">OK</v-ons-button>
-          </p>
-        </v-ons-page>
-      </v-ons-dialog>
+      <v-ons-alert-dialog modifier="rowfooter"
+      :title="'Mission terminée'"
+      :footer="{
+        Ok: () => closeDialog()
+      }"
+      :visible.sync="missionOver"
+      >
+        Vous avez terminé votre mission, place à la mission suivante
+      </v-ons-alert-dialog>
+
+      <v-ons-alert-dialog modifier="rowfooter"
+      :title="'Activité terminée'"
+      :footer="{
+        Ok: () => closeDialog()
+      }"
+      :visible.sync="activityOver"
+      >
+        Vous avez terminé votre activité, place à l'activité suivante
+      </v-ons-alert-dialog>
+
     </div>
     <v-ons-fab @click="centerMap" modifier="mini" position='bottom right'>
-  <v-ons-icon icon="md-pin"></v-ons-icon>
-</v-ons-fab>
+      <v-ons-icon icon="md-pin"></v-ons-icon>
+    </v-ons-fab>
+
+  <ons-bottom-toolbar style="background-color:#F44336">
+      <center style="color:white">
+        {{consigne}}
+        <br>
+        <p v-if="goal>0"> {{completion}}/{{goal}}</p>
+        <p v-else> {{completion}}</p>  
+      </center>  
+  </ons-bottom-toolbar>
 
   </v-ons-page>
 </template>
@@ -194,6 +197,7 @@ export default {
   },
   data() {
     return {
+      consigne: "",
       missionOver: false,
       activityOver: false,
       newCircle: null,
@@ -287,6 +291,12 @@ export default {
     },
     nbActivite() {
       return this.$store.state.releve.mission.activites.length;
+    },
+    completion() {
+      return this.$store.state.releve.completion;
+    },
+    goal() {
+      return this.$store.state.releve.goal;
     }
   },
 
@@ -298,6 +308,15 @@ export default {
         } else {
           this.activityOver = true;
         }
+      },
+      deep: true
+    },
+    indexActivite: {
+      handler: function(newIndex, oldIndex) {
+        if (this.newIndex == -1) {
+          return
+        }
+        this.consigne = this.currentMission.activites[newIndex].consigne.courte
       },
       deep: true
     }
