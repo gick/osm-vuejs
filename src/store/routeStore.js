@@ -29,6 +29,14 @@ export default {
           "28 à 32m",
           "Plus de 32m"
         ],
+      },
+      mutations: {
+        setVerificationMode(state, mode) {
+          state.verification = mode
+        },
+        setIdentificationMode(state, mode) {
+          state.identification = mode
+        }
       }
     },
     osmData: {
@@ -117,6 +125,9 @@ export default {
       namespaced: true,
       state: {
         releves: [],
+        identificationMode: false,
+        verificationMode: false,
+        gamificationMode: true,
         actionsTransActivite: new Map(),
         differentSpecie: new Array(),
         differentGender: new Array(),
@@ -127,27 +138,17 @@ export default {
         goal: 0,
         chgtActivity: 0,
         score: 0,
-        trophies: [],
-        identificationMode: false,
-        verificationMode: false,
-        journal: [],
-        notifProfil: 0
+        journal: []
       },
       mutations: {
-        addNotifProfil(state, nbNotif) {
-          if (state.nbNotif == null) {
-            state.nbNotif = 0
-          }
-          state.notifProfil += nbNotif
-        },
-        clearNotifProfil(state) {
-          state.notifProfil = null
-        },
         setIdentificationMode(state, mode) {
           state.identificationMode = mode
         },
         setVerificationMode(state, mode) {
           state.verificationMode = mode
+        },
+        setGamificationMode(state, mode) {
+          state.gamificationMode = mode
         },
         setCompletion(state, completion) {
           state.completion = completion;
@@ -165,26 +166,23 @@ export default {
           state.mission = mission
         },
         addPoints(state, nbPoint) {
-          state.score += nbPoint
+          if (state.gamificationMode) {
+            state.score += nbPoint
+          }
         },
         add(state, releve) {
           state.releves.push(releve)
           if (releve.image) {
-            updateCompletion(state, "add_photo", releve.specie)
+            updateCompletion(state, "add_photo", releve.specie, releve.genus)
           } else {
-            updateCompletion(state, "add", releve.specie)
-          }
+             updateCompletion(state, "add", releve.specie, releve.genus)
+          }      
         },
         addFromOutside(state, releve) {
           state.releves.push(releve)
         },
-
-        addActionTransActivite(state, params) {
-          state.actionsTransActivite.set(params.split('#')[0], params.split('#')[1])
-        },
-        addTrophie(state, trophie) {
-          state.trophies.unshift(trophie)
-          state.notifProfil++
+        addActionTransActivite(state, param){
+          state.actionsTransActivite.set(param.action, param.nbPoint)
         },
         clearActionsTransActivite(state) {
           state.actionsTransActivite.clear()
@@ -207,14 +205,18 @@ export default {
         modify(state, newReleve) {
           let index = state.releves.findIndex(releve => releve._id == newReleve._id)
           if (index != -1) {
-            // state.releves[index].test='truc'    
-            state.releves.splice(index, 1, newReleve)
-            state.releves[index].prev = newReleve.prev
-            var indexRelevePrecedent = state.releves[index].prev.length - 1
+           // state.releves[index].test='truc'    
+            state.releves.splice(index,1,newReleve)
+            state.releves[index].prev=newReleve.prev
+            var indexRelevePrecedent = state.releves[index].prev.length -1
+            var relevePrecedent = state.releves[index].prev[indexRelevePrecedent]
+
+            var differentID = !(newReleve.osmId == newReleve.modifierId)
+
             if (newReleve.image) {
-              updateCompletion(state, "modify/validate_photo", state.releves[index].prev[indexRelevePrecedent].specie)
+              updateCompletion(state, "modify/validate_photo", relevePrecedent.specie, relevePrecedent.genus, differentID)
             } else {
-              //   updateCompletion(state, "modify/validate", state.releves[index].prev[indexRelevePrecedent].specie)
+              updateCompletion(state, "modify/validate", state.releves[index].prev[indexRelevePrecedent].specie, state.releves[index].prev[indexRelevePrecedent].genus, differentID)
             }
           }
         },
@@ -232,9 +234,9 @@ export default {
             state.releves.push(observation)
           }
         },
-        validate(state, currentReleve) {
+        validate(state, currentReleve) { 
 
-          updateCompletion(state, "modify/validate", currentReleve.specie)
+          updateCompletion(state, "modify/validate", currentReleve.specie, currentReleve.genus, true)
 
           let index = state.releves.findIndex(releve => releve._id == currentReleve._id)
           if (index != -1) {
@@ -258,17 +260,18 @@ export default {
           state.differentGender.length = 0
         },
         pointsActions(state, actions) {
-          for (let i = 0; i < actions.length; i++) {
-            if (state.actionsTransActivite.has(actions[i])) {
-              var nbPoint = parseInt(state.actionsTransActivite.get(actions[i]))
-              var line = new Object()
-              line.action = actions[i]
-              line.nbPoint = nbPoint
-              state.journal.unshift(line)
-              //  this.$toasted.show("Vous avez obtenu " + nbPoint + " points bonus pour " + actions[i], {fullWidth:true, position:"bottom-center",duration: 2000 });
-              state.score += nbPoint
+          if (state.gamificationMode) {
+            for (let i = 0; i < actions.length; i++) {
+              if (state.actionsTransActivite.has(actions[i])) {
+                var nbPoint = parseInt(state.actionsTransActivite.get(actions[i]))
+                var line = new Object()
+                line.action = actions[i]
+                line.nbPoint = nbPoint
+                state.journal.unshift(line)
+                state.score += nbPoint
+              }
             }
-          }
+          } 
         }
       },
       actions: {
@@ -337,6 +340,7 @@ export default {
           state,
           commit
         }, releve) {
+          updateCompletion(state, "identification", releve.specie, releve.genus)
           axios.defaults.withCredentials = true
           axios.post('/api/identification', {
             releve: releve
@@ -396,8 +400,34 @@ export default {
         isAnon: false,
         formerName: null,
         formerId: null,
+        notifProfil: 0,
+        trophies: []
       },
       mutations: {
+        addTrophie(state, trophie) {
+          for (let i = 0 ; i < state.trophies.length; i++) {
+            if (state.trophies[i].nom == trophie.nom) return
+          }
+          state.trophies.push(trophie)
+        },
+        winTrophy(state, trophyName) {
+          for (let i = 0; i<state.trophies.length; i++) {
+            if (state.trophies[i].nom == trophyName && state.trophies[i].obtenu == false) {
+              state.trophies[i].obtenu = true
+              state.notifProfil++
+              alert(state.notifProfil)
+            }
+          }  
+        },
+        addNotifProfil(state, nbNotif) {
+          if (state.nbNotif == null) {
+            state.nbNotif = 0
+          }
+          state.notifProfil += nbNotif
+        },
+        clearNotifProfil(state) {
+          state.notifProfil = null
+        },
         set(state, user) {
           LogRocket.identify(user.id,{name:user.name})
           state.name = user.name
@@ -552,43 +582,58 @@ export default {
 };
 
 
-function updateCompletion(state, operation, specie) {
+function updateCompletion(state, operation, specie, genus, differentID) {
 
-  if (specie == null || specie == '') {
-    return
+  var gameMode = state.activite.gameMode
+
+  if (gameMode == 'verification' && differentID) {
+    if (operation.includes('modify/validate')) state.completion++
+  } else if (gameMode == 'identification') {
+    if (operation == 'identification') state.completion++
+  } else if (gameMode == 'classic') {
+
+    var action = state.activite.typeActivite.action
+
+    if (action == 'LOCALISER' && operation.includes('add')) {
+      state.completion++
+    }
+
+    else if (action == 'LOCALISER' && operation.includes('add')) {
+      state.completion++
+    }
+      
+    else if ((action == 'IDENTIFIER' && operation.includes('add')) ||
+          (action == 'VERIFIER' && operation.includes('modify/validate')) ||
+          (action == 'PHOTOGRAPHIER' && operation.includes('photo'))) {
+
+        if (specie != null && !state.differentSpecie.includes(specie)) {
+          state.differentSpecie.push(specie)
+        }
+
+        if (genus != null && !state.differentGender.includes(genus)) {
+          state.differentGender.push(genus)
+        }
+            
+        var objet = state.activite.typeActivite.objet
+
+        if (objet == 'ARBRE'){
+          state.completion++;
+        } else if (objet == 'ESPECE' && specie != null && state.activite.espece.toUpperCase() == specie.toUpperCase()){
+          state.completion++;
+        } else if (objet == 'GENRE' && genus != null && state.activite.genre.toUpperCase() == genus.toUpperCase()){
+          state.completion++;
+        } else if (objet == 'ESPECESDIFFERENTES'){
+          state.completion = state.differentSpecie.length;
+        } else if (objet == 'GENRESDIFFERENTS'){
+          state.completion = state.differentGender.length;
+        } 
+    }
   }
-
-  var action = state.activite.typeActivite.action
-  if ((action == 'IDENTIFIER' && operation.includes('add')) ||
-    (action == 'VERIFIER' && operation.includes('modify/validate')) ||
-    (action == 'PHOTOGRAPHIER' && operation.includes('photo'))) {
-
-    if (!state.differentSpecie.includes(specie)) {
-      state.differentSpecie.push(specie)
-    }
-
-    if (!state.differentGender.includes(specie.split(' ')[0])) {
-      state.differentGender.push(specie.split(' ')[0])
-    }
-
-    var objet = state.activite.typeActivite.objet
-
-    if (objet == 'ARBRE') {
-      state.completion++;
-    } else if (objet == 'ESPECE' && state.activite.espece.toUpperCase() == specie.toUpperCase()) {
-      state.completion++;
-    } else if (objet == 'GENRE' && specie.indexOf(state.activite.genre) == 0) {
-      state.completion++;
-    } else if (objet == 'ESPECESDIFFERENTES') {
-      state.completion = state.differentSpecie.length;
-    } else if (objet == 'GENRESDIFFERENTS') {
-      state.completion = state.differentGender.length;
-    }
-
-    if (state.completion == state.goal) {
-      state.chgtActivity++;
-    }
+      
+  if (state.completion == state.goal) {          
+    state.chgtActivity++;
   }
+    
 }
 
 function extractActions(releve, identification) {

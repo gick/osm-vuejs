@@ -28,6 +28,7 @@ import vSelect from 'vue-select'
 // import * as OnsenComponents from './onsen-components'; // For ESM
 import storeLike from './store/routeStore';
 import CustomToolbar from './partials/CustomToolbar.vue';
+import Countdown from './partials/Countdown.vue';
 import AppNavigator from './AppNavigator.vue';
 import 'vue-select/dist/vue-select.css';
 
@@ -59,6 +60,10 @@ window.addEventListener("hashchange", function(){
 Vue.component('custom-toolbar', CustomToolbar); // Common toolbar
 Vue.component('b-progress', BProgress);
 Vue.component('b-progress-bar', BProgressBar);
+Vue.component('countdown', Countdown);
+
+import Progress from 'vue-multiple-progress'
+Vue.component('VmProgress', Progress)
 
 new Vue({
   el: '#app',

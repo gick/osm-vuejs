@@ -13,8 +13,7 @@
     		<v-ons-col style="text-align: right">
     			{{score}}
     		</v-ons-col>
-    	</v-ons-row>
-    	 
+    	</v-ons-row>   	 
     </v-ons-card>
    
     <v-ons-card>
@@ -23,10 +22,10 @@
     		<v-ons-list-item v-for="line in journal">
     			<v-ons-row>
     				<v-ons-col>
-    					{{ line.action }}
+    					{{ renameAction(line.action) }}
     				</v-ons-col>
     				<v-ons-col style="text-align: right">
-    					+{{ line.nbPoint }}
+    					{{ line.nbPoint }}
     				</v-ons-col>
     			</v-ons-row>  
     		</v-ons-list-item>
@@ -39,20 +38,20 @@
     		<v-ons-list-item v-for="action in actionsTransActivite.keys()">
     			<v-ons-row>
     				<v-ons-col>
-    					{{action}}
+    					{{ renameAction(action)}}
     				</v-ons-col>
     				<v-ons-col style="text-align: right">
-    					+{{actionsTransActivite.get(action)}}
+    					{{actionsTransActivite.get(action)}}
     				</v-ons-col>	 
     			</v-ons-row>
     		</v-ons-list-item>
     		<v-ons-list-item>
     			<v-ons-row>
     				<v-ons-col>
-    					ACTIVITE_REUSSIE
+    					Activité réussie
     				</v-ons-col>
     				<v-ons-col style="text-align: right">
-    					+?
+    					?
     				</v-ons-col>	 
     			</v-ons-row>
     		</v-ons-list-item>
@@ -80,6 +79,28 @@
     	actionsTransActivite() {
     		return this.$store.state.releve.actionsTransActivite
     	}
+		},
+		methods : {
+			renameAction(action) {
+			  switch (action) {
+			    case "COMPLETER_GENRE" :
+			      return "Genre renseigné"
+			    case "COMPLETER_ESPECE" :
+			      return "Espèce renseignée"
+			    case "COMPLETER_NOM" :
+			      return "Nom commun renseigné"
+			    case "PHOTOGRAPHIER" :
+			      return "Prise de photo"
+			    case "VALIDER" :
+			      return "Validation"
+			    case "ACTIVITE_REUSSIE" :
+			      return "Activité réussie"
+			    case "IDENTIFIER" :
+			      return "Identification"
+			    default :
+			      return "Action non répertoriée"
+			  }
+			}
 		}
 	}
 

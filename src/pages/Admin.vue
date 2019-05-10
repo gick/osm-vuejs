@@ -17,7 +17,7 @@
           </div>
         </v-ons-list-item>
         <v-ons-list-item>
-          <div class="center">Mode anonyme (vos relevé seront vus comme ceux d'un autre joueur)</div>
+          <div class="center">Mode anonyme (vos relevés seront vus comme ceux d'un autre joueur)</div>
           <div class="right">
             <v-ons-switch v-model="isAnon" @change="setAnonymous"></v-ons-switch>
           </div>
@@ -29,9 +29,16 @@
           </div>
         </v-ons-list-item>
         <v-ons-list-item>
-          <div class="center">Mode vérification des relevé utilisateurs</div>
+          <div class="center">Mode vérification des relevés utilisateurs</div>
           <div class="right">
             <v-ons-switch v-model="$store.state.commonData.verification"></v-ons-switch>
+          </div>
+        </v-ons-list-item>
+
+        <v-ons-list-item>
+          <div class="center">Mode gamification</div>
+          <div class="right">
+            <v-ons-switch v-model="$store.state.releve.gamificationMode"></v-ons-switch>
           </div>
         </v-ons-list-item>
 

@@ -60,25 +60,41 @@ export default {
   }},
   data() {
     return {
-      access: [
+    };
+  },
+  computed: {
+    gamificationMode() {
+      return this.$store.state.releve.gamificationMode;
+    },
+    access() { 
+      var access = 
+      [
         {
           title: "Mission en cours",
           icon: "ion-home"
         },
         {
-          title: "Mon arboretum",
-          icon: "ion-leaf"
-        },
-        {
           title: "Mes relevés",
           icon: "ion-edit"
-        },
+        },       
         {
           title: "Folia",
           icon: "ion-search"
         }
       ]
-    };
+      if (this.gamificationMode) {
+        var profil = {
+          title: "Profil",
+          icon: "ion-person"
+        };
+        var arboretum = {
+          title: "Mon arboretum",
+          icon: "ion-leaf"
+        }
+        access.splice(1,0,profil,arboretum)
+      }
+      return access
+    }
   }
 };
 </script>
