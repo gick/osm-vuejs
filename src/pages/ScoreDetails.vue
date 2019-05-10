@@ -22,7 +22,7 @@
     		<v-ons-list-item v-for="line in journal">
     			<v-ons-row>
     				<v-ons-col>
-    					{{ line.action }}
+    					{{ renameAction(line.action) }}
     				</v-ons-col>
     				<v-ons-col style="text-align: right">
     					{{ line.nbPoint }}
@@ -38,7 +38,7 @@
     		<v-ons-list-item v-for="action in actionsTransActivite.keys()">
     			<v-ons-row>
     				<v-ons-col>
-    					{{action}}
+    					{{ renameAction(action)}}
     				</v-ons-col>
     				<v-ons-col style="text-align: right">
     					{{actionsTransActivite.get(action)}}
@@ -48,7 +48,7 @@
     		<v-ons-list-item>
     			<v-ons-row>
     				<v-ons-col>
-    					ACTIVITE_REUSSIE
+    					Activité réussie
     				</v-ons-col>
     				<v-ons-col style="text-align: right">
     					?
@@ -79,6 +79,28 @@
     	actionsTransActivite() {
     		return this.$store.state.releve.actionsTransActivite
     	}
+		},
+		methods : {
+			renameAction(action) {
+			  switch (action) {
+			    case "COMPLETER_GENRE" :
+			      return "Genre renseigné"
+			    case "COMPLETER_ESPECE" :
+			      return "Espèce renseignée"
+			    case "COMPLETER_NOM" :
+			      return "Nom commun renseigné"
+			    case "PHOTOGRAPHIER" :
+			      return "Prise de photo"
+			    case "VALIDER" :
+			      return "Validation"
+			    case "ACTIVITE_REUSSIE" :
+			      return "Activité réussie"
+			    case "IDENTIFIER" :
+			      return "Identification"
+			    default :
+			      return "Action non répertoriée"
+			  }
+			}
 		}
 	}
 

@@ -139,7 +139,8 @@ export default {
         identificationMode: false,
         verificationMode: false,
         journal: [],
-        notifProfil: 0
+        notifProfil: 0,
+        gamificationMode: true
       },
       mutations: {
         addNotifProfil(state, nbNotif) {
@@ -157,6 +158,9 @@ export default {
         setVerificationMode(state, mode) {
           state.verificationMode = mode
         },
+        setGamificationMode(state, mode) {
+          state.gamificationMode = mode
+        },
         setCompletion(state, completion) {
           state.completion = completion;
         },
@@ -173,7 +177,9 @@ export default {
           state.mission = mission
         },
         addPoints(state, nbPoint) {
-          state.score += nbPoint
+          if (state.gamificationMode) {
+            state.score += nbPoint
+          }
         },
         add(state, releve) {
           state.releves.push(releve)
@@ -279,17 +285,18 @@ export default {
           state.differentGender.length = 0
         },
         pointsActions(state, actions) {
-          for (let i = 0; i < actions.length; i++) {
-            if (state.actionsTransActivite.has(actions[i])) {
-              var nbPoint = parseInt(state.actionsTransActivite.get(actions[i]))
-              var line = new Object()
-              line.action = actions[i]
-              line.nbPoint = nbPoint
-              state.journal.unshift(line)
-              //  this.$toasted.show("Vous avez obtenu " + nbPoint + " points bonus pour " + actions[i], {fullWidth:true, position:"bottom-center",duration: 2000 });
-              state.score += nbPoint
+          if (state.gamificationMode) {
+            for (let i = 0; i < actions.length; i++) {
+              if (state.actionsTransActivite.has(actions[i])) {
+                var nbPoint = parseInt(state.actionsTransActivite.get(actions[i]))
+                var line = new Object()
+                line.action = actions[i]
+                line.nbPoint = nbPoint
+                state.journal.unshift(line)
+                state.score += nbPoint
+              }
             }
-          }
+          } 
         }
       },
       actions: {

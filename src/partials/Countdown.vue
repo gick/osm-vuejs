@@ -4,7 +4,6 @@
       Temps restant : {{ hours2digits }}:{{ minutes2digits }}:{{ secondes2digits }}
       <v-ons-progress-circular :value=progress></v-ons-progress-circular>
     </p>
-    <v-ons-button v-show="timer==null" @click="play">Démarrer l'activité</v-ons-button>  
   </div>
  
 </template>
@@ -36,6 +35,9 @@ export default {
       return ("0" + this.secondes).slice(-2);
     }
   },
+  mounted() {
+    this.play()
+  },
   methods: {
   	play() {	
           this.totalSecondes2 = this.totalSecondes
@@ -45,7 +47,7 @@ export default {
           this.minutes = Math.floor(this.totalSecondes2 / 60) - this.hours * 60 ;
           this.secondes = Math.floor(this.totalSecondes2) - this.minutes * 60 - this.hours * 60 * 60;
           if (this.totalSecondes2 <= 0) {
-            this.$emit("timeout")
+            this.$emit("timeout","ninja")
             clearInterval(this.timer);
           }
         }, 1000);       

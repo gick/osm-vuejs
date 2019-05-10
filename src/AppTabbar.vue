@@ -199,7 +199,8 @@ export default {
 
   computed: {
     tabs() {
-      return [
+      var tab = 
+      [
         {
           label: "Carte",
           icon: "ion-map",
@@ -212,23 +213,7 @@ export default {
           icon: "ion-home",
           page: Home,
           theme: red
-        },
-        {
-          label: "Profil",
-          icon: "ion-person",
-          page: Profile,
-          theme: red,
-          badge:
-            this.$store.state.releve.notifProfil == 0
-              ? null
-              : this.$store.state.releve.notifProfil
-        },
-        {
-          label: "Arboretum",
-          icon: "ion-leaf",
-          page: Arboretum,
-          theme: blue
-        },
+        },       
         {
           label: "Relevés",
           icon: "ion-edit",
@@ -250,6 +235,31 @@ export default {
           theme: purple
         }
       ];
+      if (this.gamificationMode) {
+        var profil = 
+         {
+          label: "Profil",
+          icon: "ion-person",
+          page: Profile,
+          theme: red,
+          badge:
+            this.$store.state.releve.notifProfil == 0
+              ? null
+              : this.$store.state.releve.notifProfil
+        };
+        var arboretum =
+        {
+          label: "Arboretum",
+          icon: "ion-leaf",
+          page: Arboretum,
+          theme: blue
+        }
+        tab.splice(2,0, profil, arboretum)
+      }
+      return tab
+    },
+    gamificationMode() {
+      return this.$store.state.releve.gamificationMode;
     },
     userID() {
       return this.$store.state.user.id;

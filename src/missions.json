@@ -64,6 +64,7 @@
                   "action":"LOCALISER",
                   "objet":"ARBRE"
                },
+               "consigne" : {"longue" : "Localisez 5 arbres", "courte" : "Localisez arbres"},
                "gameMode":"classic",
                "mecaniques":[  
                   {  
@@ -90,6 +91,7 @@
                   "action":"IDENTIFIER",
                   "objet":"GENRESDIFFERENTS"
                },
+               "consigne" : {"longue" : "Identifiez de 3 arbres de genres différents", "courte" : "Identifiez genres différents"},
                "gameMode":"classic",
                "mecaniques":[  
                   {  
@@ -117,6 +119,7 @@
                   "action":"IDENTIFIER",
                   "objet":"ARBRE"
                },
+               "consigne" : {"longue" :"Identifiez 3 arbres à partir d'un relevé d'expert (cercle bleu clignotant)", "courte" : "Identifiez arbres expert"},
                "gameMode":"identification",
                "mecaniques":[  
                   {  
@@ -143,6 +146,7 @@
                   "action":"VERIFIER",
                   "objet":"ARBRE"
                },
+               "consigne" : {"longue" : "Modifiez ou validez 3 relevés d'un autre utilisateur (cercle vert clignotant)", "courte" : "Modifiez ou validez relevés"},
                "gameMode":"verification",
                "mecaniques":[  
                   {  
@@ -169,6 +173,7 @@
                   "action":"LOCALISER",
                   "objet":"ARBRE"
                },
+               "consigne" : {"longue" : "Localisez un maximum d'arbre en un temps limite", "courte" : "Localisez arbres"},
                "gameMode":"classic",
                "mecaniques":[ 
                 	{  

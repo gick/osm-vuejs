@@ -46,9 +46,9 @@
                 <VmProgress v-if="goal>0" :percentage=progression stroke-width="10">
                   {{completion}} / {{goal}}
                 </VmProgress>
-                <VmProgress v-else :percentage=progression stroke-width="10">
-                  {{completion}}
-                </VmProgress>
+                <div v-else>
+                  Nombre de relevé : {{completion}}
+                </div>
               </v-ons-col>  
               <v-ons-col width="10%">
                <v-ons-icon icon="fa-angle-double-right" @click="showDialog = true" size="30px"></v-ons-icon> 
@@ -103,6 +103,9 @@ export default {
     this.newMission();
   },
   computed: {
+    gamificationMode() {
+      return this.$store.state.releve.gamificationMode;
+    },
     completion() {
       return this.$store.state.releve.completion;
     },
@@ -160,7 +163,7 @@ export default {
       this.$store.commit('commonData/setVerificationMode', false)
       this.$store.commit('commonData/setIdentificationMode', false)
       this.activites[this.indexActivite].statut = statut
-      if (statut == 'done') {
+      if (statut == 'done' && this.gamificationMode) {
         for (let i = 0; i < this.currentActivity.mecaniques.length; i++) {
           //attribution des points
           if (this.currentActivity.mecaniques[i].nom == 'score') {
@@ -185,30 +188,32 @@ export default {
         }
       }
       if (this.indexActivite + 1 ==  this.currentMission.activites.length) {
+        if (this.gamificationMode) {
           for (let i = 0; i < this.currentMission.mecaniques.length; i++) {
-          //attribution des trophées
-          if (this.currentMission.mecaniques[i].nom == 'trophee') {
-            var nbActivitesReussies = 0
-            for (let j = 0 ; j < this.activites.length ; j++) {
-              if (this.activites[j].statut == 'done') {
-                nbActivitesReussies++
-              }
-            }
-            for (let j = 0 ; j < this.currentMission.mecaniques[i].listeDeTrophees.length; j++) {
-              if (nbActivitesReussies >= this.currentMission.mecaniques[i].listeDeTrophees[j].condition.nbMissionReussie) {
-                let nom = this.currentMission.mecaniques[i].listeDeTrophees[j].titre
-                if (!this.tropheeDejaGagne(nom)) {
-                  this.$store.commit('releve/winTrophy', nom)
-                  let toast = this.$toasted.show("Nouveau trophée '" + nom + "'", { 
-                  fullWidth : true,
-                  position: "bottom-center", 
-                  duration : 5000,
-                  icon : "trophy"
-                });
+            //attribution des trophées
+            if (this.currentMission.mecaniques[i].nom == 'trophee') {
+              var nbActivitesReussies = 0
+              for (let j = 0 ; j < this.activites.length ; j++) {
+                if (this.activites[j].statut == 'done') {
+                  nbActivitesReussies++
                 }
-                
               }
-            } 
+              for (let j = 0 ; j < this.currentMission.mecaniques[i].listeDeTrophees.length; j++) {
+                if (nbActivitesReussies >= this.currentMission.mecaniques[i].listeDeTrophees[j].condition.nbMissionReussie) {
+                  let nom = this.currentMission.mecaniques[i].listeDeTrophees[j].titre
+                  if (!this.tropheeDejaGagne(nom)) {
+                    this.$store.commit('releve/winTrophy', nom)
+                    let toast = this.$toasted.show("Nouveau trophée '" + nom + "'", { 
+                    fullWidth : true,
+                    position: "bottom-center", 
+                    duration : 5000,
+                    icon : "trophy"
+                  });
+                  }
+                  
+                }
+              } 
+            }
           }
         }
         this.newMission()
@@ -217,61 +222,11 @@ export default {
       }
     },
     newMission() {
-      //recuperation d'une mission aleatoire dans le JSON
-      let random = Math.floor(Math.random() * missions.missions.length);  
-      this.$store.commit('releve/setMission', missions.missions[random])
+      this.$store.commit('releve/setMission', missions.missions[0])
       this.$store.commit('releve/setIndexActivite', -1)
       this.activites = []
 
       for (let i = 0; i < this.currentMission.activites.length; i++) {
-        
-        var action;
-        switch (this.currentMission.activites[i].typeActivite.action) {
-          case 'LOCALISER' : 
-            action = 'Localisez'
-            break;
-          case 'IDENTIFIER' : 
-            action = 'Identifiez'
-            break;
-          case 'VERIFIER' :
-            action = 'Modifiez ou validez'
-            break;
-          case 'PHOTOGRAPHIER' :
-            action = 'Prenez une photo de'
-            break;
-        }
-        var objet;
-        switch (this.currentMission.activites[i].typeActivite.objet) {
-          case 'ESPECE' :
-            objet = " de l'espece " + this.currentMission.activites[i].espece
-            break;
-          case 'GENRE' :
-            objet = ' du genre ' + this.currentMission.activites[i].genre
-            break;
-          case 'ESPECESDIFFERENTES' :
-            objet = " d'espèces différentes"
-            break;
-          case 'GENRESDIFFERENTS' :
-            objet = ' de genres différents'
-            break;
-          default : 
-            objet = ''
-        }
-
-        var gameMode;
-        switch (this.currentMission.activites[i].gameMode) {
-          case 'classic' :
-            gameMode = ''
-            break;
-          case 'identification' :
-            gameMode = " à partir d'un relevé d'expert (cercle bleu clignotant)"
-            break;
-          case 'verification' :
-            gameMode = " d'un autre utilisateur (cercle vert clignotant)"
-            break;
-        }
-
-        var tempsLimite = ""
 
         for (let j = 0; j < this.currentMission.activites[i].mecaniques.length; j++) {
           if (this.currentMission.activites[i].mecaniques[j].nom == 'trophee') {
@@ -280,22 +235,15 @@ export default {
             trophee.nom = this.currentMission.activites[i].mecaniques[j].titre
             trophee.obtenu = false
             this.$store.commit('releve/addTrophie', trophee)
-          } else if(this.currentMission.activites[i].mecaniques[j].nom == 'chronometreDescendant') {
-            tempsLimite = " en un temps limite"
-          }
+          } 
         }
+
+        var consigne = this.currentMission.activites[i].consigne.longue
 
         var nbAction = this.currentMission.activites[i].conditionDeFin[0].nbArbre
         this.$store.commit('releve/setGoal', nbAction)
 
-        var arbre = (action == 'Modifiez ou validez') ? " relevé" : " arbre"
-
-        if (nbAction) {
-          arbre = nbAction > 1 ? arbre + "s" : arbre
-          this.activites.push(new Activite(action + " " + nbAction + arbre + objet + gameMode + tempsLimite,"toDo"));
-        } else {
-          this.activites.push(new Activite(action + " un maximum d'arbre"+ objet + gameMode + tempsLimite,"toDo"));
-        }
+        this.activites.push(new Activite(consigne,"toDo"));
         
       }
 
@@ -347,6 +295,15 @@ export default {
       this.$store.commit('releve/setGoal', nbAction)
       this.totalSecondes = totalSecondes
       this.activites[this.indexActivite].statut = 'onGoing'
+
+      if (totalSecondes) {
+         let toast = this.$toasted.show("Une activité chronométrée vient de commencer !", { 
+                fullWidth : true,
+                position: "bottom-center", 
+                duration : 5000,
+                icon : "clock"
+          });
+      }
     },
     tropheeDejaGagne(trophyName) {
       var res = false
