@@ -18,8 +18,7 @@
         <img v-show="releve.image" :src="releve.image" style="width: 100%">
 
         <section style="margin: 16px">
-          <v-ons-button disabled @click="modify" style="margin: 6px 0">Modifier</v-ons-button>
-          <v-ons-button disabled @click="validate" style="margin: 6px 0">Valider</v-ons-button>
+          <v-ons-button :disabled="importDone" @click="importObservation" style="margin: 6px 0">Importer dans Albiziapp</v-ons-button>
         </section>
       </div>
     </ons-card>
@@ -30,7 +29,9 @@ import SimplePage from "./SimplePage.vue";
 
 export default {
   data() {
-    return { releve:{} };
+    return { 
+      importDone:false,
+      releve:{} };
   },
   computed: {
   },
@@ -44,24 +45,15 @@ export default {
       this.$store.dispatch("releve/validateObservation", this.releve);
       this.$store.commit("navigator/pop");
     },
-    mutate() {
-      this.releve.prev.push({ test: "d" });
+    importObservation() {
+      this.importDone=true
+      this.$store.dispatch("releve/importObservation",this.releve)
+      this.$toasted.show("Le relevé a été importé dans Albiziapp", {
+        fullWidth: true,
+        position: "bottom-center",
+        duration: 2000
+      }); // Shows from 0s to 2s
     },
-    modify() {
-      this.$store.commit("navigator/push", {
-        extends: SimplePage,
-        data: function() {
-          return {
-            releve: this.releve,
-            modify: true,
-            toolbarInfo: {
-              backLabel: "Home",
-              title: "key"
-            }
-          };
-        }.bind(this)
-      });
-    }
   }
 };
 </script>

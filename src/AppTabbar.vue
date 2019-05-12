@@ -127,7 +127,7 @@ export default {
             return;
           }
           if (this.userID == observation.osmId) {
-            this.$toasted.show("Un de vos relevé à été validé", {
+            this.$toasted.show("Un de vos relevés à été validé", {
               fullWidth: true,
               position: "bottom-center",
               duration: 2000

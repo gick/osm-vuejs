@@ -22,6 +22,17 @@
           :radius="6"
           :color="getColor(circle)"
         />
+
+        <l-circle
+          @click="circleClick(circle)"
+          v-for="(circle,index) in observationsFromOSM"
+          custom="10"
+          v-bind:key='index+"fromosm"'
+          :lat-lng="circle.coordinates"
+          :radius="6"
+          :color="'orange'"
+        />
+
         <l-circle
           @click="identificationClick(circle)"
           className="pulse"
@@ -232,13 +243,21 @@ export default {
     verification(){
         return this.$store.state.commonData.verification;
     }
-
     ,
+
     observations() {
       return this.$store.state.releve.releves
       .filter(value=>!value.identificationValue.identification)
       .filter(value=>value.osmId==this.userID)
+      .filter(value=>value.source!="OSM")
     },
+    observationsFromOSM() {
+      return this.$store.state.releve.releves
+      .filter(value=>!value.identificationValue.identification)
+      .filter(value=>value.osmId==this.userID)
+      .filter(value=>value.source=="OSM")
+    }   
+    ,
     identifications(){
       return this.$store.state.releve.releves.filter(value=>value.identificationValue.identification);
     },
@@ -278,7 +297,8 @@ export default {
     },
 
     osmData() {
-      return this.$store.state.osmData.data;
+      let importedObs=this.observationsFromOSM.map(val=>val.osmNodeId)
+      return this.$store.state.osmData.data.filter(val=>!(importedObs.includes(val.id.toString())));
     },
     currentMission() {
       return this.$store.state.releve.mission;
@@ -403,6 +423,9 @@ export default {
       console.log(releve);
       let newReleve = {};
       newReleve.specie = releve.tags.species;
+      newReleve.source="OSM"
+      newReleve.coordinates=[releve.lat,releve.lon]
+      newReleve.nodeId=releve.id
       this.$store.commit("navigator/push", {
         extends: ReleveOSM,
         data() {

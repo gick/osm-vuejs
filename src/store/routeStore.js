@@ -346,6 +346,15 @@ export default {
             releve: releve
           })
         },
+        importObservation({state,commit},observation){
+          axios.defaults.withCredentials = true
+          axios.post('/api/importFromOSM',{releve:observation})
+          .then(function(response){
+            if(response.data.observation){
+              commit('add',response.data.observation)
+            }
+          })
+        },
         setObservation({
           state,
           commit

@@ -120,6 +120,9 @@ export default {
       return val ? true : false;
     },
     allowNoTree() {
+      if(this.releve.source=="OSM"){
+        return false
+      }
       return (
         this.releve.osmId == this.userID ||
         this.releve.modifierId == this.userID || this.validated
