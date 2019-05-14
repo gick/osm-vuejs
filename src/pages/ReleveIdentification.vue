@@ -2,7 +2,7 @@
   <v-ons-page>
     <v-ons-toolbar>
       <div class="left">
-        <v-ons-back-button>Back</v-ons-back-button>
+        <v-ons-back-button>Retour</v-ons-back-button>
       </div>
     </v-ons-toolbar>
     <v-ons-card>
@@ -20,17 +20,15 @@
           <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>
         </div>
         <div class="center">
-          <autocomplete
+          <v-select
+            v-model="releve.identificationValue.specie"
+            @input="updateReleve($event,'specie')"
             ref="species"
-            :disable-input="releve.identificationValue.success"
-            :source="specieSource"
-            inputClass="inputClass"
-            results-display="Species"
-            results-value="Numbers"
+            :options="specieVerSource"
+            label="espece"
             placeholder="Nom de l'espèce"
-            :initial-display="releve.identificationValue.specie"
-            @selected="specieSelected"
-          ></autocomplete>
+            style="width: -webkit-fill-available;"
+          ></v-select>
         </div>
       </v-ons-list-item>
       <v-ons-list-item>
@@ -38,55 +36,31 @@
           <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>
         </div>
         <div class="center">
-          <autocomplete
+          <v-select
+            v-model="releve.identificationValue.genus"
             ref="genus"
-            :disable-input="releve.identificationValue.success"
-            :source="genusList"
-            inputClass="inputClass"
-            results-display="name"
+            :options="genusList"
+            @input="setGenus"
+            label="name"
             placeholder="Nom du genre"
-            :initial-display="releve.identificationValue.genus"
-            @selected="genusSelected"
-          ></autocomplete>
+            style="width: -webkit-fill-available;"
+          ></v-select>
         </div>
       </v-ons-list-item>
       <v-ons-list-item>
         <div class="left">
           <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>
         </div>
-        <div class="center">
-          <autocomplete
-            ref="common"
-            :disable-input="releve.identificationValue.success"
-            :source="specieSource"
-            inputClass="inputClass"
-            results-display="verna1"
-            placeholder="Nom commun"
-            results-value="Numbers"
-            :initial-display="releve.identificationValue.common"
-            @selected="commonSelected"
-          ></autocomplete>
-        </div>
-      </v-ons-list-item>
-            <v-ons-list-item>
-        <div class="left">
-          <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>Hauteur
-        </div>
-        <div class="center">
-          <v-ons-select @change="releve.identificationValue.height=selectedHeight" style="margin-left:15px;" v-model="selectedHeight">
-            <option v-for="heigh in heights" :value="heigh">{{ heigh }}</option>
-          </v-ons-select>
-        </div>
-      </v-ons-list-item>
-      <v-ons-list-item>
-        <div class="left">
-          <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>Diamètre de la couronne
-        </div>
-        <div class="center">
-          <v-ons-select  @change="releve.identificationValue.crown=selectedCrown" style="margin-left:15px;" v-model="selectedCrown">
-            <option v-for="heigh in heights" :value="heigh">{{ heigh }}</option>
-          </v-ons-select>
-        </div>
+
+        <v-select
+          v-model="releve.identificationValue.common"
+          @input="updateReleve($event,'common')"
+          label="vernaculaire"
+          ref="common"
+          style="width: -webkit-fill-available;"
+          placeholder="Nom vernaculaire"
+          :options="specieVerSource"
+        ></v-select>
       </v-ons-list-item>
 
       <v-ons-list-item v-if="!releve.identificationValue.success">
@@ -104,12 +78,16 @@
           buttonClass="btn"
           :customStrings="{
            upload: '<h1>Bummer!</h1>',
-          drag: 'Prendre photo'
+          tap: 'Appuyer pour prendre une photo'
           }"
         ></picture-input>
       </v-ons-list-item>
       <v-ons-list-item v-if="releve.identificationValue.success && releve">
-        <img v-show="releve.identificationValue.image" :src="releve.identificationValue.image" style="width: 100%">
+        <img
+          v-show="releve.identificationValue.image"
+          :src="releve.identificationValue.image"
+          style="width: 100%"
+        >
       </v-ons-list-item>
     </v-ons-list>
 
@@ -129,21 +107,11 @@
         <div v-if="releve.common==releve.identificationValue.common" class="right">Bravo!</div>
         <div v-else class="right">Raté!</div>
       </v-ons-list-item>
-      <v-ons-list-item>
-        <div class="center">Hauteur identifié par l'expert : {{releve.height}}</div>
-        <div v-if="releve.height==releve.identificationValue.height" class="right">Bravo!</div>
-        <div v-else class="right">Raté!</div>
-      </v-ons-list-item>
-      <v-ons-list-item>
-        <div class="center">Diamètre de la couronne identifié : {{releve.crown}}</div>
-        <div v-if="releve.crown==releve.identificationValue.crown" class="right">Bravo!</div>
-        <div v-else class="right">Raté!</div>
-      </v-ons-list-item>
     </v-ons-list>
     <section style="margin: 16px">
       <v-ons-button
         @click="complete"
-        :disabled="releve.identificationValue.success"
+        :disabled="releve.identificationValue.success || !hasImage"
         style="margin: 6px 0"
       >Valider</v-ons-button>
       <v-ons-button modifier="outline" @click="cancel" style="margin: 6px 0">Retour</v-ons-button>
@@ -154,6 +122,9 @@
 #app .autocomplete__results {
   position: relative !important;
 }
+.vs__dropdown-menu {
+  z-index: 10005;
+}
 </style>
 <script>
 import PictureInput from "vue-picture-input";
@@ -161,16 +132,13 @@ import imageCompression from "browser-image-compression";
 import Autocomplete from "vuejs-auto-complete";
 import Identification from "./Identification.vue";
 import genusList from "../js/genus.js";
-import speciesList from "../js/species.js";
-import specieVernac from "../js/species_vernac.js";
+import speciesList from "../js/species_ver.js";
 export default {
   data() {
     return {
       releve: {},
-      selectedHeight:0,
-      selectedCrown:0, 
       genusList: genusList,
-      specieSource: specieVernac
+      specieVerSource: speciesList
     };
   },
   components: {
@@ -178,20 +146,14 @@ export default {
     PictureInput
   },
   computed: {
-    heights(){
-      return this.$store.state.commonData.heights
-    },
-    completed() {
+    hasImage() {
       if (this.releve.identificationValue.image) {
         return true;
       }
+      return false
     }
   },
   methods: {
-    changeHeight(e){
-      console.log(e)
-      console.log(this.selectedHeight)
-    },
     onChange() {
       var that = this;
       //this.image = this.$refs.pictureInput.image;
@@ -214,7 +176,7 @@ export default {
             ); // smaller than maxSizeMB
             imageCompression.getDataUrlFromFile(compressedFile).then(
               function(compressedDataURI) {
-                this.releve.identificationValue.image = compressedDataURI;
+                this.$set(this.releve.identificationValue,'image', compressedDataURI);
               }.bind(this)
             );
             //return uploadToServer(compressedFile); // write your own logic
@@ -225,23 +187,27 @@ export default {
         });
     },
 
-    commonSelected(common) {
-      this.releve.identificationValue.common = common.display;
-      this.releve.identificationValue.specie = common.selectedObject.Species;
-      this.releve.identificationValue.genus = common.selectedObject.genus;
-      this.$refs.species._data.display = this.newReleve.specie;
-      this.$refs.genus._data.display = this.newReleve.genus;
+    setGenus(evt) {
+      if (evt == null) this.$refs.genus.value = "";
     },
-    specieSelected(specie) {
-      this.releve.identificationValue.specie = specie.display;
-      this.releve.identificationValue.common = specie.selectedObject.verna1;
-      this.releve.identificationValue.genus = specie.selectedObject.genus;
-      this.$refs.common._data.display = this.releve.identificationValue.common;
-      this.$refs.genus._data.display = this.releve.identificationValue.genus;
+    updateReleve(evt, src) {
+      if (evt && evt.espece && evt.vernaculaire && evt.genus) {
+        this.releve.identificationValue.specie = evt.espece;
+        this.releve.identificationValue.common = evt.vernaculaire;
+        this.releve.identificationValue.genus = evt.genus;
+      }
+      if (evt == null) {
+        switch (src) {
+          case "specie":
+            this.$refs.species.value = "";
+            break;
+          case "common":
+            this.$refs.common.value = "";
+            break;
+        }
+      }
     },
-    genusSelected(genus) {
-      this.releve.identificationValue.genus = genus.display;
-    },
+
     complete() {
       this.$store.dispatch("releve/identification", this.releve);
       this.releve.identificationValue.success = true;

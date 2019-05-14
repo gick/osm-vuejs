@@ -3,6 +3,8 @@ import 'onsenui/css/onsenui.css'; // Onsen UI basic CSS
 // import 'onsenui/css/onsen-css-components.css'; // Default Onsen UI CSS components
 import './onsen-css-components.css'; // Onsen UI CSS components source for custom themes (requires cssnext)
 import './vue-onsenui-kitchensink.css'; // CSS specific to this app
+import VueLodash from 'vue-lodash'
+
 import Toasted from 'vue-toasted';
 import LogRocket from 'logrocket';
 LogRocket.init('mpgeqr/albiziapp');
@@ -45,7 +47,7 @@ Vue.use(Toasted, {
     iconPack : 'fontawesome' // set your iconPack, defaults to material. material|fontawesome|custom-class
 });
 Vue.component('v-select', vSelect)
-
+Vue.use(VueLodash)
 Vue.use(Vuex);
 Vue.use(VueOnsen);
 Vue.use(BootstrapVue)

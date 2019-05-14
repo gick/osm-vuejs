@@ -2,7 +2,7 @@
 	<v-ons-page>
 		<v-ons-toolbar>
       <div class="left">
-        <v-ons-back-button>Back</v-ons-back-button>
+        <v-ons-back-button>Retour</v-ons-back-button>
       </div>
     </v-ons-toolbar>
 		<v-card>

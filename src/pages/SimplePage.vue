@@ -2,7 +2,7 @@
   <v-ons-page>
     <v-ons-toolbar>
       <div class="left">
-        <v-ons-back-button>Back</v-ons-back-button>
+        <v-ons-back-button>Retour</v-ons-back-button>
       </div>
     </v-ons-toolbar>
     <v-ons-list>
@@ -74,40 +74,7 @@
           </v-ons-select>
         </div>
       </v-ons-list-item>
-      <v-ons-list-title
-        style="margin-top: 10px;
-    font-size: 15px;
-    font-weight: bolder;"
-      >Informations complémentaires</v-ons-list-title>
 
-      <v-ons-list-item>
-        <div class="left">
-          <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>Hauteur
-        </div>
-        <div class="center">
-          <v-ons-select :disabled="noTree" style="margin-left:15px;" v-model="releve.height">
-            <option
-              v-for="(heigh,index) in heights"
-              :value="heigh"
-              v-bind:key="index+'height'"
-            >{{ heigh }}</option>
-          </v-ons-select>
-        </div>
-      </v-ons-list-item>
-      <v-ons-list-item>
-        <div class="left">
-          <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>Diamètre de la couronne
-        </div>
-        <div class="center">
-          <v-ons-select :disabled="noTree" style="margin-left:15px;" v-model="releve.crown">
-            <option
-              v-for="(heigh,index) in heights"
-              :value="heigh"
-              v-bind:key="index+'crown'"
-            >{{ heigh }}</option>
-          </v-ons-select>
-        </div>
-      </v-ons-list-item>
       <v-ons-list-item v-if="validate">
         <div class="left">
           <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>Arbre non présent
@@ -181,9 +148,6 @@ export default {
   computed: {
     confidenceValues() {
       return this.$store.state.commonData.confidenceValues;
-    },
-    heights() {
-      return this.$store.state.commonData.heights;
     },
     completed() {
       if (this.genus.length) {
