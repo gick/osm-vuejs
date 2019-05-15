@@ -259,7 +259,7 @@ export default {
       return tab
     },
     gamificationMode() {
-      return this.$store.state.releve.gamificationMode;
+      return this.$store.state.user.gamificationMode;
     },
     userID() {
       return this.$store.state.user.id;

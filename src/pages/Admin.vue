@@ -38,7 +38,7 @@
         <v-ons-list-item>
           <div class="center">Mode gamification</div>
           <div class="right">
-            <v-ons-switch v-model="$store.state.releve.gamificationMode"></v-ons-switch>
+            <v-ons-switch v-model="$store.state.user.gamificationMode"></v-ons-switch>
           </div>
         </v-ons-list-item>
 

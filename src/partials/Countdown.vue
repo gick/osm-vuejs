@@ -47,7 +47,7 @@ export default {
           this.minutes = Math.floor(this.totalSecondes2 / 60) - this.hours * 60 ;
           this.secondes = Math.floor(this.totalSecondes2) - this.minutes * 60 - this.hours * 60 * 60;
           if (this.totalSecondes2 <= 0) {
-            this.$emit("timeout","ninja")
+            this.$emit("timeout")
             clearInterval(this.timer);
           }
         }, 1000);       

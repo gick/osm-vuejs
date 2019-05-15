@@ -1,201 +1,201 @@
 {  
    "missions":[  
       {  
-         "mecaniques":[  
+         "mechanics":[  
             {  
-               "nom":"score",
+               "name":"score",
                "actions":[  
                   {  
-                     "code":"IDENTIFIER",
+                     "code":"IDENTIFY",
                      "nbPoint":5
                   },
                   {  
-                     "code":"COMPLETER_GENRE",
+                     "code":"COMPLETE_GENUS",
                      "nbPoint":7
                   },
                   {  
-                     "code":"COMPLETER_ESPECE",
+                     "code":"COMPLETE_SPECIE",
                      "nbPoint":7
                   },
                   {  
-                     "code":"COMPLETER_NOM",
+                     "code":"COMPLETE_COMMON",
                      "nbPoint":7
                   },
                   {  
-                     "code":"PHOTOGRAPHIER",
+                     "code":"PHOTOGRAPH",
                      "nbPoint":7
                   },
                   {  
-                     "code":"VALIDER",
+                     "code":"VALIDATE",
                      "nbPoint":3
                   }
                ]
             },
             {  
-               "nom":"trophee",
-               "listeDeTrophees":[  
+               "name":"trophy",
+               "trophiesList":[  
                   {  
-                     "titre":"Une activité terminée",
+                     "title":"Une activité terminée",
                      "image":"trophee4.jpg",
                      "condition":{  
-                        "nbMissionReussie":1
+                        "nbSuccessfulActivities":1
                      }
                   },
                   {  
-                     "titre":"Deux activités terminées",
+                     "title":"Deux activités terminées",
                      "image":"trophee4.jpg",
                      "condition":{  
-                        "nbMissionReussie":2
+                        "nbSuccessfulActivities":2
                      }
                   },
                   {  
-                     "titre":"Trois activités terminées",
+                     "title":"Trois activités terminées",
                      "image":"trophee4.jpg",
                      "condition":{  
-                        "nbMissionReussie":3
+                        "nbSuccessfulActivities":3
                      }
                   }
                ]
             }
          ],
-         "activites":[  
+         "activities":[  
             {  
-               "typeActivite":{  
-                  "action":"LOCALISER",
-                  "objet":"ARBRE"
+               "activityType":{  
+                  "action":"LOCATE",
+                  "object":"TREE"
                },
-               "consigne" : {"longue" : "Localisez 5 arbres", "courte" : "Localisez arbres"},
-               "gameMode":"classic",
-               "mecaniques":[  
+               "instruction" : {"long" : "Localisez 5 arbres", "short" : "Localisez arbres"},
+               "mode":"classic",
+               "mechanics":[  
                   {  
-                     "nom":"score",
+                     "name":"score",
                      "nbPoint":10
                   },
                   {  
-                     "nom":"trophee",
-                     "titre":"Activité 1 faite",
+                     "name":"trophy",
+                     "title":"Activité 1 faite",
                      "image":"trophee1.jpg",
                      "condition":{  
                         "statutMission":"done"
                      }
                   }
                ],
-               "conditionDeFin":[  
+               "endCondition":[  
                   {  
-                     "nbArbre":5
+                     "nbAction":5
                   }
                ]
             },
             {  
-               "typeActivite":{  
-                  "action":"IDENTIFIER",
-                  "objet":"GENRESDIFFERENTS"
+               "activityType":{  
+                  "action":"IDENTIFY",
+                  "object":"DIFFERENTGENUS"
                },
-               "consigne" : {"longue" : "Identifiez 3 arbres de genres différents", "courte" : "Identifiez genres différents"},
-               "gameMode":"classic",
-               "mecaniques":[  
+               "instruction" : {"long" : "Identifiez 3 arbres de genres différents", "short" : "Identifiez genres différents"},
+               "mode":"classic",
+               "mechanics":[  
                   {  
-                     "nom":"score",
+                     "name":"score",
                      "nbPoint":12
                   },
                   {  
-                     "nom":"trophee",
-                     "titre":"Activité 2 faite",
+                     "name":"trophy",
+                     "title":"Activité 2 faite",
                      "image":"trophee2.jpg",
                      "condition":{  
                         "statutMission":"done"
                      }
                   }
                ],
-               "conditionDeFin":[  
+               "endCondition":[  
                   {  
-                     "nbArbre":3
+                     "nbAction":3
                   }
-               ],
-               "espece":"Acer negundo"
+               ]
             },
             {  
-               "typeActivite":{  
-                  "action":"IDENTIFIER",
-                  "objet":"ARBRE"
+               "activityType":{  
+                  "action":"IDENTIFY",
+                  "object":"TREE"
                },
-               "consigne" : {"longue" :"Identifiez 3 arbres à partir d'un relevé d'expert (cercle bleu clignotant)", "courte" : "Identifiez arbres expert"},
-               "gameMode":"identification",
-               "mecaniques":[  
+               "instruction" : {"long" :"Identifiez 3 arbres à partir d'un relevé d'expert (cercle bleu clignotant)", "short" : "Identifiez arbres expert"},
+               "mode":"identification",
+               "mechanics":[  
                   {  
-                     "nom":"score",
+                     "name":"score",
                      "nbPoint":12
                   },
                   {  
-                     "nom":"trophee",
-                     "titre":"Activité 3 faite",
+                     "name":"trophy",
+                     "title":"Activité 3 faite",
                      "image":"trophee3.jpg",
                      "condition":{  
                         "statutMission":"done"
                      }
                   }
                ],
-               "conditionDeFin":[  
+               "endCondition":[  
                   {  
-                     "nbArbre":3
+                     "nbAction":3
                   }
                ]
             },
             {  
-               "typeActivite":{  
-                  "action":"VERIFIER",
-                  "objet":"ARBRE"
+               "activityType":{  
+                  "action":"VERIFY",
+                  "object":"TREE"
                },
-               "consigne" : {"longue" : "Modifiez ou validez 3 relevés d'un autre utilisateur (cercle vert clignotant)", "courte" : "Modifiez ou validez relevés"},
-               "gameMode":"verification",
-               "mecaniques":[  
+               "instruction" : {"long" : "Modifiez ou validez 3 relevés d'un autre utilisateur (cercle vert clignotant)", "short" : "Modifiez ou validez relevés"},
+               "mode":"verification",
+               "mechanics":[  
                   {  
-                     "nom":"score",
+                     "name":"score",
                      "nbPoint":12
                   },
                   {  
-                     "nom":"trophee",
-                     "titre":"Activité 3 faite",
+                     "name":"trophy",
+                     "title":"Activité 3 faite",
                      "image":"trophee3.jpg",
                      "condition":{  
                         "statutMission":"done"
                      }
                   }
                ],
-               "conditionDeFin":[  
+               "endCondition":[  
                   {  
-                     "nbArbre":3
+                     "nbAction":3
                   }
                ]
             },
             {  
-               "typeActivite":{  
-                  "action":"LOCALISER",
-                  "objet":"ARBRE"
+               "activityType":{  
+                  "action":"LOCATE",
+                  "object":"TREE"
                },
-               "consigne" : {"longue" : "Localisez un maximum d'arbre en un temps limite", "courte" : "Localisez arbres"},
-               "gameMode":"classic",
-               "mecaniques":[ 
+               "instruction" : {"long" : "Localisez un maximum d'arbre en un temps limite", "short" : "Localisez arbres"},
+               "mode":"classic",
+               "mechanics":[ 
                 	{  
-                     "nom":"chronometreDescendant",
-                     "conditionDeFin":"tempsLimite"
+                     "name":"countdown",
+                     "endCondition":"time"
                   }, 
                   {  
-                     "nom":"score",
+                     "name":"score",
                      "nbPoint":12
                   },
+                  
                   {  
-                     "nom":"trophee",
-                     "titre":"Activité 3 faite",
+                     "name":"trophy",
+                     "title":"Activité 3 faite",
                      "image":"trophee3.jpg",
                      "condition":{  
                         "statutMission":"done"
                      }
                   }
                ],
-               "conditionDeFin":[  
+               "endCondition":[  
                   {  
-                     "tempsLimite":900
+                     "time":900
                   }
                ]
             }
