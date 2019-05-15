@@ -94,22 +94,19 @@ export default {
       return this.$store.state.user.gamificationMode;
     },
     completion() {
-      return this.$store.state.releve.completion;
+      return this.$store.state.user.completion;
     },
     goal() {
-      return this.$store.state.releve.goal;
+      return this.$store.state.user.goal;
     },
     currentMission() {
-      return this.$store.state.releve.mission;
+      return this.$store.state.user.mission;
     },
     currentActivity() {
-      return this.$store.state.releve.activite;
-    },
-    chgtActivity() {
-      return this.$store.state.releve.chgtActivity
+      return this.$store.state.user.activite;
     },
     indexActivite() {
-       return this.$store.state.releve.indexActivite
+       return this.$store.state.user.indexActivite
     },
     trophies() {
       return this.$store.state.user.trophies
@@ -210,8 +207,8 @@ export default {
       }
     },
     newMission() {
-      this.$store.commit('releve/setMission', missions.missions[0])
-      this.$store.commit('releve/setIndexActivite', -1)
+      this.$store.commit('user/setMission', missions.missions[0])
+      this.$store.commit('user/setIndexActivite', -1)
       this.activities = []
 
       for (let i = 0; i < this.currentMission.activities.length; i++) {
@@ -229,7 +226,7 @@ export default {
         var instruction = this.currentMission.activities[i].instruction.long
 
         var nbAction = this.currentMission.activities[i].endCondition[0].nbAction
-        this.$store.commit('releve/setGoal', nbAction)
+        this.$store.commit('user/setGoal', nbAction)
 
         this.activities.push(new Activite(instruction,"toDo"));
         
@@ -258,10 +255,10 @@ export default {
     },
 
     newActivity() {
-      this.$store.commit('releve/setCompletion', 0)
-      this.$store.commit('releve/clearSets')
-      this.$store.commit('releve/setIndexActivite', this.indexActivite + 1)
-      this.$store.commit('releve/setActivite', this.currentMission.activities[this.indexActivite])
+      this.$store.commit('user/setCompletion', 0)
+      this.$store.commit('user/clearSets')
+      this.$store.commit('user/setIndexActivite', this.indexActivite + 1)
+      this.$store.commit('user/setActivite', this.currentMission.activities[this.indexActivite])
 
       var totalSecondes = 0
       var nbAction = -1
@@ -280,7 +277,7 @@ export default {
         this.$store.commit('commonData/setIdentificationMode', true)
       }
 
-      this.$store.commit('releve/setGoal', nbAction)
+      this.$store.commit('user/setGoal', nbAction)
       this.totalSecondes = totalSecondes
       this.activities[this.indexActivite].statut = 'onGoing'
 

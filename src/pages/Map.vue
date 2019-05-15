@@ -281,22 +281,19 @@ export default {
       return this.$store.state.osmData.data;
     },
     currentMission() {
-      return this.$store.state.releve.mission;
-    },
-    chgtActivity() {
-      return this.$store.state.releve.chgtActivity;
+      return this.$store.state.user.mission;
     },
     indexActivite() {
-      return this.$store.state.releve.indexActivite;
+      return this.$store.state.user.indexActivite;
     },
     nbActivite() {
-      return this.$store.state.releve.mission.activities.length;
+      return this.$store.state.user.mission.activities.length;
     },
     completion() {
-      return this.$store.state.releve.completion;
+      return this.$store.state.user.completion;
     },
     goal() {
-      return this.$store.state.releve.goal;
+      return this.$store.state.user.goal;
     }
   },
 

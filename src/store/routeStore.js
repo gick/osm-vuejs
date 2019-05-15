@@ -126,14 +126,7 @@ export default {
       state: {
         releves: [],
         identificationMode: false,
-        verificationMode: false,
-        differentSpecie: new Array(),
-        differentGender: new Array(),
-        mission: null,
-        activite: null,
-        indexActivite: 0,
-        completion: 0,
-        goal: 0
+        verificationMode: false
       },
       mutations: {
         setIdentificationMode(state, mode) {
@@ -142,28 +135,8 @@ export default {
         setVerificationMode(state, mode) {
           state.verificationMode = mode
         },
-        setCompletion(state, completion) {
-          state.completion = completion;
-        },
-        setGoal(state, goal) {
-          state.goal = goal;
-        },
-        setIndexActivite(state, index) {
-          state.indexActivite = index
-        },
-        setActivite(state, activite) {
-          state.activite = activite
-        },
-        setMission(state, mission) {
-          state.mission = mission
-        },
         add(state, releve) {
-          state.releves.push(releve)
-          if (releve.image) {
-            updateCompletion(state, "add_photo", releve.specie, releve.genus)
-          } else {
-             updateCompletion(state, "add", releve.specie, releve.genus)
-          }      
+          state.releves.push(releve)     
         },
         addFromOutside(state, releve) {
           state.releves.push(releve)
@@ -186,16 +159,6 @@ export default {
            // state.releves[index].test='truc'    
             state.releves.splice(index,1,newReleve)
             state.releves[index].prev=newReleve.prev
-            var indexRelevePrecedent = state.releves[index].prev.length -1
-            var relevePrecedent = state.releves[index].prev[indexRelevePrecedent]
-
-            var differentID = !(newReleve.osmId == newReleve.modifierId)
-
-            if (newReleve.image) {
-              updateCompletion(state, "modify/validate_photo", relevePrecedent.specie, relevePrecedent.genus, differentID)
-            } else {
-              updateCompletion(state, "modify/validate", state.releves[index].prev[indexRelevePrecedent].specie, state.releves[index].prev[indexRelevePrecedent].genus, differentID)
-            }
           }
         },
         modifyFromOutside(state, newReleve) {
@@ -213,9 +176,6 @@ export default {
           }
         },
         validate(state, currentReleve) { 
-
-          updateCompletion(state, "modify/validate", currentReleve.specie, currentReleve.genus, true)
-
           let index = state.releves.findIndex(releve => releve._id == currentReleve._id)
           if (index != -1) {
             state.releves.splice(index, 1, currentReleve)
@@ -231,10 +191,6 @@ export default {
           if (state.releve.length > 1) {
             state.releve.pop();
           }
-        },
-        clearSets(state) {
-          state.differentSpecie.length = 0
-          state.differentGender.length = 0
         }
       },
       actions: {
@@ -248,12 +204,18 @@ export default {
             })
             .then(function (response) {
               commit('validate', response.data.observation)
+              commit('user/validate', response.data.observation, {
+                root : true
+              })
             })
 
-          commit("pointsActions", ["VALIDER"])
+          commit("user/pointsActions", ["VALIDATE"], {
+            root : true
+          })
         },
         modifyObservation({
-          commit
+          commit,
+          state
         }, newReleve) {
           axios.defaults.withCredentials = true
           axios.post('/api/modifyObservation', {
@@ -261,8 +223,14 @@ export default {
             })
             .then(function (response) {
               commit('modify', response.data.observation)
+              let index = state.releves.findIndex(releve => releve._id == response.data.observation._id)
+              commit('user/modify', state.releves[index], {
+                root : true
+              })
             })
-          commit("pointsActions", extractActions(newReleve, false))
+          commit("user/pointsActions", extractActions(newReleve, false), {
+            root : true
+          })
         },
         setNoTree({
           commit
@@ -303,7 +271,9 @@ export default {
           state,
           commit
         }, releve) {
-          updateCompletion(state, "identification", releve.specie, releve.genus)
+          commit("user/identification", releve, {
+            root : true
+          })
           axios.defaults.withCredentials = true
           axios.post('/api/identification', {
             releve: releve
@@ -311,7 +281,8 @@ export default {
         },
         setObservation({
           state,
-          commit
+          commit,
+          dispatch
         }, releve) {
 
           // commit('add', releve)
@@ -324,6 +295,9 @@ export default {
           }).then(function (response) {
             if (response.data.observation) {
               commit('add', response.data.observation)
+              commit('user/add', response.data.observation, {
+                root : true
+              })
               if (response.data.observation.specie) {
                 commit('arboretum/add', response.data.observation.specie, {
                   root: true
@@ -370,9 +344,35 @@ export default {
         journal: [],
         score: 0,
         actionsTransActivite: new Map(),
-        gamificationMode: true
+        gamificationMode: true,
+        differentSpecie: new Array(),
+        differentGender: new Array(),
+        mission: null,
+        activite: null,
+        indexActivite: 0,
+        completion: 0,
+        goal: 0
       },
       mutations: {
+        setCompletion(state, completion) {
+          state.completion = completion;
+        },
+        setGoal(state, goal) {
+          state.goal = goal;
+        },
+        setIndexActivite(state, index) {
+          state.indexActivite = index
+        },
+        setActivite(state, activite) {
+          state.activite = activite
+        },
+        setMission(state, mission) {
+          state.mission = mission
+        },
+        clearSets(state) {
+          state.differentSpecie.length = 0
+          state.differentGender.length = 0
+        },
         setGamificationMode(state, mode) {
           state.gamificationMode = mode
         },
@@ -441,6 +441,26 @@ export default {
         restoreIdentity(state) {
           state.name = state.formerName
           state.id = state.formerId
+        },
+        add(state, releve) {
+          if (releve.image) {
+            updateCompletion(state, "add_photo", releve)
+          } else {
+             updateCompletion(state, "add", releve)
+          } 
+        },
+        modify(state, releve) {
+          if (releve.image) {
+            updateCompletion(state, "modify/validate_photo", releve)
+          } else {
+            updateCompletion(state, "modify/validate", releve)
+          }
+        },
+        validate(state, releve) {
+           updateCompletion(state, "modify/validate", releve)
+        },
+        identification(state, releve) {
+           updateCompletion(state, "identification", releve)
         }
 
       },
@@ -581,9 +601,13 @@ export default {
 };
 
 
-function updateCompletion(state, operation, specie, genus, differentID) {
+function updateCompletion(state, operation, releve) {
 
   var mode = state.activite.mode
+
+  let {specie, genus} = releve
+
+  var differentID = !(releve.osmId == releve.modifierId)
 
   if (mode == 'verification' && differentID) {
     if (operation.includes('modify/validate')) state.completion++
