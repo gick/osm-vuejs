@@ -71,31 +71,31 @@
 		},
 		computed : {
 			journal() {
-				return this.$store.state.releve.journal
+				return this.$store.state.user.journal
 			},
 			score() {
-      	return this.$store.state.releve.score
+      	return this.$store.state.user.score
     	},
     	actionsTransActivite() {
-    		return this.$store.state.releve.actionsTransActivite
+    		return this.$store.state.user.actionsTransActivite
     	}
 		},
 		methods : {
 			renameAction(action) {
 			  switch (action) {
-			    case "COMPLETER_GENRE" :
+			    case "COMPLETE_GENUS" :
 			      return "Genre renseigné"
-			    case "COMPLETER_ESPECE" :
+			    case "COMPLETE_SPECIE" :
 			      return "Espèce renseignée"
-			    case "COMPLETER_NOM" :
+			    case "COMPLETE_COMMON" :
 			      return "Nom commun renseigné"
-			    case "PHOTOGRAPHIER" :
+			    case "PHOTOGRAPH" :
 			      return "Prise de photo"
-			    case "VALIDER" :
+			    case "VALIDATE" :
 			      return "Validation"
-			    case "ACTIVITE_REUSSIE" :
+			    case "SUCCESSFUL_ACTIVITY" :
 			      return "Activité réussie"
-			    case "IDENTIFIER" :
+			    case "IDENTIFY" :
 			      return "Identification"
 			    default :
 			      return "Action non répertoriée"

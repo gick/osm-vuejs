@@ -42,7 +42,7 @@ export default {
   },
   computed : {
   	score() {
-      return this.$store.state.releve.score
+      return this.$store.state.user.score
     },
     username() {
       return this.$store.state.user.name

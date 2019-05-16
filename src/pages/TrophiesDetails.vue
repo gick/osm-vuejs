@@ -24,11 +24,11 @@
 		    			<img v-else :src="'./trophees/' + trophy.path" style="opacity:0.2; width:100%">
 		    			<br>
 		    			<center v-if="trophy.obtenu">
-		    				{{ trophy.nom }}
+		    				{{ trophy.name }}
 		    			</center>
 		    			<center v-else>
 		    				<v-ons-icon icon="fa-lock"></v-ons-icon>
-		    				{{ trophy.nom }}
+		    				{{ trophy.name }}
 		    			</center>
 		    		</v-ons-card>
 		</v-card>

@@ -129,7 +129,7 @@
 
   <ons-bottom-toolbar style="background-color:#F44336">
       <center style="color:white">
-        {{consigne}}
+        {{instruction}}
         <br>
         <p v-if="goal>0"> {{completion}}/{{goal}}</p>
         <p v-else> {{completion}}</p>  
@@ -208,7 +208,7 @@ export default {
   },
   data() {
     return {
-      consigne: "",
+      instruction: "",
       missionOver: false,
       activityOver: false,
       newCircle: null,
@@ -301,33 +301,32 @@ export default {
       return this.$store.state.osmData.data.filter(val=>!(importedObs.includes(val.id.toString())));
     },
     currentMission() {
-      return this.$store.state.releve.mission;
-    },
-    chgtActivity() {
-      return this.$store.state.releve.chgtActivity;
+      return this.$store.state.user.mission;
     },
     indexActivite() {
-      return this.$store.state.releve.indexActivite;
+      return this.$store.state.user.indexActivite;
     },
     nbActivite() {
-      return this.$store.state.releve.mission.activites.length;
+      return this.$store.state.user.mission.activities.length;
     },
     completion() {
-      return this.$store.state.releve.completion;
+      return this.$store.state.user.completion;
     },
     goal() {
-      return this.$store.state.releve.goal;
+      return this.$store.state.user.goal;
     }
   },
 
   watch: {
-    chgtActivity: {
-      handler: function(newMision, oldMission) {
-        if (this.indexActivite + 1 == this.nbActivite) {
+    completion: {
+      handler: function(newValue, oldValue) {
+        if (newValue == this.goal) {
+          if (this.indexActivite + 1 == this.nbActivite) {
           this.missionOver = true;
-        } else {
-          this.activityOver = true;
-        }
+          } else {
+            this.activityOver = true;
+          }
+        }  
       },
       deep: true
     },
@@ -336,7 +335,7 @@ export default {
         if (this.newIndex == -1) {
           return
         }
-        this.consigne = this.currentMission.activites[newIndex].consigne.courte
+        this.instruction = this.currentMission.activities[newIndex].instruction.short
       },
       deep: true
     }

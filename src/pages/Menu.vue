@@ -64,7 +64,7 @@ export default {
   },
   computed: {
     gamificationMode() {
-      return this.$store.state.releve.gamificationMode;
+      return this.$store.state.user.gamificationMode;
     },
     access() { 
       var access = 
