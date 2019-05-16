@@ -120,7 +120,7 @@
             {  
                "activity":{  
                   "type":"IDENTIFY",
-                  "object":"NONE"
+                  "object":"DIFFERENTGENUS"
                },
                "instruction":{  
                   "long":"Identifiez 3 relevés d'expert (cercle bleu clignotant)",

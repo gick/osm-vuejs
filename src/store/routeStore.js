@@ -204,7 +204,10 @@ export default {
             })
             .then(function (response) {
               commit('validate', response.data.observation)
-              commit('user/validate', response.data.observation, {
+              commit('user/updateProgression', {
+                releve : response.data.observation,
+                operation : "VERIFY"
+              }, {
                 root : true
               })
             })
@@ -224,7 +227,10 @@ export default {
             .then(function (response) {
               commit('modify', response.data.observation)
               let index = state.releves.findIndex(releve => releve._id == response.data.observation._id)
-              commit('user/modify', state.releves[index], {
+              commit('user/updateProgression', {
+                releve : state.releves[index],
+                operation : "VERIFY"
+              }, {
                 root : true
               })
             })
@@ -271,7 +277,11 @@ export default {
           state,
           commit
         }, releve) {
-          commit("user/identification", releve, {
+          console.log(JSON.stringify(releve))
+          commit("user/updateProgression", {
+            releve : releve,
+            operation : "IDENTIFY"
+          }, {
             root : true
           })
           axios.defaults.withCredentials = true
@@ -304,7 +314,10 @@ export default {
           }).then(function (response) {
             if (response.data.observation) {
               commit('add', response.data.observation)
-              commit('user/add', response.data.observation, {
+              commit('user/updateProgression', {
+                releve : response.data.observation,
+                operation : "INVENTORY"
+              }, {
                 root : true
               })
               if (response.data.observation.specie) {
@@ -451,19 +464,9 @@ export default {
           state.name = state.formerName
           state.id = state.formerId
         },
-        add(state, releve) {
-          if (updateCompletion(state, "INVENTORY", releve)) state.completion++
-        },
-        modify(state, releve) {
-         if (updateCompletion(state, "VERIFY", releve)) state.completion++
-        },
-        validate(state, releve) {
-          if (updateCompletion(state, "VERIFY", releve)) state.completion++
-        },
-        identification(state, releve) {
-          if (updateCompletion(state, "IDENTIFY", releve)) state.completion++
+        updateProgression(state, param) {
+          if (updateCompletion(state, param.operation, param.releve)) state.completion++
         }
-
       },
       actions: {
         logout({
