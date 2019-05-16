@@ -60,12 +60,14 @@
          ],
          "activities":[  
             {  
-               "activityType":{  
-                  "action":"LOCATE",
-                  "object":"TREE"
+               "activity":{  
+                  "type":"INVENTORY",
+                  "object":"NONE"
                },
-               "instruction" : {"long" : "Localisez 5 arbres", "short" : "Localisez arbres"},
-               "mode":"classic",
+               "instruction":{  
+                  "long":"Faites 5 relevés",
+                  "short":"Faites relevés"
+               },
                "mechanics":[  
                   {  
                      "name":"score",
@@ -87,12 +89,14 @@
                ]
             },
             {  
-               "activityType":{  
-                  "action":"IDENTIFY",
+               "activity":{  
+                  "type":"INVENTORY",
                   "object":"DIFFERENTGENUS"
                },
-               "instruction" : {"long" : "Identifiez 3 arbres de genres différents", "short" : "Identifiez genres différents"},
-               "mode":"classic",
+               "instruction":{  
+                  "long":"Faites 3 relevés de genres différents",
+                  "short":"Faites relevés genres différents"
+               },
                "mechanics":[  
                   {  
                      "name":"score",
@@ -114,12 +118,14 @@
                ]
             },
             {  
-               "activityType":{  
-                  "action":"IDENTIFY",
-                  "object":"TREE"
+               "activity":{  
+                  "type":"IDENTIFY",
+                  "object":"NONE"
                },
-               "instruction" : {"long" :"Identifiez 3 arbres à partir d'un relevé d'expert (cercle bleu clignotant)", "short" : "Identifiez arbres expert"},
-               "mode":"identification",
+               "instruction":{  
+                  "long":"Identifiez 3 relevés d'expert (cercle bleu clignotant)",
+                  "short":"Identifiez relevés experts"
+               },
                "mechanics":[  
                   {  
                      "name":"score",
@@ -141,12 +147,14 @@
                ]
             },
             {  
-               "activityType":{  
-                  "action":"VERIFY",
-                  "object":"TREE"
+               "activity":{  
+                  "type":"VERIFY",
+                  "object":"NONE"
                },
-               "instruction" : {"long" : "Modifiez ou validez 3 relevés d'un autre utilisateur (cercle vert clignotant)", "short" : "Modifiez ou validez relevés"},
-               "mode":"verification",
+               "instruction":{  
+                  "long":"Vérifiez 3 relevés d'un autre utilisateur (cercle vert clignotant)",
+                  "short":"Vérifiez relevés"
+               },
                "mechanics":[  
                   {  
                      "name":"score",
@@ -168,22 +176,23 @@
                ]
             },
             {  
-               "activityType":{  
-                  "action":"LOCATE",
-                  "object":"TREE"
+               "activity":{  
+                  "type":"INVENTORY",
+                  "object":"NONE"
                },
-               "instruction" : {"long" : "Localisez un maximum d'arbre en un temps limite", "short" : "Localisez arbres"},
-               "mode":"classic",
-               "mechanics":[ 
-                	{  
+               "instruction":{  
+                  "long":"Faites un maximum de relevé en un temps limite",
+                  "short":"Faites relevés"
+               },
+               "mechanics":[  
+                  {  
                      "name":"countdown",
                      "endCondition":"time"
-                  }, 
+                  },
                   {  
                      "name":"score",
                      "nbPoint":12
                   },
-                  
                   {  
                      "name":"trophy",
                      "title":"Activité 3 faite",
@@ -200,6 +209,76 @@
                ]
             }
          ]
+      }
+   ],
+   "scores":[  
+      {  
+         "name":"explorationPoints"
+      },
+      {  
+         "name":"knowlegdePoints"
+      }
+   ],
+   "status":[  
+      {  
+         "name":"Voyageur",
+         "explorationPoints":54,
+         "knowlegdePoints":0
+      },
+      {  
+         "name":"Voyageur confirmé",
+         "explorationPoints":108,
+         "knowlegdePoints":0
+      },
+      {  
+         "name":"Voyageur expérimenté",
+         "explorationPoints":162,
+         "knowlegdePoints":0
+      },
+      {  
+         "name":"Curieux des bois",
+         "explorationPoints":54,
+         "knowlegdePoints":70
+      },
+      {  
+         "name":"Explorateur de la forêt",
+         "explorationPoints":108,
+         "knowlegdePoints":70
+      },
+      {  
+         "name":"Routard des étendues forestières",
+         "explorationPoints":162,
+         "knowlegdePoints":70
+      },
+      {  
+         "name":"Observateur attenboisé",
+         "explorationPoints":54,
+         "knowlegdePoints":140
+      },
+      {  
+         "name":"Explorateur-botaniste aguerri",
+         "explorationPoints":108,
+         "knowlegdePoints":140
+      },
+      {  
+         "name":"Maître explorateur botaniste",
+         "explorationPoints":162,
+         "knowlegdePoints":140
+      },
+      {  
+         "name":"Oeil d'aigle des arbres",
+         "explorationPoints":54,
+         "knowlegdePoints":210
+      },
+      {  
+         "name":"Archéologue botaniste",
+         "explorationPoints":108,
+         "knowlegdePoints":210
+      },
+      {  
+         "name":"Grand maître arbatéliste",
+         "explorationPoints":62,
+         "knowlegdePoints":210
       }
    ]
 }

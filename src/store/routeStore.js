@@ -346,7 +346,7 @@ export default {
         actionsTransActivite: new Map(),
         gamificationMode: true,
         differentSpecie: new Array(),
-        differentGender: new Array(),
+        differentGenus: new Array(),
         mission: null,
         activite: null,
         indexActivite: 0,
@@ -371,7 +371,7 @@ export default {
         },
         clearSets(state) {
           state.differentSpecie.length = 0
-          state.differentGender.length = 0
+          state.differentGenus.length = 0
         },
         setGamificationMode(state, mode) {
           state.gamificationMode = mode
@@ -443,24 +443,16 @@ export default {
           state.id = state.formerId
         },
         add(state, releve) {
-          if (releve.image) {
-            updateCompletion(state, "add_photo", releve)
-          } else {
-             updateCompletion(state, "add", releve)
-          } 
+          if (updateCompletion(state, "INVENTORY", releve)) state.completion++
         },
         modify(state, releve) {
-          if (releve.image) {
-            updateCompletion(state, "modify/validate_photo", releve)
-          } else {
-            updateCompletion(state, "modify/validate", releve)
-          }
+         if (updateCompletion(state, "VERIFY", releve)) state.completion++
         },
         validate(state, releve) {
-           updateCompletion(state, "modify/validate", releve)
+          if (updateCompletion(state, "VERIFY", releve)) state.completion++
         },
         identification(state, releve) {
-           updateCompletion(state, "identification", releve)
+          if (updateCompletion(state, "IDENTIFY", releve)) state.completion++
         }
 
       },
@@ -603,52 +595,29 @@ export default {
 
 function updateCompletion(state, operation, releve) {
 
-  var mode = state.activite.mode
-
   let {specie, genus} = releve
 
   var differentID = !(releve.osmId == releve.modifierId)
 
-  if (mode == 'verification' && differentID) {
-    if (operation.includes('modify/validate')) state.completion++
-  } else if (mode == 'identification') {
-    if (operation == 'identification') state.completion++
-  } else if (mode == 'classic') {
-
-    var action = state.activite.activityType.action
-
-    if (action == 'LOCATE' && operation.includes('add')) {
-      state.completion++
-    }
+  var type = state.activite.activity.type
       
-    else if ((action == 'IDENTIFY' && operation.includes('add')) ||
-          (action == 'VERIFY' && operation.includes('modify/validate')) ||
-          (action == 'PHOTOGRAPH' && operation.includes('photo'))) {
-
-        if (specie != null && !state.differentSpecie.includes(specie)) {
-          state.differentSpecie.push(specie)
-        }
-
-        if (genus != null && !state.differentGender.includes(genus)) {
-          state.differentGender.push(genus)
-        }
-            
-        var object = state.activite.activityType.object
-
-        if (object == 'TREE'){
-          state.completion++;
-        } else if (object == 'SPECIE' && specie != null && state.activite.activityType.specie.toUpperCase() == specie.toUpperCase()){
-          state.completion++;
-        } else if (object == 'GENUS' && genus != null && state.activite.activityType.genus.toUpperCase() == genus.toUpperCase()){
-          state.completion++;
-        } else if (object == 'DIFFERENTSPECIE'){
-          state.completion = state.differentSpecie.length;
-        } else if (object == 'DIFFERENTGENUS'){
-          state.completion = state.differentGender.length;
-        } 
+  if (type == operation) {
+    let {specieAdded, genusAdded} = updateDifferentSet(state, specie, genus)            
+    switch (state.activite.activity.object) {
+      case 'NONE' :
+        return true;
+      case 'SPECIE' :
+        return (specie != null && state.activite.activity.specie.toUpperCase() == specie.toUpperCase())
+      case 'GENUS' :
+        return (genus != null && state.activite.activity.genus.toUpperCase() == genus.toUpperCase())
+      case 'DIFFERENTSPECIE' :
+        return specieAdded
+      case 'DIFFERENTGENUS' :
+        return genusAdded
+      default :
+        return false
+      }
     }
-  }
-    
 }
 
 function extractActions(releve, identification) {
@@ -669,4 +638,18 @@ function extractActions(releve, identification) {
     actions.push("PHOTOGRAPH")
   }
   return actions
+}
+
+function updateDifferentSet(state, specie, genus) {
+  var res = new Object()
+  if (specie != null && !state.differentSpecie.includes(specie)) {
+    state.differentSpecie.push(specie)
+    res.specieAdded=true
+  }
+
+  if (genus != null && !state.differentGenus.includes(genus)) {
+    state.differentGenus.push(genus) 
+    res.genusAdded=true
+  } 
+  return res
 }

@@ -271,9 +271,9 @@ export default {
         }
       }
 
-      if (this.currentMission.activities[this.indexActivite].mode == 'verification') {
+      if (this.currentMission.activities[this.indexActivite].activity.type == 'VERIFY') {
         this.$store.commit('commonData/setVerificationMode', true)
-      } else if (this.currentMission.activities[this.indexActivite].mode == 'identification') {
+      } else if (this.currentMission.activities[this.indexActivite].activity.type == 'IDENTIFY') {
         this.$store.commit('commonData/setIdentificationMode', true)
       }
 
