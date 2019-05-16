@@ -33,7 +33,7 @@ import CustomToolbar from './partials/CustomToolbar.vue';
 import Countdown from './partials/Countdown.vue';
 import AppNavigator from './AppNavigator.vue';
 import 'vue-select/dist/vue-select.css';
-
+import progressionPlugin from './store/progressionPlugin'
 import L from 'leaflet';
 delete L.Icon.Default.prototype._getIconUrl;
 Vue.config.devtools = true
@@ -70,7 +70,7 @@ Vue.component('VmProgress', Progress)
 new Vue({
   el: '#app',
   render: h => h(AppNavigator),
-  store: new Vuex.Store(storeLike,{  plugins: [logrocketPlugin]  }),
+  store: new Vuex.Store({modules:storeLike.modules,  plugins: [progressionPlugin]  }),
   beforeCreate() {
     // Shortcut for Material Design
     Vue.prototype.md = this.$ons.platform.isAndroid();

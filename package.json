@@ -39,7 +39,8 @@
     "vue-toasted": "^1.1.26",
     "vue2-leaflet": "^1.2.3",
     "vuejs-auto-complete": "^0.9.0",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "vuex-persistedstate": "^2.5.4"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",
