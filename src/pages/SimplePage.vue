@@ -20,8 +20,8 @@
         <div class="center">
           <v-select
             v-model="releve.specie"
-            @input="updateReleve($event,'specie')"
             ref="species"
+            :reduce="option=>option.espece"
             :options="specieVerSource"
             label="espece"
             placeholder="Nom de l'espèce"
@@ -38,7 +38,7 @@
             v-model="releve.genus"
             ref="genus"
             :options="genusList"
-            @input="setGenus"
+            :reduce="option=>option.name"
             label="name"
             placeholder="Nom du genre"
             style="width: -webkit-fill-available;"
@@ -52,9 +52,9 @@
 
         <v-select
           v-model="releve.common"
-          @input="updateReleve($event,'common')"
           label="vernaculaire"
           ref="common"
+          :reduce="option=>option.vernaculaire"
           style="width: -webkit-fill-available;"
           placeholder="Nom vernaculaire"
           :options="specieVerSource"
@@ -161,26 +161,6 @@ export default {
   methods: {
     noResult(e) {
       console.log(e);
-    },
-    setGenus(evt) {
-      if (evt == null) this.$refs.genus.value = "";
-    },
-    updateReleve(evt, src) {
-      if (evt && evt.espece && evt.vernaculaire && evt.genus) {
-        this.releve.specie = evt.espece;
-        this.releve.common = evt.vernaculaire;
-        this.releve.genus = evt.genus;
-      }
-      if (evt == null) {
-        switch (src) {
-          case "specie":
-            this.$refs.species.value = "";
-            break;
-          case "common":
-            this.$refs.common.value = "";
-            break;
-        }
-      }
     },
     onChange() {
       var that = this;
