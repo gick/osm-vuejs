@@ -127,12 +127,19 @@
       <v-ons-icon icon="md-pin"></v-ons-icon>
     </v-ons-fab>
 
-  <ons-bottom-toolbar style="background-color:#F44336">
-      <center style="color:white">
+  <ons-bottom-toolbar style="background-color:#F44336; color:white">
+      <center>
         {{instruction}}
-        <br>
-        <p v-if="goal>0"> {{completion}}/{{goal}}</p>
-        <p v-else> {{completion}}</p>  
+        <v-ons-row>
+          <v-ons-col v-if="timeLeft!=-1">
+          <v-ons-icon icon="fa-clock"></v-ons-icon>
+            {{ timeLeft | duration('asSeconds') | moment("mm:ss") }}
+          </v-ons-col>
+          <v-ons-col>
+            <div v-if="goal>0"> {{completion}}/{{goal}}</div>
+            <div v-else> {{completion}}</div> 
+          </v-ons-col>
+        </v-ons-row> 
       </center>  
   </ons-bottom-toolbar>
 
@@ -314,6 +321,9 @@ export default {
     },
     goal() {
       return this.$store.state.user.goal;
+    },
+    timeLeft() {
+       return this.$store.state.user.time.timeLeft
     }
   },
 

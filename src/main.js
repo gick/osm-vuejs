@@ -51,6 +51,7 @@ Vue.use(VueLodash)
 Vue.use(Vuex);
 Vue.use(VueOnsen);
 Vue.use(BootstrapVue)
+Vue.use(require('vue-moment'));
 window.addEventListener("hashchange", function(){
   console.log("Hash changed to", window.location.hash);
     window.location.hash = "#albiziapp"

@@ -34,8 +34,11 @@
               <v-ons-col width="10%">
                <v-ons-icon icon="fa-angle-double-right" @click="showDialog = true" size="30px"></v-ons-icon> 
              </v-ons-col>
-            </v-ons-row>   
-            <countdown  v-if="totalSecondes!=0" :totalSecondes=totalSecondes @timeout="activityEnd('done')"></countdown>       
+            </v-ons-row> 
+            <div v-if="timeLeft!=-1">
+              <v-ons-icon icon="fa-clock"></v-ons-icon>
+              {{ timeLeft | duration('asSeconds') | moment("mm:ss") }}
+            </div>
           </v-ons-card>
 
           <v-ons-card class=opaque v-else>
@@ -113,13 +116,41 @@ export default {
     },
     progression() {
       return  this.goal > 0 ? (this.completion / this.goal * 100) : 0
+    },
+    timeLeft() {
+      return this.$store.state.user.time.timeLeft
+    },
+    nbSuccessfulActivities() {
+      var nbSuccessfulActivities = 0
+      for (let i = 0; i < this.activities.length; i++) {
+        if (this.activities[i].statut == 'done') {
+          nbSuccessfulActivities++
+        }
+      }
+      return nbSuccessfulActivities
     }
   },
   watch : {
      'completion': {
         handler: function(newValue, oldValue){
           if (newValue == this.goal)
-          this.activityEnd('done')
+            this.activityEnd('done')
+        },
+        deep : true
+      }, 
+      'timeLeft': {
+        handler: function(newValue, oldValue){
+          if (newValue == 0) {
+            this.activityEnd('done')
+          }
+        },
+        deep : true
+      },
+      'nbSuccessfulActivities': {
+        handler: function(newValue, oldValue){
+          if (this.gamificationMode) {
+            this.updateTrophy(newValue)
+          }
         },
         deep : true
       }
@@ -147,6 +178,7 @@ export default {
     activityEnd(statut) {
       this.$store.commit('commonData/setVerificationMode', false)
       this.$store.commit('commonData/setIdentificationMode', false)
+      this.$store.commit('user/resetTime')
       this.activities[this.indexActivite].statut = statut
       if (statut == 'done' && this.gamificationMode) {
         for (let i = 0; i < this.currentActivity.mechanics.length; i++) {
@@ -173,34 +205,6 @@ export default {
         }
       }
       if (this.indexActivite + 1 ==  this.currentMission.activities.length) {
-        if (this.gamificationMode) {
-          for (let i = 0; i < this.currentMission.mechanics.length; i++) {
-            //attribution des trophées
-            if (this.currentMission.mechanics[i].name == 'trophy') {
-              var nbSuccessfulActivities = 0
-              for (let j = 0 ; j < this.activities.length ; j++) {
-                if (this.activities[j].statut == 'done') {
-                  nbSuccessfulActivities++
-                }
-              }
-              for (let j = 0 ; j < this.currentMission.mechanics[i].trophiesList.length; j++) {
-                if (nbSuccessfulActivities >= this.currentMission.mechanics[i].trophiesList[j].condition.nbSuccessfulActivities) {
-                  let name = this.currentMission.mechanics[i].trophiesList[j].title
-                  if (!this.tropheeDejaGagne(name)) {
-                    this.$store.commit('user/winTrophy', name)
-                    let toast = this.$toasted.show("Nouveau trophée '" + name + "'", { 
-                    fullWidth : true,
-                    position: "bottom-center", 
-                    duration : 5000,
-                    icon : "trophy"
-                  });
-                  }
-                  
-                }
-              } 
-            }
-          }
-        }
         this.newMission()
       } else {
         this.newActivity()
@@ -271,6 +275,14 @@ export default {
         }
       }
 
+      var date = new Date();
+      var startTime = date.getTime();
+      var duration = totalSecondes ? totalSecondes * 1000 : -1
+      this.$store.commit('user/setTime', {
+        startTime : startTime,
+        duration : duration
+      })
+
       if (this.currentMission.activities[this.indexActivite].activity.type == 'VERIFY') {
         this.$store.commit('commonData/setVerificationMode', true)
       } else if (this.currentMission.activities[this.indexActivite].activity.type == 'IDENTIFY') {
@@ -289,6 +301,7 @@ export default {
                 icon : "clock"
           });
       }
+      
     },
     tropheeDejaGagne(trophyName) {
       var res = false
@@ -307,6 +320,26 @@ export default {
       } else if (statut == 'done') {
         return "✓ " + intitule
       }
+    },
+    updateTrophy(nbSuccessfulActivities) {
+      for (let i = 0; i < this.currentMission.mechanics.length; i++) {
+        if (this.currentMission.mechanics[i].name == 'trophy') {
+          for (let j = 0 ; j < this.currentMission.mechanics[i].trophiesList.length; j++) {
+            if (nbSuccessfulActivities == this.currentMission.mechanics[i].trophiesList[j].condition.nbSuccessfulActivities) {
+              let name = this.currentMission.mechanics[i].trophiesList[j].title
+              if (!this.tropheeDejaGagne(name)) {
+                this.$store.commit('user/winTrophy', name)
+                let toast = this.$toasted.show("Nouveau trophée '" + name + "'", { 
+                  fullWidth : true,
+                  position: "bottom-center", 
+                  duration : 5000,
+                  icon : "trophy"
+                });
+              }    
+            }
+          } 
+        }
+      }     
     }
   }
 };

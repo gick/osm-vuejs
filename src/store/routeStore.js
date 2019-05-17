@@ -247,6 +247,12 @@ export default {
             })
             .then(function (response) {
               commit('setNoTree', response.data.observation)
+              commit('user/updateProgression', {
+                releve : response.data.observation,
+                operation : "VERIFY"
+              }, {
+                root : true
+              })
             })
         },
         unsetNoTree({
@@ -277,7 +283,6 @@ export default {
           state,
           commit
         }, releve) {
-          console.log(JSON.stringify(releve))
           commit("user/updateProgression", {
             releve : releve,
             operation : "IDENTIFY"
@@ -373,7 +378,12 @@ export default {
         activite: null,
         indexActivite: 0,
         completion: 0,
-        goal: 0
+        goal: 0,
+        time: {
+          timer : null,
+          startTime : -1,
+          timeLeft : -1
+        }
       },
       mutations: {
         setCompletion(state, completion) {
@@ -466,6 +476,25 @@ export default {
         },
         updateProgression(state, param) {
           if (updateCompletion(state, param.operation, param.releve)) state.completion++
+        },
+        setTime(state, time) {
+          state.time.startTime = time.startTime
+          state.time.timeLeft = time.duration
+          if (time.duration!=-1) {
+            state.time.timer = setInterval( () => {
+            var timestamp = (new Date()).getTime()
+            state.time.timeLeft = time.duration - (timestamp - time.startTime)
+            if (state.time.timeLeft <= 0) {
+              state.time.timeLeft = 0
+              clearInterval(state.time.timer)
+            }
+            }, 1000); 
+          }    
+        },
+        resetTime(state) {
+          state.time.startTime = -1
+          state.time.timeLeft = -1
+          clearInterval(state.time.timer)
         }
       },
       actions: {
