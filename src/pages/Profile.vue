@@ -5,13 +5,24 @@
 			 <v-ons-card>
 	    	<v-ons-row @click='displayScoreDetails'>
 	    		<v-ons-col>
-	        	Score : {{ score }}
+	        	Points d'observation : {{ score }}
 	    		</v-ons-col>
 	    		<v-ons-col style="text-align: right" >
 	        	<v-ons-icon icon="fa-info-circle" style="color:#cca108"></v-ons-icon> 
 	       	</v-ons-col>
 	      </v-ons-row>
 	    </v-ons-card>
+			 <v-ons-card>
+	    	<v-ons-row @click='displayKnowledgeDetails'>
+	    		<v-ons-col>
+	        	Points de connaissance : {{ knowledgeScore }}
+	    		</v-ons-col>
+	    		<v-ons-col style="text-align: right" >
+	        	<v-ons-icon icon="fa-info-circle" style="color:#cca108"></v-ons-icon> 
+	       	</v-ons-col>
+	      </v-ons-row>
+	    </v-ons-card>
+
 			<v-ons-card>
 	      		<v-ons-row @click='displayTrophiesDetails'>
 	        		<v-ons-col>
@@ -23,7 +34,6 @@
 	        		</v-ons-col>   		
 	      		</v-ons-row>  
 	    	</v-ons-card>
-	    </v-card>
     </div>
 	</v-ons-page>
 
@@ -32,6 +42,7 @@
 <script>
 
 import ScoreDetails from "./ScoreDetails.vue"
+import ScoreKnowledgeDetails from "./ScoreKnowledgeDetails.vue"
 import TrophiesDetails from "./TrophiesDetails.vue"
 
 export default {
@@ -46,7 +57,11 @@ export default {
     },
     username() {
       return this.$store.state.user.name
-    },
+		},
+		knowledgeScore(){
+			return this.$store.state.user.knowledgeScore
+		}
+		,
     trophies() {
     	return this.$store.state.user.trophies
     },
@@ -63,7 +78,13 @@ export default {
   		this.$store.commit("navigator/push", {
         extends: ScoreDetails  
       });
-  	},
+		},
+		displayKnowledgeDetails() {
+  		this.$store.commit("navigator/push", {
+        extends: ScoreKnowledgeDetails  
+      });
+		}	
+		,
   	resetBadge() {
   		this.$store.commit('user/clearNotifProfil')
   	},

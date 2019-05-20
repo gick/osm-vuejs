@@ -22,8 +22,9 @@
         <div class="center">
           <v-select
             v-model="releve.identificationValue.specie"
-            @input="updateReleve($event,'specie')"
             ref="species"
+            :reduce="option=>option.espece"
+
             :options="specieVerSource"
             label="espece"
             placeholder="Nom de l'espèce"
@@ -39,8 +40,8 @@
           <v-select
             v-model="releve.identificationValue.genus"
             ref="genus"
+            :reduce="option=>option.name"
             :options="genusList"
-            @input="setGenus"
             label="name"
             placeholder="Nom du genre"
             style="width: -webkit-fill-available;"
@@ -54,7 +55,7 @@
 
         <v-select
           v-model="releve.identificationValue.common"
-          @input="updateReleve($event,'common')"
+          :reduce="option=>option.vernaculaire"
           label="vernaculaire"
           ref="common"
           style="width: -webkit-fill-available;"
@@ -187,26 +188,6 @@ export default {
         });
     },
 
-    setGenus(evt) {
-      if (evt == null) this.$refs.genus.value = "";
-    },
-    updateReleve(evt, src) {
-      if (evt && evt.espece && evt.vernaculaire && evt.genus) {
-        this.releve.identificationValue.specie = evt.espece;
-        this.releve.identificationValue.common = evt.vernaculaire;
-        this.releve.identificationValue.genus = evt.genus;
-      }
-      if (evt == null) {
-        switch (src) {
-          case "specie":
-            this.$refs.species.value = "";
-            break;
-          case "common":
-            this.$refs.common.value = "";
-            break;
-        }
-      }
-    },
 
     complete() {
       this.$store.dispatch("releve/identification", this.releve);

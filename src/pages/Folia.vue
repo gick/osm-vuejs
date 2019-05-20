@@ -23,24 +23,32 @@
             <v-ons-list-header>Résultats</v-ons-list-header>
             <v-ons-list-item v-for="(specieResult, index) in foliaResult" :key="index">
               <div class="left"></div>
-              <div class="center">{{specieResult.specie}} {{specieResult.result}}%</div>
+              <div class="center">{{specieResult.species}} {{specieResult.percent}}%</div>
             </v-ons-list-item>
           </v-ons-list>
         </div>
       </v-ons-card>
       <v-ons-modal :visible="modalVisible">
         <div style="position:relative;">
-        <img ref="image" :src="imageData" @load="imageLoaded" style="max-height: 100vh;max-width: 100vw;">
-        <VueSignaturePad
-          :options="{dotSize:5,minWidth:15,maxWidth:15,penColor:'rgb(0,125,0)',onBegin}"
-          :width="width"
-          :height="height"
-          ref="signaturePad"
-          style="position:absolute;top:0;left: 0;right: 0;margin: auto;"
-        ></VueSignaturePad>
+          <img
+            ref="image"
+            :src="imageData"
+            @load="imageLoaded"
+            style="max-height: 100vh;max-width: 100vw;"
+          >
+          <VueSignaturePad
+            :options="{dotSize:5,minWidth:15,maxWidth:15,penColor:'rgb(0,125,0)',onBegin}"
+            :width="width"
+            :height="height"
+            ref="signaturePad"
+            style="position:absolute;top:0;left: 0;right: 0;margin: auto;"
+          ></VueSignaturePad>
         </div>
         <p>Réalisez un tracé à l'intérieur de la feuille puis valider</p>
-        <v-ons-button style="position: absolute;left: 0;right: 0;bottom: 1px" @click="sendImages">Valider</v-ons-button>
+        <v-ons-button
+          style="position: absolute;left: 0;right: 0;bottom: 1px"
+          @click="sendImages"
+        >Valider</v-ons-button>
       </v-ons-modal>
 
       <div style="position:relative"></div>
@@ -49,7 +57,7 @@
 </template>
 
 <script>
-import {SSE} from '../js/sse.js'
+import { SSE } from "../js/sse.js";
 import imageCompression from "browser-image-compression";
 import VueSignaturePad from "vue-signature-pad";
 import FileUpload from "../FileUpload.vue";
@@ -64,7 +72,7 @@ export default {
       foliaStarted: false,
       foliaResult: [],
       draw: false,
-      modalVisible:false
+      modalVisible: false
     };
   },
   components: {
@@ -86,13 +94,14 @@ export default {
       this.draw = false;
     },
     imageLoaded() {
-      this.modalVisible=true
+      this.modalVisible = true;
       this.$refs.signaturePad.resizeCanvas();
       this.$nextTick(() => {
-              this.width = this.$refs.image.clientWidth + "px";
-      this.height = this.$refs.image.clientHeight + "px";
-        this.$nextTick(()=>{this.$refs.signaturePad.resizeCanvas();})
-        
+        this.width = this.$refs.image.clientWidth + "px";
+        this.height = this.$refs.image.clientHeight + "px";
+        this.$nextTick(() => {
+          this.$refs.signaturePad.resizeCanvas();
+        });
       });
       console.log("imageLoaded");
     },
@@ -125,10 +134,28 @@ export default {
         img.src = datas;
       });
     },
+    parseResult(res) {
+      for (let item of res) {
+        let species = _.startCase(item.split(",")[0]);
+        let percent = parseInt(item.split(",")[1]);
+        this.foliaResult.push({ species: species, percent: percent });
+      }
+    },
+    handleError() {
+      this.$toasted.show(
+        "Erreur lors de la reconnaissance. Essayez avec une autre photo.",
+        {
+          fullWidth: true,
+          position: "bottom-center",
+          duration: 4000
+        }
+      ); // Shows from 0s to 2s
+      this.restart()
+    },
 
     sendImages() {
-
-      this.modalVisible=false
+      this.$store.commit('user/startFolia')
+      this.modalVisible = false;
       let { status, data } = this.$refs.signaturePad.saveSignature();
       this.foliaStarted = true;
       this.resizedataURL(
@@ -143,26 +170,46 @@ export default {
           Number(this.height.replace("px", "")),
           "image/jpeg"
         ).then(imageData => {
-          var source=new SSE("http://localhost:8081/api/setupImages",{headers:{'Content-Type' :'application/json;charset=UTF-8'},payload:{trace:dataURI,leaf:imageData}})
-          source.stream()
-          console.log(source)
+          let data = new FormData();
+          data.append("trace", dataURI);
+          data.append("leaf", imageData);
+
+          var source = new SSE("http://localhost:8081/api/setupImages", {
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            payload: JSON.stringify({ trace: dataURI, leaf: imageData })
+          });
+          source.addEventListener("readystatechange", function(e) {
+            console.log(e);
+          });
+          source.addEventListener("error", function(e) {
+           // this.handleError();
+            source.close();
+          }.bind(this));
+
+          source.addEventListener(
+            "message",
+            function(e) {
+              // Assuming we receive JSON-encoded data payloads:
+              var payload = JSON.parse(e.data);
+              console.log(payload);
+              this.currentStep = this.currentStep + 3;
+              if (payload.error) {
+                this.handleError();
+                source.close();
+              }
+              if (payload.data) {
+                this.parseResult(payload.data);
+                source.close();
+              }
+            }.bind(this)
+          );
+          source.stream();
         });
       });
     },
     setImage(imageData) {
       this.imageData = imageData;
     },
-    transition(releve) {
-      this.$store.commit("navigator/push", {
-        extends: Releve,
-        data() {
-          return {
-            releve: releve,
-            visualize: true
-          };
-        }
-      });
-    }
   }
 };
 </script>

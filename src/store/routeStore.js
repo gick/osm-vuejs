@@ -17,18 +17,15 @@ export default {
           'Peu confiant',
           'Confiant',
         ],
-        heights: [
-          "Inconnue",
-          "Moins de 4m",
-          "4 à 8m",
-          "8 à 12m",
-          "12 à 16m",
-          "16 à 20m",
-          "20 à 24m",
-          "24 à 28m",
-          "28 à 32m",
-          "Plus de 32m"
-        ],
+        knowledgeRules:[
+          {text:'Identifier correctement un genre', points:10},
+          {text:'Identifier correctement une espèce', points:15},
+          {text:'Identifier correctement un nom vernaculaire', points:15},
+          {text:'Confirmation d\'un relevé par un autre joueur', points:4},
+          {text:'Utiliser Folia', points:2},
+          {text:'Déclarer un arbre douteux', points:1},
+        
+        ]
       },
       mutations: {
         setVerificationMode(state, mode) {
@@ -370,6 +367,8 @@ export default {
         trophies: [],
         journal: [],
         score: 0,
+        knowledgeScore:0,
+        knowledgeHistory:[],
         actionsTransActivite: new Map(),
         gamificationMode: true,
         differentSpecie: new Array(),
@@ -389,6 +388,9 @@ export default {
         setCompletion(state, completion) {
           state.completion = completion;
         },
+        startFolia(state){
+
+        },
         setGoal(state, goal) {
           state.goal = goal;
         },
@@ -404,6 +406,10 @@ export default {
         clearSets(state) {
           state.differentSpecie.length = 0
           state.differentGenus.length = 0
+        },
+        addKnowledgePoints(state,knowledgeResult){
+          state.knowledgeScore+=knowledgeResult.points
+          state.knowledgeHistory.unshift(knowledgeResult)
         },
         setGamificationMode(state, mode) {
           state.gamificationMode = mode
