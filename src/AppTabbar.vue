@@ -126,13 +126,6 @@ export default {
           if (userId == this.userID) {
             return;
           }
-          if (this.userID == observation.osmId) {
-            this.$toasted.show("Un de vos relevés à été validé", {
-              fullWidth: true,
-              position: "bottom-center",
-              duration: 2000
-            }); // Shows from 0s to 2s
-          }
           this.$store.commit("releve/validateFromOutside", observation);
         }.bind(this)
       );

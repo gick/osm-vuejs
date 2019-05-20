@@ -35,6 +35,21 @@ export default {
       this.$store.commit("splitter/toggle");
     },
     admin() {
+      this.$store.commit("navigator/push", {
+        extends: Admin,
+        data() {
+          return {
+            toolbarInfo: {
+              backLabel: "Home",
+              title: "key"
+            }
+          };
+        }
+      });
+    }
+  },
+  /*
+    admin() {
       this.$ons.notification
         .prompt("Mot de passe", {})
         .then(function(response) {
@@ -57,18 +72,16 @@ export default {
         }.bind(this))
         
     
-  }},
+  }}*/
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
     gamificationMode() {
       return this.$store.state.user.gamificationMode;
     },
-    access() { 
-      var access = 
-      [
+    access() {
+      var access = [
         {
           title: "Mission en cours",
           icon: "ion-home"
@@ -76,12 +89,12 @@ export default {
         {
           title: "Mes relevés",
           icon: "ion-edit"
-        },       
+        },
         {
           title: "Folia",
           icon: "ion-search"
         }
-      ]
+      ];
       if (this.gamificationMode) {
         var profil = {
           title: "Profil",
@@ -90,10 +103,10 @@ export default {
         var arboretum = {
           title: "Mon arboretum",
           icon: "ion-leaf"
-        }
-        access.splice(1,0,profil,arboretum)
+        };
+        access.splice(1, 0, profil, arboretum);
       }
-      return access
+      return access;
     }
   }
 };

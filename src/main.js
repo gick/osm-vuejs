@@ -4,7 +4,8 @@ import 'onsenui/css/onsenui.css'; // Onsen UI basic CSS
 import './onsen-css-components.css'; // Onsen UI CSS components source for custom themes (requires cssnext)
 import './vue-onsenui-kitchensink.css'; // CSS specific to this app
 import VueLodash from 'vue-lodash'
-
+window._=require('lodash')
+//TODO remove Vue-lodash
 import Toasted from 'vue-toasted';
 import LogRocket from 'logrocket';
 LogRocket.init('mpgeqr/albiziapp');
@@ -34,6 +35,8 @@ import Countdown from './partials/Countdown.vue';
 import AppNavigator from './AppNavigator.vue';
 import 'vue-select/dist/vue-select.css';
 import progressionPlugin from './store/progressionPlugin'
+import knowledgePlugin from './store/knowledgePlugin'
+
 import L from 'leaflet';
 delete L.Icon.Default.prototype._getIconUrl;
 Vue.config.devtools = true
@@ -70,7 +73,7 @@ Vue.component('VmProgress', Progress)
 new Vue({
   el: '#app',
   render: h => h(AppNavigator),
-  store: new Vuex.Store({modules:storeLike.modules,  plugins: [progressionPlugin]  }),
+  store: new Vuex.Store({modules:storeLike.modules,  plugins: [knowledgePlugin]  }),
   beforeCreate() {
     // Shortcut for Material Design
     Vue.prototype.md = this.$ons.platform.isAndroid();
