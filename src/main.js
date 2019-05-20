@@ -7,11 +7,6 @@ import VueLodash from 'vue-lodash'
 window._=require('lodash')
 //TODO remove Vue-lodash
 import Toasted from 'vue-toasted';
-import LogRocket from 'logrocket';
-LogRocket.init('mpgeqr/albiziapp');
-import createPlugin from 'logrocket-vuex';
-
-const logrocketPlugin = createPlugin(LogRocket);
 
 import Vue from 'vue';
 import Vuex from 'vuex';
@@ -33,7 +28,7 @@ import storeLike from './store/routeStore';
 import CustomToolbar from './partials/CustomToolbar.vue';
 import AppNavigator from './AppNavigator.vue';
 import 'vue-select/dist/vue-select.css';
-import progressionPlugin from './store/progressionPlugin'
+import backupPlugin from './store/backupPlugin'
 import knowledgePlugin from './store/knowledgePlugin'
 
 import L from 'leaflet';
@@ -72,7 +67,7 @@ Vue.component('VmProgress', Progress)
 new Vue({
   el: '#app',
   render: h => h(AppNavigator),
-  store: new Vuex.Store({modules:storeLike.modules,  plugins: [knowledgePlugin]  }),
+  store: new Vuex.Store({modules:storeLike.modules,  plugins: [knowledgePlugin,backupPlugin]  }),
   beforeCreate() {
     // Shortcut for Material Design
     Vue.prototype.md = this.$ons.platform.isAndroid();
