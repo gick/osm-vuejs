@@ -134,7 +134,6 @@ export default {
       return nbSuccessfulActivities
     },
     displayMission() {
-      alert(this.activities.length)
       return this.$store.state.user.id && this.activities.length != 0
     }
   },
@@ -248,10 +247,10 @@ export default {
 
       for (let i = 0; i < this.currentMission.mechanics.length; i++) {
         if (this.currentMission.mechanics[i].name == 'score') {
-          for (let j = 0; j < this.currentMission.mechanics[i].actions.length; j++) {
+          for (let j = 0; j < this.currentMission.mechanics[i].explorationPoints.length; j++) {
             var param = new Object()
-            param.action = this.currentMission.mechanics[i].actions[j].code
-            param.nbPoint = this.currentMission.mechanics[i].actions[j].nbPoint
+            param.action = this.currentMission.mechanics[i].explorationPoints[j].code
+            param.nbPoint = this.currentMission.mechanics[i].explorationPoints[j].nbPoint
             this.$store.commit('user/addActionTransActivite', param)
           }
         } else if (this.currentMission.mechanics[i].name == 'trophy') {

@@ -4,7 +4,7 @@
          "mechanics":[  
             {  
                "name":"score",
-               "actions":[  
+               "explorationPoints":[  
                   {  
                      "code":"IDENTIFY",
                      "nbPoint":5
@@ -29,7 +29,10 @@
                      "code":"VALIDATE",
                      "nbPoint":3
                   }
-               ]
+               ],
+               "knowlegdePoints":{  
+
+               }
             },
             {  
                "name":"trophy",
@@ -54,6 +57,71 @@
                      "condition":{  
                         "nbSuccessfulActivities":3
                      }
+                  }
+               ]
+            },
+            {  
+               "name":"status",
+               "statusList":[  
+                  {  
+                     "name":"Voyageur",
+                     "explorationPoints":54,
+                     "knowlegdePoints":0
+                  },
+                  {  
+                     "name":"Voyageur confirmé",
+                     "explorationPoints":108,
+                     "knowlegdePoints":0
+                  },
+                  {  
+                     "name":"Voyageur expérimenté",
+                     "explorationPoints":162,
+                     "knowlegdePoints":0
+                  },
+                  {  
+                     "name":"Curieux des bois",
+                     "explorationPoints":54,
+                     "knowlegdePoints":70
+                  },
+                  {  
+                     "name":"Explorateur de la forêt",
+                     "explorationPoints":108,
+                     "knowlegdePoints":70
+                  },
+                  {  
+                     "name":"Routard des étendues forestières",
+                     "explorationPoints":162,
+                     "knowlegdePoints":70
+                  },
+                  {  
+                     "name":"Observateur attenboisé",
+                     "explorationPoints":54,
+                     "knowlegdePoints":140
+                  },
+                  {  
+                     "name":"Explorateur-botaniste aguerri",
+                     "explorationPoints":108,
+                     "knowlegdePoints":140
+                  },
+                  {  
+                     "name":"Maître explorateur botaniste",
+                     "explorationPoints":162,
+                     "knowlegdePoints":140
+                  },
+                  {  
+                     "name":"Oeil d'aigle des arbres",
+                     "explorationPoints":54,
+                     "knowlegdePoints":210
+                  },
+                  {  
+                     "name":"Archéologue botaniste",
+                     "explorationPoints":108,
+                     "knowlegdePoints":210
+                  },
+                  {  
+                     "name":"Grand maître arbatéliste",
+                     "explorationPoints":62,
+                     "knowlegdePoints":210
                   }
                ]
             }
@@ -209,76 +277,6 @@
                ]
             }
          ]
-      }
-   ],
-   "scores":[  
-      {  
-         "name":"explorationPoints"
-      },
-      {  
-         "name":"knowlegdePoints"
-      }
-   ],
-   "status":[  
-      {  
-         "name":"Voyageur",
-         "explorationPoints":54,
-         "knowlegdePoints":0
-      },
-      {  
-         "name":"Voyageur confirmé",
-         "explorationPoints":108,
-         "knowlegdePoints":0
-      },
-      {  
-         "name":"Voyageur expérimenté",
-         "explorationPoints":162,
-         "knowlegdePoints":0
-      },
-      {  
-         "name":"Curieux des bois",
-         "explorationPoints":54,
-         "knowlegdePoints":70
-      },
-      {  
-         "name":"Explorateur de la forêt",
-         "explorationPoints":108,
-         "knowlegdePoints":70
-      },
-      {  
-         "name":"Routard des étendues forestières",
-         "explorationPoints":162,
-         "knowlegdePoints":70
-      },
-      {  
-         "name":"Observateur attenboisé",
-         "explorationPoints":54,
-         "knowlegdePoints":140
-      },
-      {  
-         "name":"Explorateur-botaniste aguerri",
-         "explorationPoints":108,
-         "knowlegdePoints":140
-      },
-      {  
-         "name":"Maître explorateur botaniste",
-         "explorationPoints":162,
-         "knowlegdePoints":140
-      },
-      {  
-         "name":"Oeil d'aigle des arbres",
-         "explorationPoints":54,
-         "knowlegdePoints":210
-      },
-      {  
-         "name":"Archéologue botaniste",
-         "explorationPoints":108,
-         "knowlegdePoints":210
-      },
-      {  
-         "name":"Grand maître arbatéliste",
-         "explorationPoints":62,
-         "knowlegdePoints":210
       }
    ]
 }
