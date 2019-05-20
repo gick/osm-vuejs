@@ -10,13 +10,13 @@
       </div>
     </v-ons-card>
 
-    <v-ons-card v-show="$store.state.user.id">
+    <v-ons-card v-show="displayMission">
       <div class="title">
         Mission en cours ( {{ indexActivite + 1}} / {{activities.length}} )
       </div>          
     </v-ons-card>
 
-    <v-card v-show="$store.state.user.id">
+    <v-card v-show="displayMission">
         <div v-for="item in activities">
 
           <v-ons-card v-if="(item.statut=='onGoing')">
@@ -43,10 +43,13 @@
 
           <v-ons-card class=opaque v-else>
              {{ displayActivity(item.statut, item.intitule) }}
-          </v-ons-card>
-        
+          </v-ons-card>       
         </div>
     </v-card>
+
+    <v-ons-card v-show="missionDone">
+      <p>Vous avez terminé la mission, merci d'avoir participé !</p>
+    </v-ons-card>
 
     <v-ons-alert-dialog modifier="rowfooter"
       :title="'Êtes-vous sûr de vouloir passer cette activité ?'"
@@ -86,7 +89,8 @@ export default {
     return {
       activities: [],
       showDialog: false,
-      totalSecondes : 0
+      totalSecondes : 0,
+      missionDone: false
     };
   },
   mounted() {
@@ -128,6 +132,10 @@ export default {
         }
       }
       return nbSuccessfulActivities
+    },
+    displayMission() {
+      alert(this.activities.length)
+      return this.$store.state.user.id && this.activities.length != 0
     }
   },
   watch : {
@@ -148,7 +156,7 @@ export default {
       },
       'nbSuccessfulActivities': {
         handler: function(newValue, oldValue){
-          if (this.gamificationMode) {
+          if (this.gamificationMode && this.currentMission) {
             this.updateTrophy(newValue)
           }
         },
@@ -205,7 +213,9 @@ export default {
         }
       }
       if (this.indexActivite + 1 ==  this.currentMission.activities.length) {
-        this.newMission()
+        this.activities.length = 0
+        this.missionDone = true
+        /*this.newMission()*/
       } else {
         this.newActivity()
       }

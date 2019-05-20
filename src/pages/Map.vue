@@ -128,7 +128,7 @@
     </v-ons-fab>
 
   <ons-bottom-toolbar style="background-color:#F44336; color:white">
-      <center>
+      <center v-show='userID'>
         {{instruction}}
         <v-ons-row>
           <v-ons-col v-if="timeLeft!=-1">
