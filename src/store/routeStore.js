@@ -2,7 +2,6 @@ import {
   cpus
 } from "os";
 import missions from "../missions.json"
-import LogRocket from 'logrocket';
 var osmAuth = require("osm-auth");
 export default {
   modules: {
@@ -443,7 +442,6 @@ export default {
           state.notifProfil = null
         },
         set(state, user) {
-          LogRocket.identify(user.id,{name:user.name})
           state.name = user.name
           state.id = user.id
         },
@@ -468,6 +466,9 @@ export default {
         },
         identification(state, releve) {
           if (updateCompletion(state, "IDENTIFY", releve)) state.completion++
+        },
+        restore(state,user){
+
         }
 
       },
@@ -561,7 +562,8 @@ export default {
                   id: user.getAttribute('id'),
                   name: user.getAttribute('display_name'),
                 }
-              }).then(function () {
+              }).then(function (response) {
+                commit('restore',response.data.user)
                 dispatch('loadObservation')
               })
 
