@@ -8,10 +8,11 @@
     <v-ons-list>
       <v-ons-list-header v-if="!modify">Nouveau relevé</v-ons-list-header>
       <v-ons-list-header v-if="modify">Modifier un relevé</v-ons-list-header>
-      <v-ons-list-title         style="margin-top: 10px;
+      <v-ons-list-title
+        style="margin-top: 10px;
     font-size: 15px;
     font-weight: bolder;"
->Identification</v-ons-list-title>
+      >Identification</v-ons-list-title>
 
       <v-ons-list-item>
         <div class="left">
@@ -88,10 +89,10 @@
         <picture-input
           ref="pictureInput"
           @change="onChange"
-          width="600"
+          width="400"
           :crop="false"
           :removable="true"
-          height="600"
+          height="400"
           margin="16"
           :disabled="noTree"
           accept="image/*"
@@ -100,6 +101,9 @@
           buttonClass="btn"
           :customStrings="{
           tap: 'Appuyez ici pour prendre une photo', // HTML allowed
+          change: 'Modifier photo', // Text only
+          remove: 'Supprimer photo', // Text only
+
         drag: 'Prendre photo'
       }"
         ></picture-input>

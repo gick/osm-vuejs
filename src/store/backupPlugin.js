@@ -3,6 +3,7 @@ let backup=(field,value)=>{
 }
 let restoreSession=(oldState,state)=>{
     delete oldState._id
+    delete oldState.__v
     _.forOwn(oldState,(value,key)=>{
         if(value){
             if(!key.includes('_')){ //restoring state/user module
@@ -19,7 +20,7 @@ let backupPlugin = store => {
     store.subscribe((mutation,state)=>{
         let userId=state.user.id
         switch(mutation.type){
-            case 'user/addThrophie' :
+            case 'user/addTrophie' :
                 backup('trophies',state.user.trophies)
                 break
             case 'user/winThrophy' :

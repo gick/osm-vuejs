@@ -9,7 +9,7 @@
       <div class="title">Exercice d'identification</div>
       <div class="content">
         Vous devez identifier cet arbre
-        précédemment identifié par un expert. Prenez au moins une photo du relevé et remplissez les champs le mieux possible. Vous aurez la bonne réponse
+        précédemment identifié par un expert. <b>Prenez au moins une photo </b>du relevé et remplissez les champs le mieux possible. Vous aurez la bonne réponse
         après avoir soumis votre identification
       </div>
     </v-ons-card>
@@ -78,7 +78,9 @@
           size="10"
           buttonClass="btn"
           :customStrings="{
-           upload: '<h1>Bummer!</h1>',
+           drag: 'Prendre photo',
+          change: 'Modifier photo', // Text only
+          remove: 'Supprimer photo', // Text only
           tap: 'Appuyer pour prendre une photo'
           }"
         ></picture-input>
