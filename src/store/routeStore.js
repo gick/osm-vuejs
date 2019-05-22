@@ -412,7 +412,7 @@ export default {
           state.differentGenus.length = 0
         },
         addKnowledgePoints(state,knowledgeResult){
-          state.knowledgeScore+=knowledgeResult.points
+          state.knowledgeScore+= extractKnowledgePoints(knowledgeResult.actions)
           state.knowledgeHistory.unshift(knowledgeResult)
         },
         setGamificationMode(state, mode) {
@@ -710,4 +710,22 @@ function updateDifferentSet(state, specie, genus) {
     res.genusAdded=true
   } 
   return res
+}
+
+function extractKnowledgePoints(actions) {
+  let score = 0
+  if (actions.includes("SAME_GENUS_PROPAGATION")) {
+    score += 0 // récupérer les points dans le JSON
+  }
+  if (actions.includes("SAME_SPECIE_PROPAGATION")) {
+    score += 0 // récupérer les points dans le JSON
+  }
+  if (actions.includes("SAME_COMMON_PROPAGATION")) {
+    score += 0 // récupérer les points dans le JSON
+  }
+  if (actions.includes("QUESTION")) {
+    score += 0 // récupérer les points dans le JSON
+  }
+
+  return score
 }

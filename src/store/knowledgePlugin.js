@@ -96,14 +96,14 @@ let knowledgePlugin = store => {
     store.subscribeAction((action, state) => {
         switch (action.type) {
             case 'releve/identification':
-                let score = 0
+                let actions = []
                 let result = compareObservation(action.payload, action.payload.identificationValue)
-                score += result.genus ? 10 : 0
-                score += result.specie ? 15 : 0
-                score += result.common ? 15 : 0
-                if (score) {
+                if (result.genus) actions += "SAME_GENUS_PROPAGATION"
+                if (result.specie) actions += "SAME_SPECIE_PROPAGATION"
+                if (result.common) actions += "SAME_COMMON_PROPAGATION"
+                if (actions.length != 0) {
                     store.commit('user/addKnowledgePoints', {
-                        points: score,
+                        actions: actions,
                         context: {
                             activity: 'identification',
                             details: result
@@ -114,7 +114,7 @@ let knowledgePlugin = store => {
 
             case 'releve/setNoTree':
                 store.commit('user/addKnowledgePoints', {
-                    points: 1,
+                    actions: ["QUESTION"],
                     context: {
                         activity: 'noTree'
                     }
