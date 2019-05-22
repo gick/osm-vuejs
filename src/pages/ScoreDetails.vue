@@ -89,14 +89,20 @@
 			      return "Espèce renseignée"
 			    case "COMPLETE_COMMON" :
 			      return "Nom commun renseigné"
+			     case "MODIFY_GENUS" :
+			      return "Genre modifié"
+			    case "MODIFY_SPECIE" :
+			      return "Espèce modifiée"
+			    case "MODIFY_COMMON" :
+			      return "Nom commun modifié"
 			    case "PHOTOGRAPH" :
 			      return "Prise de photo"
 			    case "VALIDATE" :
 			      return "Validation"
 			    case "SUCCESSFUL_ACTIVITY" :
 			      return "Activité réussie"
-			    case "IDENTIFY" :
-			      return "Identification"
+			    case "GPS" :
+			      return "Faire un relevé"
 			    default :
 			      return "Action non répertoriée"
 			  }

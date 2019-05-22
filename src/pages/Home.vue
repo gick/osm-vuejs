@@ -10,13 +10,13 @@
       </div>
     </v-ons-card>
 
-    <v-ons-card v-show="displayMission">
+    <v-ons-card v-show="$store.state.user.id">
       <div class="title">
         Mission en cours ( {{ indexActivite + 1}} / {{activities.length}} )
       </div>          
     </v-ons-card>
 
-    <v-card v-show="displayMission">
+    <v-card v-show="$store.state.user.id">
         <div v-for="item in activities">
 
           <v-ons-card v-if="(item.statut=='onGoing')">
@@ -77,7 +77,7 @@
 <script>
 import Progress from "./Progress.vue";
 import SimplePage from "./SimplePage.vue";
-import missions from "../missions.json";
+import mission from "../mission.json";
 
 function Activite(intitule, statut) {
     this.intitule = intitule;
@@ -87,7 +87,6 @@ function Activite(intitule, statut) {
 export default {
   data() {
     return {
-      activities: [],
       showDialog: false,
       totalSecondes : 0,
       missionDone: false
@@ -126,6 +125,7 @@ export default {
     },
     nbSuccessfulActivities() {
       var nbSuccessfulActivities = 0
+      if (!this.activities) return 0
       for (let i = 0; i < this.activities.length; i++) {
         if (this.activities[i].statut == 'done') {
           nbSuccessfulActivities++
@@ -133,8 +133,8 @@ export default {
       }
       return nbSuccessfulActivities
     },
-    displayMission() {
-      return this.$store.state.user.id && this.activities.length != 0
+    activities() {
+      return this.$store.state.user.activities
     }
   },
   watch : {
@@ -186,7 +186,10 @@ export default {
       this.$store.commit('commonData/setVerificationMode', false)
       this.$store.commit('commonData/setIdentificationMode', false)
       this.$store.commit('user/resetTime')
-      this.activities[this.indexActivite].statut = statut
+      this.$store.commit('user/setActivityStatus', {
+        statut: statut,
+        index: this.indexActivite 
+      })
       if (statut == 'done' && this.gamificationMode) {
         for (let i = 0; i < this.currentActivity.mechanics.length; i++) {
           //attribution des points
@@ -212,17 +215,15 @@ export default {
         }
       }
       if (this.indexActivite + 1 ==  this.currentMission.activities.length) {
-        this.activities.length = 0
         this.missionDone = true
-        /*this.newMission()*/
       } else {
         this.newActivity()
       }
     },
     newMission() {
-      this.$store.commit('user/setMission', missions.missions[0])
+      this.$store.commit('user/setMission', mission)
       this.$store.commit('user/setIndexActivite', -1)
-      this.activities = []
+      var activities = []
 
       for (let i = 0; i < this.currentMission.activities.length; i++) {
 
@@ -241,9 +242,10 @@ export default {
         var nbAction = this.currentMission.activities[i].endCondition[0].nbAction
         this.$store.commit('user/setGoal', nbAction)
 
-        this.activities.push(new Activite(instruction,"toDo"));
-        
+        activities.push(new Activite(instruction,"toDo"));      
       }
+
+      this.$store.commit('user/setActivities', activities)
 
       for (let i = 0; i < this.currentMission.mechanics.length; i++) {
         if (this.currentMission.mechanics[i].name == 'score') {
@@ -262,8 +264,7 @@ export default {
                 this.$store.commit('user/addTrophie', trophy)
             } 
           }
-      }
-
+      } 
       this.newActivity()
     },
 
@@ -292,15 +293,18 @@ export default {
         duration : duration
       })
 
-      if (this.currentMission.activities[this.indexActivite].activity.type == 'VERIFY') {
+      if (this.currentMission.activities[this.indexActivite].type == 'VERIFY') {
         this.$store.commit('commonData/setVerificationMode', true)
-      } else if (this.currentMission.activities[this.indexActivite].activity.type == 'IDENTIFY') {
+      } else if (this.currentMission.activities[this.indexActivite].type == 'IDENTIFY') {
         this.$store.commit('commonData/setIdentificationMode', true)
       }
 
       this.$store.commit('user/setGoal', nbAction)
       this.totalSecondes = totalSecondes
-      this.activities[this.indexActivite].statut = 'onGoing'
+      this.$store.commit('user/setActivityStatus', {
+        statut:'onGoing',
+        index: this.indexActivite
+      })
 
       if (totalSecondes) {
          let toast = this.$toasted.show("Une activité chronométrée vient de commencer !", { 

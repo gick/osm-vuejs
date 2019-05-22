@@ -1,7 +1,6 @@
 import {
   cpus
 } from "os";
-import missions from "../missions.json"
 var osmAuth = require("osm-auth");
 export default {
   modules: {
@@ -332,7 +331,6 @@ export default {
             root : true
           })
         }
-
       }
     },
 
@@ -381,9 +379,16 @@ export default {
           timer : null,
           startTime : -1,
           timeLeft : -1
-        }
+        },
+        activities: []
       },
       mutations: {
+        setActivities(state, activities) {
+          state.activities = activities
+        },
+        setActivityStatus(state, param) {
+          state.activities[param.index].statut = param.statut
+        },
         setCompletion(state, completion) {
           state.completion = completion;
         },
@@ -652,17 +657,17 @@ function updateCompletion(state, operation, releve) {
 
   var differentID = !(releve.osmId == releve.modifierId)
 
-  var type = state.activite.activity.type
+  var type = state.activite.type
       
   if (type == operation) {
     let {specieAdded, genusAdded} = updateDifferentSet(state, specie, genus)            
-    switch (state.activite.activity.object) {
+    switch (state.activite.object) {
       case 'NONE' :
         return true;
       case 'SPECIE' :
-        return (specie != null && state.activite.activity.specie.toUpperCase() == specie.toUpperCase())
+        return (specie != null && state.activite.specie.toUpperCase() == specie.toUpperCase())
       case 'GENUS' :
-        return (genus != null && state.activite.activity.genus.toUpperCase() == genus.toUpperCase())
+        return (genus != null && state.activite.genus.toUpperCase() == genus.toUpperCase())
       case 'DIFFERENTSPECIE' :
         return specieAdded
       case 'DIFFERENTGENUS' :
@@ -676,7 +681,7 @@ function updateCompletion(state, operation, releve) {
 function extractActions(releve, identification) {
   var actions = []
   if (identification) {
-    actions.push("IDENTIFY")
+    actions.push("GPS")
   }
   if (releve.specie) {
     actions.push("COMPLETE_SPECIE")
