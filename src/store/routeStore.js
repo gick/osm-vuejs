@@ -207,7 +207,7 @@ export default {
               })
             })
 
-          commit("user/pointsActions", ["VALIDATE"], {
+          commit("user/extractExplorationPoints", ["VALIDATE"], {
             root : true
           })
         },
@@ -229,7 +229,7 @@ export default {
                 root : true
               })
             })
-          commit("user/pointsActions", extractActions(newReleve, false), {
+          commit("user/extractExplorationPoints", extractActions(newReleve, false), {
             root : true
           })
         },
@@ -327,7 +327,7 @@ export default {
               }
             }
           })
-          commit('user/pointsActions', extractActions(releve, true), {
+          dispatch('user/extractExplorationPoints', extractActions(releve, true), {
             root : true
           })
         }
@@ -362,8 +362,8 @@ export default {
         formerId: null,
         notifProfil: 0,
         trophies: [],
-        journal: [],
-        score: 0,
+        explorationHistory: [],
+        explorationScore: 0,
         knowledgeScore:0,
         knowledgeHistory:[],
         actionsTransActivite: new Map(),
@@ -412,7 +412,7 @@ export default {
           state.differentGenus.length = 0
         },
         addKnowledgePoints(state,knowledgeResult){
-          state.knowledgeScore+= extractKnowledgePoints(knowledgeResult.actions)
+          state.knowledgeScore += knowledgeResult.points
           state.knowledgeHistory.unshift(knowledgeResult)
         },
         setGamificationMode(state, mode) {
@@ -424,29 +424,13 @@ export default {
         clearActionsTransActivite(state) {
           state.actionsTransActivite.clear()
         },
-        addPoints(state, nbPoint) {
+        addExplorationPoints(state, explorationResult) {
           if (state.gamificationMode) {
-            state.score += nbPoint
-          }
+            state.explorationHistory.unshift(explorationResult)
+            state.explorationScore += explorationResult.points
+          }     
         },
-        pointsActions(state, actions) {
-          if (state.gamificationMode) {
-            for (let i = 0; i < actions.length; i++) {
-              if (state.actionsTransActivite.has(actions[i])) {
-                var nbPoint = parseInt(state.actionsTransActivite.get(actions[i]))
-                var line = new Object()
-                line.action = actions[i]
-                line.nbPoint = nbPoint
-                state.journal.unshift(line)
-                state.score += nbPoint
-              }
-            }
-          } 
-        },
-        updateJournal(state, line) {
-          state.journal.unshift(line)
-        },
-        addTrophie(state, trophie) {
+        addTrophy(state, trophie) {
           for (let i = 0 ; i < state.trophies.length; i++) {
             if (state.trophies[i].name == trophie.name) return
           }
@@ -514,6 +498,36 @@ export default {
         }
       },
       actions: {
+        extractExplorationPoints({
+          commit, state
+        }, actions) {
+          if (state.gamificationMode) {
+            for (let i = 0; i < actions.length; i++) {
+              if (state.actionsTransActivite.has(actions[i])) {
+                var points = parseInt(state.actionsTransActivite.get(actions[i]))
+                commit('addExplorationPoints', {
+                  points:points,
+                  action:actions[i]
+                })
+              }
+            }
+          } 
+        },
+        extractKnowledgePoints({
+          commit, state
+        }, actions) {
+          if (state.gamificationMode) {
+            for (let i = 0; i < actions.length; i++) {
+              if (state.actionsTransActivite.has(actions[i])) {
+                var points = parseInt(state.actionsTransActivite.get(actions[i]))
+                commit('addKnowledgePoints', {
+                  points:points,
+                  action:actions[i]
+                })
+              }
+            }
+          } 
+        },
         logout({
           commit
         }) {
@@ -715,17 +729,30 @@ function updateDifferentSet(state, specie, genus) {
 function extractKnowledgePoints(actions) {
   let score = 0
   if (actions.includes("SAME_GENUS_PROPAGATION")) {
-    score += 0 // récupérer les points dans le JSON
+    score += 2 // récupérer les points dans le JSON
   }
   if (actions.includes("SAME_SPECIE_PROPAGATION")) {
-    score += 0 // récupérer les points dans le JSON
+    score += 4 // récupérer les points dans le JSON
   }
   if (actions.includes("SAME_COMMON_PROPAGATION")) {
-    score += 0 // récupérer les points dans le JSON
+    score += 4 // récupérer les points dans le JSON
+  }
+  if (actions.includes("IDENTIFIED_GENUS")) {
+    score += 10 // récupérer les points dans le JSON
+  }
+  if (actions.includes("IDENTIFIED_SPECIE")) {
+    score += 15 // récupérer les points dans le JSON
+  }
+  if (actions.includes("IDENTIFIED_COMMON")) {
+    score += 15 // récupérer les points dans le JSON
   }
   if (actions.includes("QUESTION")) {
-    score += 0 // récupérer les points dans le JSON
+    score += 1 // récupérer les points dans le JSON
+  }
+  if (actions.includes("USE_FOLIA")) {
+    score += 2 // récupérer les points dans le JSON
   }
 
+alert(JSON.stringify(actions))
   return score
 }

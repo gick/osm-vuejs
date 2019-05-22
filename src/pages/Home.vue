@@ -194,11 +194,11 @@ export default {
         for (let i = 0; i < this.currentActivity.mechanics.length; i++) {
           //attribution des points
           if (this.currentActivity.mechanics[i].name == 'score') {
-            var line = new Object()
-            line.nbPoint = this.currentActivity.mechanics[i].nbPoint
-            line.action = "SUCCESSFUL_ACTIVITY"
-            this.$store.commit('user/addPoints', line.nbPoint)
-            this.$store.commit('user/updateJournal', line)
+            points = this.currentActivity.mechanics[i].nbPoint
+            this.$store.commit('user/addExplorationPoints', {
+              points:points,
+              action:"SUCCESSFUL_ACTIVITY"
+            })
           //attribution des trophées
           } else if (this.currentActivity.mechanics[i].name == 'trophy') {  
             let name = this.currentActivity.mechanics[i].title
@@ -233,7 +233,7 @@ export default {
             trophy.path = this.currentMission.activities[i].mechanics[j].image
             trophy.name = this.currentMission.activities[i].mechanics[j].title
             trophy.obtenu = false
-            this.$store.commit('user/addTrophie', trophy)
+            this.$store.commit('user/addTrophy', trophy)
           } 
         }
 
@@ -255,13 +255,19 @@ export default {
             param.nbPoint = this.currentMission.mechanics[i].explorationPoints[j].nbPoint
             this.$store.commit('user/addActionTransActivite', param)
           }
+          for (let j = 0; j < this.currentMission.mechanics[i].knowledgePoints.length; j++) {
+            var param = new Object()
+            param.action = this.currentMission.mechanics[i].knowledgePoints[j].code
+            param.nbPoint = this.currentMission.mechanics[i].knowledgePoints[j].nbPoint
+            this.$store.commit('user/addActionTransActivite', param)
+          }
         } else if (this.currentMission.mechanics[i].name == 'trophy') {
             for (let j = 0 ; j < this.currentMission.mechanics[i].trophiesList.length; j++) {
                 var trophy = new Object()
                 trophy.path = this.currentMission.mechanics[i].trophiesList[j].image
                 trophy.name = this.currentMission.mechanics[i].trophiesList[j].title
                 trophy.obtenu = false
-                this.$store.commit('user/addTrophie', trophy)
+                this.$store.commit('user/addTrophy', trophy)
             } 
           }
       } 

@@ -19,13 +19,13 @@
     <v-ons-card>
     	<v-ons-list-header>Journal</v-ons-list-header>
     	<v-ons-list style="max-height:200px; overflow: auto">
-    		<v-ons-list-item v-for="line in journal">
+    		<v-ons-list-item v-for="item in journal">
     			<v-ons-row>
     				<v-ons-col>
-    					{{ renameAction(line.action) }}
+    					{{ getText(item.action) }}
     				</v-ons-col>
     				<v-ons-col style="text-align: right">
-    					{{ line.nbPoint }}
+    					{{ item.points }}
     				</v-ons-col>
     			</v-ons-row>  
     		</v-ons-list-item>
@@ -38,7 +38,7 @@
     		<v-ons-list-item v-for="action in actionsTransActivite.keys()">
     			<v-ons-row>
     				<v-ons-col>
-    					{{ renameAction(action)}}
+    					{{ getText(action)}}
     				</v-ons-col>
     				<v-ons-col style="text-align: right">
     					{{actionsTransActivite.get(action)}}
@@ -71,17 +71,17 @@
 		},
 		computed : {
 			journal() {
-				return this.$store.state.user.journal
+				return this.$store.state.user.explorationHistory
 			},
 			score() {
-      	return this.$store.state.user.score
+      	return this.$store.state.user.explorationScore
     	},
     	actionsTransActivite() {
     		return this.$store.state.user.actionsTransActivite
     	}
 		},
 		methods : {
-			renameAction(action) {
+			getText(action) {
 			  switch (action) {
 			    case "COMPLETE_GENUS" :
 			      return "Genre renseigné"

@@ -5,32 +5,71 @@
          "explorationPoints":[  
             {  
                "code":"GPS",
-               "nbPoint":5
+               "nbPoint":1
             },
             {  
                "code":"COMPLETE_GENUS",
-               "nbPoint":7
+               "nbPoint":3
             },
             {  
                "code":"COMPLETE_SPECIE",
-               "nbPoint":7
+               "nbPoint":6
             },
             {  
                "code":"COMPLETE_COMMON",
-               "nbPoint":7
+               "nbPoint":6
+            },
+            {  
+               "code":"MODIFY_GENUS",
+               "nbPoint":0
+            },
+            {  
+               "code":"MODIFY_SPECIE",
+               "nbPoint":0
+            },
+            {  
+               "code":"MODIFY_COMMON",
+               "nbPoint":0
             },
             {  
                "code":"PHOTOGRAPH",
-               "nbPoint":7
-            },
-            {  
-               "code":"VALIDATE",
-               "nbPoint":3
+               "nbPoint":2
             }
          ],
-         "knowlegdePoints":{  
-
-         }
+         "knowledgePoints":[
+         	{
+         		"code":"USE_FOLIA",
+         		"nbPoint":2
+         	},
+         	{
+         		"code":"SAME_GENUS_PROPAGATION",
+         		"nbPoint":2
+         	},
+         	{
+         		"code":"SAME_SPECIE_PROPAGATION",
+         		"nbPoint":4
+         	},
+         	{
+         		"code":"SAME_COMMON_PROPAGATION",
+         		"nbPoint":4
+         	},
+         	{
+         		"code":"IDENTIFIED_GENUS",
+         		"nbPoint":10
+         	},
+         	{
+         		"code":"IDENTIFIED_SPECIE",
+         		"nbPoint":15
+         	},
+         	{
+         		"code":"IDENTIFIED_COMMON",
+         		"nbPoint":15
+         	},
+         	{
+         		"code":"QUESTION",
+         		"nbPoint":1
+         	}
+         ]
       },
       {  
          "name":"trophy",
@@ -150,14 +189,6 @@
             {  
                "name":"score",
                "nbPoint":10
-            },
-            {  
-               "name":"trophy",
-               "title":"Activité 1 faite",
-               "image":"trophee1.jpg",
-               "condition":{  
-                  "statutMission":"done"
-               }
             }
          ],
          "endCondition":[  
@@ -177,14 +208,6 @@
             {  
                "name":"score",
                "nbPoint":12
-            },
-            {  
-               "name":"trophy",
-               "title":"Activité 2 faite",
-               "image":"trophee2.jpg",
-               "condition":{  
-                  "statutMission":"done"
-               }
             }
          ],
          "endCondition":[  
@@ -204,14 +227,6 @@
             {  
                "name":"score",
                "nbPoint":12
-            },
-            {  
-               "name":"trophy",
-               "title":"Activité 3 faite",
-               "image":"trophee3.jpg",
-               "condition":{  
-                  "statutMission":"done"
-               }
             }
          ],
          "endCondition":[  
@@ -231,14 +246,6 @@
             {  
                "name":"score",
                "nbPoint":12
-            },
-            {  
-               "name":"trophy",
-               "title":"Activité 3 faite",
-               "image":"trophee3.jpg",
-               "condition":{  
-                  "statutMission":"done"
-               }
             }
          ],
          "endCondition":[  
@@ -262,14 +269,6 @@
             {  
                "name":"score",
                "nbPoint":12
-            },
-            {  
-               "name":"trophy",
-               "title":"Activité 3 faite",
-               "image":"trophee3.jpg",
-               "condition":{  
-                  "statutMission":"done"
-               }
             }
          ],
          "endCondition":[  

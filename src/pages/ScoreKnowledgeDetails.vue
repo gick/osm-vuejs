@@ -22,7 +22,7 @@
     		<v-ons-list-item v-for="(item,index) in knowledgeHistory" v-bind:key="index+'history'">
     			<v-ons-row>
     				<v-ons-col>
-    					{{ getText(item.context) }}
+    					{{ getText(item.action) }}
     				</v-ons-col>
     				<v-ons-col style="text-align: right">
     					{{ item.points }}
@@ -71,17 +71,24 @@
     	}
 		},
 		methods : {
-			getText(item){
-				switch(item.activity){
-					case 'identification' :
-						return 'Identification réussie'
-					case 'folia' :
+			getText(action){
+				switch(action){
+					case 'IDENTIFIED_GENUS' :
+						return 'Genre correctement identifié'
+                    case 'IDENTIFIED_SPECIE' :
+                        return 'Espèce correctement identifiée'
+                    case 'IDENTIFIED_COMMON' :
+                        return 'Nom commun correctement identifié'
+					case 'USE_FOLIA' :
 						return 'Utilisation de Folia'
-					case 'noTree' :
+					case 'QUESTION' :
 						return 'Arbre déclaré douteux'
-					case 'extConfirmation' :
-						return 'Confirmation de votre relevé'
-
+					case 'SAME_GENUS_PROPAGATION' :
+						return 'Confirmation du genre de votre relevé'
+                    case 'SAME_SPECIE_PROPAGATION' :
+                        return 'Confirmation de l\'espèce de votre relevé'
+                    case 'SAME_COMMON_PROPAGATION' :
+                        return 'Confirmation du nom commun de votre relevé'
 				}
 			}
 		}
