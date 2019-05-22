@@ -3,6 +3,7 @@ let backup=(field,value)=>{
 }
 let restoreSession=(oldState,state)=>{
     delete oldState._id
+    delete oldState.__v
     _.forOwn(oldState,(value,key)=>{
         if(value){
             if(!key.includes('_')){ //restoring state/user module
