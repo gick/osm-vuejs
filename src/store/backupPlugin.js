@@ -20,10 +20,10 @@ let backupPlugin = store => {
     store.subscribe((mutation,state)=>{
         let userId=state.user.id
         switch(mutation.type){
-            case 'user/addTrophie' :
+            case 'user/addTrophy' :
                 backup('trophies',state.user.trophies)
                 break
-            case 'user/winThrophy' :
+            case 'user/winTrophy' :
                 backup('trophies',state.user.trophies)
                 break
             case 'user/setCompletion' :

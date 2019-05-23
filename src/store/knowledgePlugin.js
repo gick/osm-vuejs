@@ -35,7 +35,7 @@ let getLastModif=(history,uid)=>{
     return index
 }
 let testValidation = (obs, uid) => {
-    let points = 0
+    var actions = []
     let toTest = _.cloneDeep(obs)
     let history = toTest.prev
     delete toTest.prev
@@ -43,52 +43,47 @@ let testValidation = (obs, uid) => {
     let index = getLastModif(history, uid)
     if (index != -1) {
         let result = compareObservation(toTest, history[index])
-        points += result.genus ? 2 : 0
-        points += result.specie ? 4 : 0
-        points += result.common ? 4 : 0
-        return {points:points,context:{activity:'extConfirmation',details:{obs:toTest,result:result}}}
+        if (result.genus) actions.push("sameGenusPropagation")
+        if (result.specie) actions.push("sameSpeciePropagation")
+        if (result.common) actions.push("sameCommonPropagation")
+        return {actions:actions,context:{activity:'extConfirmation',details:{obs:toTest,result:result}}}
     }
-    return {points:0,context:{activity:'extConfirmation',details:{}}}
+    return {actions:[],context:{activity:'extConfirmation',details:{}}}
 
 }
 let testModification = (obs, uid) => {
-    let points = 0
+    var actions = []
     let toTest = _.cloneDeep(obs)
     let history = toTest.prev
     let index = getLastModif(history, uid)
     if (index != -1) {
         let result = compareObservation(toTest, history[index])
-        points += result.genus ? 2 : 0
-        points += result.specie ? 4 : 0
-        points += result.common ? 4 : 0
-        return {points:points,context:{activity:'extConfirmation',details:{obs:toTest,result:result}}}
+        if (result.genus) actions.push("sameGenusPropagation")
+        if (result.specie) actions.push("sameSpeciePropagation")
+        if (result.common) actions.push("sameCommonPropagation")
+        return {actions:actions,context:{activity:'extConfirmation',details:{obs:toTest,result:result}}}
     }
-    return {points:0,context:{activity:'extConfirmation',details:{}}}
+    return {actions:[],context:{activity:'extConfirmation',details:{}}}
 }
 
 let knowledgePlugin = store => {
     store.subscribe((mutation, state) => {
         switch (mutation.type) {
             case 'user/startFolia':
-                store.commit('user/addKnowledgePoints', {
-                    points: 2,
-                    context: {
-                        activity: 'folia'
-                    }
-                })
+                store.dispatch('user/extractKnowledgePoints', ["useFolia"])
                 break;
             case 'releve/validateFromOutside':
                 var result = testValidation(mutation.payload, userId)
-                if (result.points) {
-                    store.commit('user/addKnowledgePoints', result)
+                if (result.actions.length != 0) {
+                    store.dispatch('user/extractKnowledgePoints', result.actions)
                 }
                 break;
             case 'releve/modifyFromOutside':                
                 var userId = store.state.user.id
                 var result = testModification(mutation.payload, userId)
-              if (result.points) {
-                 store.commit('user/addKnowledgePoints', result)
-              }
+                if (result.actions.length != 0) {
+                    store.dispatch('user/extractKnowledgePoints', result.actions)
+                }
               break;
 
         }
@@ -96,29 +91,18 @@ let knowledgePlugin = store => {
     store.subscribeAction((action, state) => {
         switch (action.type) {
             case 'releve/identification':
-                let score = 0
+                let actions = []
                 let result = compareObservation(action.payload, action.payload.identificationValue)
-                score += result.genus ? 10 : 0
-                score += result.specie ? 15 : 0
-                score += result.common ? 15 : 0
-                if (score) {
-                    store.commit('user/addKnowledgePoints', {
-                        points: score,
-                        context: {
-                            activity: 'identification',
-                            details: result
-                        }
-                    })
+                if (result.genus) actions.push("identifiedGenus")
+                if (result.specie) actions.push("identifiedSpecie")
+                if (result.common) actions.push("identifiedCommon")
+                if (actions.length != 0) {
+                    store.dispatch('user/extractKnowledgePoints', actions)
                 }
                 break
 
             case 'releve/setNoTree':
-                store.commit('user/addKnowledgePoints', {
-                    points: 1,
-                    context: {
-                        activity: 'noTree'
-                    }
-                })
+                store.dispatch('user/extractKnowledgePoints', ["question"])
                 break
         }
     })
