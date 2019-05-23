@@ -231,8 +231,8 @@ export default {
       if (this.gamificationMode) {
         var profil = 
          {
-          label: "Profil",
-          icon: "ion-person",
+          label: "Score",
+          icon: "ion-trophy",
           page: Profile,
           theme: red,
           badge:

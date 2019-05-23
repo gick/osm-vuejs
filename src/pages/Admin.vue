@@ -23,7 +23,7 @@
           </div>
         </v-ons-list-item>
         <v-ons-list-item>
-          <div class="center">Mode vérification des identification expertes</div>
+          <div class="center">Mode vérification des identifications expertes</div>
           <div class="right">
             <v-ons-switch v-model="$store.state.commonData.identification"></v-ons-switch>
           </div>

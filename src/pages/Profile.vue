@@ -41,7 +41,7 @@
 
 <script>
 
-import ScoreDetails from "./ScoreDetails.vue"
+import ScoreExplorationDetails from "./ScoreExplorationDetails.vue"
 import ScoreKnowledgeDetails from "./ScoreKnowledgeDetails.vue"
 import TrophiesDetails from "./TrophiesDetails.vue"
 
@@ -53,7 +53,7 @@ export default {
   },
   computed : {
   	score() {
-      return this.$store.state.user.score
+      return this.$store.state.user.explorationScore
     },
     username() {
       return this.$store.state.user.name
@@ -76,7 +76,7 @@ export default {
   methods : {
   	displayScoreDetails() {
   		this.$store.commit("navigator/push", {
-        extends: ScoreDetails  
+        extends: ScoreExplorationDetails  
       });
 		},
 		displayKnowledgeDetails() {

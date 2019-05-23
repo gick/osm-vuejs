@@ -17,15 +17,15 @@
     </v-ons-card>
    
     <v-ons-card>
-    	<v-ons-list-header>Journal</v-ons-list-header>
+    	<v-ons-list-header>Points acquis</v-ons-list-header>
     	<v-ons-list style="max-height:200px; overflow: auto">
-    		<v-ons-list-item v-for="line in journal">
+    		<v-ons-list-item v-for="item in journal">
     			<v-ons-row>
     				<v-ons-col>
-    					{{ renameAction(line.action) }}
+    					{{ getText(item.action) }}
     				</v-ons-col>
     				<v-ons-col style="text-align: right">
-    					{{ line.nbPoint }}
+    					{{ item.points }}
     				</v-ons-col>
     			</v-ons-row>  
     		</v-ons-list-item>
@@ -35,29 +35,20 @@
     <v-ons-card>
     	<v-ons-list-header>Comment obtenir des points ?</v-ons-list-header>
     	<v-ons-list>
-    		<v-ons-list-item v-for="action in actionsTransActivite.keys()">
+    		<v-ons-list-item v-for="(item,index) in explorationRules" v-bind:key='index + "rules"'>
     			<v-ons-row>
     				<v-ons-col>
-    					{{ renameAction(action)}}
+    					{{ item.text}}
     				</v-ons-col>
     				<v-ons-col style="text-align: right">
-    					{{actionsTransActivite.get(action)}}
-    				</v-ons-col>	 
-    			</v-ons-row>
-    		</v-ons-list-item>
-    		<v-ons-list-item>
-    			<v-ons-row>
-    				<v-ons-col>
-    					Activité réussie
-    				</v-ons-col>
-    				<v-ons-col style="text-align: right">
-    					?
+    					{{item.points}}
     				</v-ons-col>	 
     			</v-ons-row>
     		</v-ons-list-item>
     	</v-ons-list>
     </v-ons-card>
-	</v-ons-page>
+
+  </v-ons-page>
 
 
 </template>
@@ -71,34 +62,38 @@
 		},
 		computed : {
 			journal() {
-				return this.$store.state.user.journal
+				return this.$store.state.user.explorationHistory
 			},
 			score() {
-      	return this.$store.state.user.score
+      	return this.$store.state.user.explorationScore
     	},
-    	actionsTransActivite() {
-    		return this.$store.state.user.actionsTransActivite
-    	}
+    	explorationRules() {
+				return this.$store.state.commonData.explorationRules
+			},
 		},
 		methods : {
-			renameAction(action) {
+			getText(action) {
 			  switch (action) {
-			    case "COMPLETE_GENUS" :
+			    case "completeGenus" :
 			      return "Genre renseigné"
-			    case "COMPLETE_SPECIE" :
+			    case "completeSpecie" :
 			      return "Espèce renseignée"
-			    case "COMPLETE_COMMON" :
+			    case "completeCommon" :
 			      return "Nom commun renseigné"
-			    case "PHOTOGRAPH" :
+			     case "modifyGenus" :
+			      return "Genre modifié"
+			    case "modifySpecie" :
+			      return "Espèce modifiée"
+			    case "modifyCommon" :
+			      return "Nom commun modifié"
+			    case "photograph" :
 			      return "Prise de photo"
-			    case "VALIDATE" :
+			    case "validate" :
 			      return "Validation"
-			    case "SUCCESSFUL_ACTIVITY" :
+			    case "successfulActivity" :
 			      return "Activité réussie"
-			    case "IDENTIFY" :
-			      return "Identification"
-			    default :
-			      return "Action non répertoriée"
+			    case "gps" :
+			      return "Faire un relevé"
 			  }
 			}
 		}

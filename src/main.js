@@ -26,7 +26,6 @@ import vSelect from 'vue-select'
 // import * as OnsenComponents from './onsen-components'; // For ESM
 import storeLike from './store/routeStore';
 import CustomToolbar from './partials/CustomToolbar.vue';
-import Countdown from './partials/Countdown.vue';
 import AppNavigator from './AppNavigator.vue';
 import 'vue-select/dist/vue-select.css';
 import backupPlugin from './store/backupPlugin'
@@ -50,6 +49,7 @@ Vue.use(VueLodash)
 Vue.use(Vuex);
 Vue.use(VueOnsen);
 Vue.use(BootstrapVue)
+Vue.use(require('vue-moment'));
 window.addEventListener("hashchange", function(){
   console.log("Hash changed to", window.location.hash);
     window.location.hash = "#albiziapp"
@@ -61,7 +61,6 @@ window.addEventListener("hashchange", function(){
 Vue.component('custom-toolbar', CustomToolbar); // Common toolbar
 Vue.component('b-progress', BProgress);
 Vue.component('b-progress-bar', BProgressBar);
-Vue.component('countdown', Countdown);
 
 import Progress from 'vue-multiple-progress'
 Vue.component('VmProgress', Progress)
