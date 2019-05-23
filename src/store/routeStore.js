@@ -98,6 +98,7 @@ export default {
       mutations: {
         push(state, page) {
           state.stack.push(page);
+          console.log(page)
         },
         pop(state) {
           if (state.stack.length > 1) {

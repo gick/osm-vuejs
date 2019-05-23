@@ -7,8 +7,6 @@
         <div class="content">
           <p>Prenez une photo de feuille puis réaliser un tracé à l'intérieur de la feuille</p>
           <FileUpload @image="setImage"></FileUpload>
-          <v-ons-button :disabled="(foliaStarted || !draw)" @click="sendImages">Identifier</v-ons-button>
-          <v-ons-button @click="restart" v-if="foliaResult.length">Nouvelle identification</v-ons-button>
         </div>
       </v-ons-card>
       <v-ons-card v-if="foliaStarted">
@@ -34,7 +32,7 @@
             ref="image"
             :src="imageData"
             @load="imageLoaded"
-            style="max-height: 100vh;max-width: 100vw;"
+            style="max-height: 60vh;"
           >
           <VueSignaturePad
             :options="{dotSize:5,minWidth:15,maxWidth:15,penColor:'rgb(0,125,0)',onBegin}"
@@ -50,8 +48,6 @@
           @click="sendImages"
         >Valider</v-ons-button>
       </v-ons-modal>
-
-      <div style="position:relative"></div>
     </div>
   </v-ons-page>
 </template>
@@ -182,7 +178,7 @@ export default {
             console.log(e);
           });
           source.addEventListener("error", function(e) {
-           // this.handleError();
+            this.handleError();
             source.close();
           }.bind(this));
 
@@ -208,6 +204,7 @@ export default {
       });
     },
     setImage(imageData) {
+      this.restart()
       this.imageData = imageData;
     },
   }
