@@ -4,70 +4,86 @@
          "name":"score",
          "explorationPoints":[  
             {  
-               "code":"GPS",
+               "code":"gps",
+               "text":"Faire un relevé",
                "nbPoint":1
             },
             {  
-               "code":"COMPLETE_GENUS",
+               "code":"photograph",
+               "text":"Photographier un arbre",
+               "nbPoint":2
+            },
+            {  
+               "code":"completeGenus",
+               "text":"Compléter le champ 'genre' d'un relevé",
                "nbPoint":3
             },
             {  
-               "code":"COMPLETE_SPECIE",
+               "code":"completeSpecie",
+               "text":"Compléter le champ 'espèce' d'un relevé",
                "nbPoint":6
             },
             {  
-               "code":"COMPLETE_COMMON",
+               "code":"completeCommon",
+               "text":"Compléter le champ 'nom commun' d'un relevé",
                "nbPoint":6
             },
             {  
-               "code":"MODIFY_GENUS",
+               "code":"modifyGenus",
+               "text":"Modifier le champ 'genre' d'un relevé",
                "nbPoint":0
             },
             {  
-               "code":"MODIFY_SPECIE",
+               "code":"modifySpecie",
+               "text":"Modifier le champ 'espèce' d'un relevé",
                "nbPoint":0
             },
             {  
-               "code":"MODIFY_COMMON",
+               "code":"modifyCommon",
+               "text":"Modifier le champ 'nom commun' d'un relevé",
                "nbPoint":0
-            },
-            {  
-               "code":"PHOTOGRAPH",
-               "nbPoint":2
-            }
+            }   
          ],
          "knowledgePoints":[
          	{
-         		"code":"USE_FOLIA",
+         		"code":"question",
+         		"text":"Déclarer un arbre douteux",
+         		"nbPoint":1
+         	},
+         	{
+         		"code":"useFolia",
+         		"text":"Utiliser Folia",
          		"nbPoint":2
          	},
          	{
-         		"code":"SAME_GENUS_PROPAGATION",
+         		"code":"sameGenusPropagation",
+         		"text":"Validation d'un de vos relevés avec le même genre",
          		"nbPoint":2
          	},
          	{
-         		"code":"SAME_SPECIE_PROPAGATION",
+         		"code":"sameSpeciePropagation",
+         		"text":"Validation d'un de vos relevés avec la même espèce",
          		"nbPoint":4
          	},
          	{
-         		"code":"SAME_COMMON_PROPAGATION",
+         		"code":"sameCommonPropagation",
+         		"text":"Validation d'un de vos relevés avec le même nom commun",
          		"nbPoint":4
          	},
          	{
-         		"code":"IDENTIFIED_GENUS",
+         		"code":"identifiedGenus",
+         		"text":"Genre correctement identifié",
          		"nbPoint":10
          	},
          	{
-         		"code":"IDENTIFIED_SPECIE",
+         		"code":"identifiedSpecie",
+         		"text":"Espèce correctement identifiée",
          		"nbPoint":15
          	},
          	{
-         		"code":"IDENTIFIED_COMMON",
+         		"code":"identifiedCommon",
+         		"text":"Nom commun correctement identifié",
          		"nbPoint":15
-         	},
-         	{
-         		"code":"QUESTION",
-         		"nbPoint":1
          	}
          ]
       },

@@ -43,9 +43,9 @@ let testValidation = (obs, uid) => {
     let index = getLastModif(history, uid)
     if (index != -1) {
         let result = compareObservation(toTest, history[index])
-        if (result.genus) actions.push("SAME_GENUS_PROPAGATION")
-        if (result.specie) actions.push("SAME_SPECIE_PROPAGATION")
-        if (result.common) actions.push("SAME_COMMON_PROPAGATION")
+        if (result.genus) actions.push("sameGenusPropagation")
+        if (result.specie) actions.push("sameSpeciePropagation")
+        if (result.common) actions.push("sameCommonPropagation")
         return {actions:actions,context:{activity:'extConfirmation',details:{obs:toTest,result:result}}}
     }
     return {actions:[],context:{activity:'extConfirmation',details:{}}}
@@ -58,9 +58,9 @@ let testModification = (obs, uid) => {
     let index = getLastModif(history, uid)
     if (index != -1) {
         let result = compareObservation(toTest, history[index])
-        if (result.genus) actions.push("SAME_GENUS_PROPAGATION")
-        if (result.specie) actions.push("SAME_SPECIE_PROPAGATION")
-        if (result.common) actions.push("SAME_COMMON_PROPAGATION")
+        if (result.genus) actions.push("sameGenusPropagation")
+        if (result.specie) actions.push("sameSpeciePropagation")
+        if (result.common) actions.push("sameCommonPropagation")
         return {actions:actions,context:{activity:'extConfirmation',details:{obs:toTest,result:result}}}
     }
     return {actions:[],context:{activity:'extConfirmation',details:{}}}
@@ -70,7 +70,7 @@ let knowledgePlugin = store => {
     store.subscribe((mutation, state) => {
         switch (mutation.type) {
             case 'user/startFolia':
-                store.dispatch('user/extractKnowledgePoints', ["USE_FOLIA"])
+                store.dispatch('user/extractKnowledgePoints', ["useFolia"])
                 break;
             case 'releve/validateFromOutside':
                 var result = testValidation(mutation.payload, userId)
@@ -93,16 +93,16 @@ let knowledgePlugin = store => {
             case 'releve/identification':
                 let actions = []
                 let result = compareObservation(action.payload, action.payload.identificationValue)
-                if (result.genus) actions.push("IDENTIFIED_GENUS")
-                if (result.specie) actions.push("IDENTIFIED_SPECIE")
-                if (result.common) actions.push("IDENTIFIED_COMMON")
+                if (result.genus) actions.push("identifiedGenus")
+                if (result.specie) actions.push("identifiedSpecie")
+                if (result.common) actions.push("identifiedCommon")
                 if (actions.length != 0) {
                     store.dispatch('user/extractKnowledgePoints', actions)
                 }
                 break
 
             case 'releve/setNoTree':
-                store.dispatch('user/extractKnowledgePoints', ["QUESTION"])
+                store.dispatch('user/extractKnowledgePoints', ["question"])
                 break
         }
     })

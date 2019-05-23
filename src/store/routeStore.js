@@ -15,15 +15,8 @@ export default {
           'Peu confiant',
           'Confiant',
         ],
-        knowledgeRules:[
-          {text:'Identifier correctement un genre', points:10},
-          {text:'Identifier correctement une espèce', points:15},
-          {text:'Identifier correctement un nom vernaculaire', points:15},
-          {text:'Confirmation d\'un relevé par un autre joueur', points:4},
-          {text:'Utiliser Folia', points:2},
-          {text:'Déclarer un arbre douteux', points:1},
-        
-        ]
+        knowledgeRules:[],
+        explorationRules:[]
       },
       mutations: {
         setVerificationMode(state, mode) {
@@ -31,6 +24,12 @@ export default {
         },
         setIdentificationMode(state, mode) {
           state.identification = mode
+        },
+        addKnowledgeRule(state, rule) {
+          state.knowledgeRules.push(rule)
+        },
+        addExplorationRule(state, rule) {
+          state.explorationRules.push(rule)
         }
       }
     },
@@ -190,7 +189,8 @@ export default {
       },
       actions: {
         validateObservation({
-          commit
+          commit,
+          dispatch
         }, releve) {
           axios.defaults.withCredentials = true
 
@@ -207,13 +207,14 @@ export default {
               })
             })
 
-          commit("user/extractExplorationPoints", ["VALIDATE"], {
+          dispatch("user/extractExplorationPoints", ["validate"], {
             root : true
           })
         },
         modifyObservation({
           commit,
-          state
+          state,
+          dispatch
         }, newReleve) {
           axios.defaults.withCredentials = true
           axios.post('/api/modifyObservation', {
@@ -228,10 +229,10 @@ export default {
               }, {
                 root : true
               })
+              dispatch("user/extractExplorationPoints", extractActions(state.releves[index], "verify"), {
+                root : true
+              })
             })
-          commit("user/extractExplorationPoints", extractActions(newReleve, false), {
-            root : true
-          })
         },
         setNoTree({
           commit
@@ -327,7 +328,7 @@ export default {
               }
             }
           })
-          dispatch('user/extractExplorationPoints', extractActions(releve, true), {
+          dispatch('user/extractExplorationPoints', extractActions(releve, "inventory"), {
             root : true
           })
         }
@@ -692,23 +693,27 @@ function updateCompletion(state, operation, releve) {
     }
 }
 
-function extractActions(releve, identification) {
+function extractActions(releve, operation) {
   var actions = []
-  if (identification) {
-    actions.push("GPS")
-  }
-  if (releve.specie) {
-    actions.push("COMPLETE_SPECIE")
-  }
-  if (releve.genus) {
-    actions.push("COMPLETE_GENUS")
-  }
-  if (releve.common) {
-    actions.push("COMPLETE_COMMON")
-  }
-  if (releve.image) {
-    actions.push("PHOTOGRAPH")
-  }
+  switch(operation) {
+    case "inventory" : 
+      actions.push("gps")
+      if (releve.specie) actions.push("completeSpecie")
+      if (releve.genus) actions.push("completeGenus")
+      if (releve.common) actions.push("completeCommon")
+      if (releve.image) actions.push("photograph")
+      break
+    case "verify" :
+      var prev = releve.prev.splice(-1)[0]
+      if (releve.specie != prev.specie && prev.specie) actions.push("modifySpecie")
+        else if (releve.specie && !prev.specie) actions.push("completeSpecie")
+      if (releve.genus != prev.genus && prev.genus) actions.push("modifyGenus")
+        else if (releve.genus && !prev.genus) actions.push("completeGenus")
+      if (releve.common != prev.common && prev.common) actions.push("modifyCommon")
+        else if (releve.common && !prev.common) actions.push("completeCommon")
+      if (releve.image != prev.image) actions.push("photograph")
+      break
+  } 
   return actions
 }
 
@@ -724,35 +729,4 @@ function updateDifferentSet(state, specie, genus) {
     res.genusAdded=true
   } 
   return res
-}
-
-function extractKnowledgePoints(actions) {
-  let score = 0
-  if (actions.includes("SAME_GENUS_PROPAGATION")) {
-    score += 2 // récupérer les points dans le JSON
-  }
-  if (actions.includes("SAME_SPECIE_PROPAGATION")) {
-    score += 4 // récupérer les points dans le JSON
-  }
-  if (actions.includes("SAME_COMMON_PROPAGATION")) {
-    score += 4 // récupérer les points dans le JSON
-  }
-  if (actions.includes("IDENTIFIED_GENUS")) {
-    score += 10 // récupérer les points dans le JSON
-  }
-  if (actions.includes("IDENTIFIED_SPECIE")) {
-    score += 15 // récupérer les points dans le JSON
-  }
-  if (actions.includes("IDENTIFIED_COMMON")) {
-    score += 15 // récupérer les points dans le JSON
-  }
-  if (actions.includes("QUESTION")) {
-    score += 1 // récupérer les points dans le JSON
-  }
-  if (actions.includes("USE_FOLIA")) {
-    score += 2 // récupérer les points dans le JSON
-  }
-
-alert(JSON.stringify(actions))
-  return score
 }

@@ -73,21 +73,21 @@
 		methods : {
 			getText(action){
 				switch(action){
-					case 'IDENTIFIED_GENUS' :
+					case 'identifiedGenus' :
 						return 'Genre correctement identifié'
-                    case 'IDENTIFIED_SPECIE' :
+                    case 'identifiedSpecie' :
                         return 'Espèce correctement identifiée'
-                    case 'IDENTIFIED_COMMON' :
+                    case 'identifiedCommon' :
                         return 'Nom commun correctement identifié'
-					case 'USE_FOLIA' :
+					case 'useFolia' :
 						return 'Utilisation de Folia'
-					case 'QUESTION' :
+					case 'question' :
 						return 'Arbre déclaré douteux'
-					case 'SAME_GENUS_PROPAGATION' :
+					case 'sameGenusPropagation' :
 						return 'Confirmation du genre de votre relevé'
-                    case 'SAME_SPECIE_PROPAGATION' :
+                    case 'sameSpeciePropagation' :
                         return 'Confirmation de l\'espèce de votre relevé'
-                    case 'SAME_COMMON_PROPAGATION' :
+                    case 'sameCommonPropagation' :
                         return 'Confirmation du nom commun de votre relevé'
 				}
 			}
