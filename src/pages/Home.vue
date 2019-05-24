@@ -93,7 +93,6 @@ export default {
     };
   },
   mounted() {
-    this.newMission();
   },
   computed: {
     gamificationMode() {
@@ -102,6 +101,10 @@ export default {
     completion() {
       return this.$store.state.user.completion;
     },
+    uid() {
+      return this.$store.state.user.id;
+    },
+
     goal() {
       return this.$store.state.user.goal;
     },
@@ -123,6 +126,10 @@ export default {
     timeLeft() {
       return this.$store.state.user.time.timeLeft
     },
+    backup(){
+        return this.$store.state.user.sessionBackup
+    }
+    ,
     nbSuccessfulActivities() {
       var nbSuccessfulActivities = 0
       if (!this.activities) return 0
@@ -138,6 +145,22 @@ export default {
     }
   },
   watch : {
+    'backup':{
+     handler:function(val){ if(val && val.mission){
+       // this.$store.commit('user/restoreBackup')
+      }}
+
+    },
+    'uid':{
+      handler(){
+        if(this.backup && this.backup.mission){
+          this.$store.commit('user/restoreBackup')
+          return
+        }
+         this.newMission();
+
+      }
+    },
      'completion': {
         handler: function(newValue, oldValue){
           if (newValue == this.goal)
@@ -183,6 +206,7 @@ export default {
       });
     },
     activityEnd(statut) {
+      let points=0
       this.$store.commit('commonData/setVerificationMode', false)
       this.$store.commit('commonData/setIdentificationMode', false)
       this.$store.commit('user/resetTime')
@@ -284,7 +308,7 @@ export default {
                 this.$store.commit('user/addTrophy', trophy)
             } 
           }
-      } 
+      }
       this.newActivity()
     },
 
@@ -334,7 +358,6 @@ export default {
                 icon : "clock"
           });
       }
-      
     },
     tropheeDejaGagne(trophyName) {
       var res = false

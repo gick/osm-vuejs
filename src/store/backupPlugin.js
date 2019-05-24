@@ -7,7 +7,13 @@ let restoreSession=(oldState,state)=>{
     _.forOwn(oldState,(value,key)=>{
         if(value){
             if(!key.includes('_')){ //restoring state/user module
-                state.user[key]=value
+                if(key=='actionsTransActivite'){
+                    _.forOwn(value,(mapVal,mapKey)=>{
+                        state.user.actionsTransActivite.set(mapKey,mapVal)
+                    })
+                }
+                else{
+                state.user[key]=value}
             } else 
             {
             let [namespace,property]=key.split('_')
@@ -26,18 +32,25 @@ let backupPlugin = store => {
             case 'user/winTrophy' :
                 backup('trophies',state.user.trophies)
                 break
+            case 'user/addActionTransActivite':
+                backup('actionsTransActivite',state.user.actionsTransActivite)
+                 break
+            case 'user/updateStatus':
+                backup('status',state.user.status)
+                break
             case 'user/setCompletion' :
                 backup('completion',state.user.completion)
                 break
-            case 'user/addPoints' :
-                backup('score',state.user.score)
+            case 'user/addExplorationPoints' :
+                backup('explorationScore',state.user.explorationScore)
+                backup('explorationHistory',state.user.explorationHistory)
                 break
-            case 'user/pointsActions':
-                backup('score',state.user.score)
-                backup('journal',state.user.journal)
+            case 'user/setActivities' :
+                backup('activities',state.user.activities)
+                console.log(state.user.activities)
                 break
-            case 'user/updateJournal' :
-                backup('journal',state.user.journal)
+            case 'user/setActivityStatus' :
+                backup('activities',state.user.activities)
                 break
             case 'user/addKnowledgePoints' :
                   backup('knowledgeHistory',state.user.knowledgeHistory)
@@ -46,20 +59,12 @@ let backupPlugin = store => {
             case 'user/gamificationMode':
                 backup('gamificationMode',state.user.gamificationMode)
                 break
-            case 'user/add':
-                backup('completion',state.user.completion)
-                backup('differentSpecie',state.user.differentSpecie)
-                backup('differentGenus',state.user.differentGenus)
-                break    
-            case 'user/modify':
+            case 'user/updateProgression':
                 backup('completion',state.user.completion)
                 backup('differentSpecie',state.user.differentSpecie)
                 backup('differentGenus',state.user.differentGenus)
                 break    
             case 'user/identification':
-                backup('completion',state.user.completion)
-                break
-            case 'user/validate':
                 backup('completion',state.user.completion)
                 break
             case 'user/clearSets':
@@ -78,8 +83,8 @@ let backupPlugin = store => {
             case 'user/setActivite':
                 backup('activite',state.user.activite)
                 break
-            case 'user/restore' :
-                restoreSession(mutation.payload,state)
+            case 'user/restoreBackup' :
+                restoreSession(state.user.sessionBackup,state)
                 break
             case 'commonData/setVerificationMode' :
                 backup('commonData_verification',state.commonData.verification)

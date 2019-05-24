@@ -372,6 +372,8 @@ export default {
         gamificationMode: true,
         differentSpecie: new Array(),
         differentGenus: new Array(),
+        sessionBackup:{},
+        status:[],
         mission: null,
         activite: null,
         indexActivite: 0,
@@ -385,6 +387,9 @@ export default {
         activities: []
       },
       mutations: {
+        updateStatus(state,status){
+          state.status=status
+        },
         setActivities(state, activities) {
           state.activities = activities
         },
@@ -393,6 +398,9 @@ export default {
         },
         setCompletion(state, completion) {
           state.completion = completion;
+        },
+        restoreBackup(state){
+
         },
         startFolia(state){
 
@@ -495,8 +503,8 @@ export default {
         identification(state, releve) {
           if (updateCompletion(state, "IDENTIFY", releve)) state.completion++
         },
-        restore(state,user){
-
+        setBackup(state,sessionBackup){
+          state.sessionBackup=sessionBackup
         }
       },
       actions: {
@@ -613,14 +621,15 @@ export default {
                 id: user.getAttribute('id')
               }
               axios.defaults.withCredentials = true
-              commit('set', userObject)
               return axios.get('/api/login', {
                 params: {
                   id: user.getAttribute('id'),
                   name: user.getAttribute('display_name'),
                 }
               }).then(function (response) {
-                commit('restore',response.data.user)
+                commit('setBackup',response.data.user)
+                commit('set', userObject)
+
                 dispatch('loadObservation')
               })
 

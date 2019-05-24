@@ -11,17 +11,14 @@ let loggerPlugin = store => {
             activity={index:state.user.indexActivite,name:state.user.activite.instruction.long}
         }
         switch(mutation.type){
-            case 'user/addPoints' :
-                logEntry('observationScore',state.user.score,activity)
+            case 'user/addExplorationPoints' :
+                logEntry('observationScore',state.user.explorationScore,activity)
                 break
             case 'user/startFolia' :
                 logEntry('startFolia',{},activity)
             break
-            case 'user/pointsActions':
-                logEntry('observationScore',state.user.score,activity)
-                break
             case 'user/addKnowledgePoints' :
-                logEntry('knowledgeScore',state.user.score,activity)
+                logEntry('knowledgeScore',state.user.knowledgeScore,activity)
             break
             case 'releve/add':
                  logEntry('newObservation',mutation.payload,activity)
@@ -33,8 +30,18 @@ let loggerPlugin = store => {
                 logEntry('validateObservation',mutation.payload,activity)
                 break
             case 'user/setIndexActivite' :
-                logEntry('startActivity',{},activity)
-                break                
+                logEntry('startActivity',state.user.activities,activity)
+                break 
+            case 'user/setActivityStatus':
+                logEntry('endActivity',state.user.activities,activity)
+                break
+            case 'user/winTrophy':
+                logEntry('newTrophy',state.user.trophies,activity)
+                break
+            case 'user/updateStatus':
+                logEntry('newStatus',state.user.status,activity)
+                break
+        
             }   
     })
     store.subscribeAction((action,state)=>{

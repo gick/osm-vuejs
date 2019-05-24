@@ -31,6 +31,7 @@ import 'vue-select/dist/vue-select.css';
 import backupPlugin from './store/backupPlugin'
 import knowledgePlugin from './store/knowledgePlugin'
 import loggerPlugin from './store/loggerPlugin'
+import statusPlugin from './store/statusPlugin'
 
 import L from 'leaflet';
 delete L.Icon.Default.prototype._getIconUrl;
@@ -68,7 +69,7 @@ Vue.component('VmProgress', Progress)
 new Vue({
   el: '#app',
   render: h => h(AppNavigator),
-  store: new Vuex.Store({modules:storeLike.modules,  plugins: [knowledgePlugin,backupPlugin,loggerPlugin]  }),
+  store: new Vuex.Store({modules:storeLike.modules,  plugins: [knowledgePlugin,backupPlugin,loggerPlugin,statusPlugin]  }),
   beforeCreate() {
     // Shortcut for Material Design
     Vue.prototype.md = this.$ons.platform.isAndroid();

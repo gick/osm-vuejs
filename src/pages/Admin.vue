@@ -41,6 +41,24 @@
             <v-ons-switch v-model="$store.state.user.gamificationMode"></v-ons-switch>
           </div>
         </v-ons-list-item>
+        <v-ons-list-item>
+          <div class="center">Reset session</div>
+          <div class="right">
+            <v-ons-button @click="resetSession">Reset</v-ons-button>
+          </div>
+        </v-ons-list-item>
+        <v-ons-list-item>
+          <div class="center">Add exploration points</div>
+          <div class="right">
+            <v-ons-button @click="addExp">Add</v-ons-button>
+          </div>
+        </v-ons-list-item>
+        <v-ons-list-item>
+          <div class="center">Add knowledge points</div>
+          <div class="right">
+            <v-ons-button @click="addKnow">Add</v-ons-button>
+          </div>
+        </v-ons-list-item>
 
       </v-ons-list>
       <v-ons-list>
@@ -129,6 +147,25 @@ export default {
     },
   },
   methods: {
+    addExp(){
+        this.$ons.notification
+        .prompt("Number of points", {inputType:'number',title:'Add exp points',defaultValue:0})
+        .then(function(points){
+          if(points){
+            this.$store.commit('user/addExplorationPoints',{points:parseInt(points)})
+          }
+        }.bind(this))
+    },
+    addKnow(){
+        this.$ons.notification
+        .prompt("Number of points", {inputType:'number',title:'Add knowledge points',defaultValue:0})
+        .then(function(points){
+          if(points){
+            this.$store.commit('user/addKnowledgePoints',{points:parseInt(points)})
+          }
+        }.bind(this))
+    },
+
     setAnonymous(evt){
       if(evt.value){
         this.$store.dispatch('user/setAnonymous')
@@ -137,6 +174,16 @@ export default {
 
       }
     },
+    resetSession(){
+      axios.post("/api/resetBackup").then(
+        function(response) {
+          if(response.data.success){
+            window.location.reload()
+          }
+        }.bind(this))
+
+    }
+    ,
     visualizeReleve(releve) {
       this.$store.commit("navigator/pop");
       this.$store.commit("tabbar/set", 0);
