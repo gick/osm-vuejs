@@ -8,10 +8,10 @@
     <v-ons-card>
     	<v-ons-row>
     		<v-ons-col>
-    			Score
+    			Points d'exploration
     		</v-ons-col>
     		<v-ons-col style="text-align: right">
-    			{{score}}
+    			{{explorationScore}}
     		</v-ons-col>
     	</v-ons-row>   	 
     </v-ons-card>
@@ -24,7 +24,7 @@
     				<v-ons-col>
     					{{ getText(item.action) }}
     				</v-ons-col>
-    				<v-ons-col style="text-align: right">
+    				<v-ons-col style="text-align: right" width='20%'>
     					{{ item.points }}
     				</v-ons-col>
     			</v-ons-row>  
@@ -40,7 +40,7 @@
     				<v-ons-col>
     					{{ item.text}}
     				</v-ons-col>
-    				<v-ons-col style="text-align: right">
+    				<v-ons-col style="text-align: right" width='20%'>
     					{{item.points}}
     				</v-ons-col>	 
     			</v-ons-row>
@@ -64,7 +64,7 @@
 			journal() {
 				return this.$store.state.user.explorationHistory
 			},
-			score() {
+			explorationScore() {
       	return this.$store.state.user.explorationScore
     	},
     	explorationRules() {
@@ -80,12 +80,6 @@
 			      return "Espèce renseignée"
 			    case "completeCommon" :
 			      return "Nom commun renseigné"
-			     case "modifyGenus" :
-			      return "Genre modifié"
-			    case "modifySpecie" :
-			      return "Espèce modifiée"
-			    case "modifyCommon" :
-			      return "Nom commun modifié"
 			    case "photograph" :
 			      return "Prise de photo"
 			    case "validate" :

@@ -207,7 +207,7 @@ export default {
               })
             })
 
-          dispatch("user/extractExplorationPoints", ["validate"], {
+          dispatch("user/extractKnowledgePoints", ["validate"], {
             root : true
           })
         },
@@ -229,7 +229,11 @@ export default {
               }, {
                 root : true
               })
-              dispatch("user/extractExplorationPoints", extractActions(state.releves[index], "verify"), {
+              var actions = extractActions(state.releves[index], "verify")
+              dispatch("user/extractExplorationPoints", actions.explorationActions, {
+                root : true
+              })
+              dispatch("user/extractKnowledgePoints", actions.knowledgeActions, {
                 root : true
               })
             })
@@ -328,7 +332,8 @@ export default {
               }
             }
           })
-          dispatch('user/extractExplorationPoints', extractActions(releve, "inventory"), {
+          var actions = extractActions(releve, "inventory")
+          dispatch('user/extractExplorationPoints', actions.explorationActions, {
             root : true
           })
         }
@@ -673,8 +678,11 @@ function updateCompletion(state, operation, releve) {
   var differentID = !(releve.osmId == releve.modifierId)
 
   var type = state.activite.type
+
+  if (type == 'VERIFY' && alreadyVerified(releve, state.id)) return false
       
   if (type == operation) {
+
     let {specieAdded, genusAdded} = updateDifferentSet(state, specie, genus)            
     switch (state.activite.object) {
       case 'NONE' :
@@ -694,24 +702,27 @@ function updateCompletion(state, operation, releve) {
 }
 
 function extractActions(releve, operation) {
-  var actions = []
+  var actions = {
+    explorationActions : [],
+    knowledgeActions : []
+  }
   switch(operation) {
     case "inventory" : 
-      actions.push("gps")
-      if (releve.specie) actions.push("completeSpecie")
-      if (releve.genus) actions.push("completeGenus")
-      if (releve.common) actions.push("completeCommon")
-      if (releve.image) actions.push("photograph")
+      actions.explorationActions.push("gps")
+      if (releve.specie) actions.explorationActions.push("completeSpecie")
+      if (releve.genus) actions.explorationActions.push("completeGenus")
+      if (releve.common) actions.explorationActions.push("completeCommon")
+      if (releve.image) actions.explorationActions.push("photograph")
       break
     case "verify" :
       var prev = releve.prev.splice(-1)[0]
-      if (releve.specie != prev.specie && prev.specie) actions.push("modifySpecie")
-        else if (releve.specie && !prev.specie) actions.push("completeSpecie")
-      if (releve.genus != prev.genus && prev.genus) actions.push("modifyGenus")
-        else if (releve.genus && !prev.genus) actions.push("completeGenus")
-      if (releve.common != prev.common && prev.common) actions.push("modifyCommon")
-        else if (releve.common && !prev.common) actions.push("completeCommon")
-      if (releve.image != prev.image) actions.push("photograph")
+      if (releve.specie != prev.specie && prev.specie) actions.knowledgeActions.push("modifySpecie")
+        else if (releve.specie && !prev.specie) actions.explorationActions.push("completeSpecie")
+      if (releve.genus != prev.genus && prev.genus) actions.knowledgeActions.push("modifyGenus")
+        else if (releve.genus && !prev.genus) actions.explorationActions.push("completeGenus")
+      if (releve.common != prev.common && prev.common) actions.knowledgeActions.push("modifyCommon")
+        else if (releve.common && !prev.common) actions.explorationActions.push("completeCommon")
+      if (releve.image != prev.image) actions.explorationActions.push("photograph")
       break
   } 
   return actions
@@ -729,4 +740,19 @@ function updateDifferentSet(state, specie, genus) {
     res.genusAdded=true
   } 
   return res
+} 
+
+function alreadyVerified(releve, userId) {
+  console.log(JSON.stringify(releve))
+  if (releve.osmId == userId) return true
+ 
+  for (let i = 0; i < releve.prev.length; i++) {
+    if (releve.prev[i].osmId == userId) return true
+    if (releve.prev[i].modifierId == userId) return true
+     
+    for (let j = 0; j < releve.prev[i].validation.length; j++) {
+      if(releve.prev[i].validation[j].id == userId) return true
+    }
+  }
+  return false
 }
