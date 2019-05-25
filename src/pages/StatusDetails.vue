@@ -1,5 +1,10 @@
 <template>
     <v-ons-page>
+        <v-ons-toolbar>
+            <div class="left">
+                <v-ons-back-button>Retour</v-ons-back-button>
+            </div>
+        </v-ons-toolbar>
     	<v-ons-card>
             <div class="title">Acquérir un status</div>
             <div class="content">Les status sont acquis en progressant dans les points de connaissances et d'observation.

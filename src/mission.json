@@ -27,22 +27,7 @@
                "code":"completeCommon",
                "text":"Compléter le champ 'nom commun' d'un relevé",
                "nbPoint":6
-            },
-            {  
-               "code":"modifyGenus",
-               "text":"Modifier le champ 'genre' d'un relevé",
-               "nbPoint":0
-            },
-            {  
-               "code":"modifySpecie",
-               "text":"Modifier le champ 'espèce' d'un relevé",
-               "nbPoint":0
-            },
-            {  
-               "code":"modifyCommon",
-               "text":"Modifier le champ 'nom commun' d'un relevé",
-               "nbPoint":0
-            }   
+            } 
          ],
          "knowledgePoints":[
          	{
@@ -84,7 +69,27 @@
          		"code":"identifiedCommon",
          		"text":"Nom commun correctement identifié",
          		"nbPoint":15
-         	}
+         	},
+         	{  
+               "code":"modifyGenus",
+               "text":"Modifier le champ 'genre' d'un relevé",
+               "nbPoint":0
+            },
+            {  
+               "code":"modifySpecie",
+               "text":"Modifier le champ 'espèce' d'un relevé",
+               "nbPoint":0
+            },
+            {  
+               "code":"modifyCommon",
+               "text":"Modifier le champ 'nom commun' d'un relevé",
+               "nbPoint":0
+            },  
+            {  
+               "code":"validate",
+               "text":"Valider un relevé",
+               "nbPoint":0
+            }
          ]
       },
       {  

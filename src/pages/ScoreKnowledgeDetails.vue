@@ -8,7 +8,7 @@
     <v-ons-card>
     	<v-ons-row>
     		<v-ons-col>
-    			Score
+    			Points de connaissance
     		</v-ons-col>
     		<v-ons-col style="text-align: right">
     			{{knowledgeScore}}
@@ -24,7 +24,7 @@
     				<v-ons-col>
     					{{ getText(item.action) }}
     				</v-ons-col>
-    				<v-ons-col style="text-align: right">
+    				<v-ons-col style="text-align: right" width='20%'>
     					{{ item.points }}
     				</v-ons-col>
     			</v-ons-row>  
@@ -40,7 +40,7 @@
     				<v-ons-col>
     					{{ item.text}}
     				</v-ons-col>
-    				<v-ons-col style="text-align: right">
+    				<v-ons-col style="text-align: right" width='20%'>
     					{{item.points}}
     				</v-ons-col>	 
     			</v-ons-row>
@@ -64,11 +64,11 @@
 				return this.$store.state.commonData.knowledgeRules
 			},
 			knowledgeScore() {
-      	return this.$store.state.user.knowledgeScore
-    	},
-    	knowledgeHistory() {
-    		return this.$store.state.user.knowledgeHistory
-    	}
+                return this.$store.state.user.knowledgeScore
+            },
+            knowledgeHistory() {
+                return this.$store.state.user.knowledgeHistory
+            }
 		},
 		methods : {
 			getText(action){
@@ -89,6 +89,14 @@
                         return 'Confirmation de l\'espèce de votre relevé'
                     case 'sameCommonPropagation' :
                         return 'Confirmation du nom commun de votre relevé'
+                    case "modifyGenus" :
+                        return "Genre modifié"
+                    case "modifySpecie" :
+                        return "Espèce modifiée"
+                    case "modifyCommon" :
+                        return "Nom commun modifié"
+                    case "validate" :
+                        return "Relevé validé"
 				}
 			}
 		}

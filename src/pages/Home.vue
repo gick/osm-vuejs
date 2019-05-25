@@ -10,13 +10,13 @@
       </div>
     </v-ons-card>
 
-    <v-ons-card v-show="$store.state.user.id">
+    <v-ons-card v-show="$store.state.user.id && !missionDone">
       <div class="title">
         Mission en cours ( {{ indexActivite + 1}} / {{activities.length}} )
       </div>          
     </v-ons-card>
 
-    <v-card v-show="$store.state.user.id">
+    <v-card v-show="$store.state.user.id && !missionDone">
         <div v-for="item in activities">
 
           <v-ons-card v-if="(item.statut=='onGoing')">
@@ -47,7 +47,7 @@
         </div>
     </v-card>
 
-    <v-ons-card v-show="missionDone">
+    <v-ons-card v-show="$store.state.user.id && missionDone">
       <p>Vous avez terminé la mission, merci d'avoir participé !</p>
     </v-ons-card>
 
@@ -89,7 +89,6 @@ export default {
     return {
       showDialog: false,
       totalSecondes : 0,
-      missionDone: false
     };
   },
   mounted() {
@@ -104,7 +103,12 @@ export default {
     uid() {
       return this.$store.state.user.id;
     },
-
+    missionDone() {
+      if (this.currentActivity) {
+        return false
+      }
+      return true
+    },
     goal() {
       return this.$store.state.user.goal;
     },
@@ -218,10 +222,10 @@ export default {
         for (let i = 0; i < this.currentActivity.mechanics.length; i++) {
           //attribution des points
           if (this.currentActivity.mechanics[i].name == 'score') {
-            points = this.currentActivity.mechanics[i].nbPoint
+            let points = this.currentActivity.mechanics[i].nbPoint
             this.$store.commit('user/addExplorationPoints', {
               points:points,
-              action:"SUCCESSFUL_ACTIVITY"
+              action:"successfulActivity"
             })
           //attribution des trophées
           } else if (this.currentActivity.mechanics[i].name == 'trophy') {  
@@ -239,7 +243,7 @@ export default {
         }
       }
       if (this.indexActivite + 1 ==  this.currentMission.activities.length) {
-        this.missionDone = true
+         this.$store.commit('user/setActivite', null)
       } else {
         this.newActivity()
       }
