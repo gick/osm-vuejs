@@ -743,7 +743,6 @@ function updateDifferentSet(state, specie, genus) {
 } 
 
 function alreadyVerified(releve, userId) {
-  console.log(JSON.stringify(releve))
   if (releve.osmId == userId) return true
  
   for (let i = 0; i < releve.prev.length; i++) {
