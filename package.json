@@ -19,6 +19,7 @@
     "dateformat": "^3.0.3",
     "exif-orientation-image": "^1.0.1",
     "gh-pages": "^1.2.0",
+    "image-file-to-base64-exif": "^1.0.3",
     "lodash": "^4.17.11",
     "logrocket": "^0.6.21",
     "logrocket-vuex": "0.0.3",
