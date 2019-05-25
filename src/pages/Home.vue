@@ -47,7 +47,7 @@
         </div>
     </v-card>
 
-    <v-ons-card v-show="missionDone">
+    <v-ons-card v-show="$store.state.user.id && missionDone">
       <p>Vous avez terminé la mission, merci d'avoir participé !</p>
     </v-ons-card>
 
@@ -89,7 +89,6 @@ export default {
     return {
       showDialog: false,
       totalSecondes : 0,
-      missionDone: false
     };
   },
   mounted() {
@@ -104,7 +103,12 @@ export default {
     uid() {
       return this.$store.state.user.id;
     },
-
+    missionDone() {
+      if (this.currentActivity) {
+        return false
+      }
+      return true
+    },
     goal() {
       return this.$store.state.user.goal;
     },
@@ -239,7 +243,7 @@ export default {
         }
       }
       if (this.indexActivite + 1 ==  this.currentMission.activities.length) {
-        this.missionDone = true
+         this.$store.commit('user/setActivite', null)
       } else {
         this.newActivity()
       }
