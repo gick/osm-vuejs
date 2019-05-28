@@ -76,6 +76,9 @@ let backupPlugin = store => {
                 break
             case 'user/setIndexActivite' :
                 backup('indexActivite',state.user.indexActivite)
+                break
+            case 'user/updateTime':
+                backup('time',state.user.time)
                 break                
             case 'user/setGoal' :
                 backup('goal',state.user.goal)

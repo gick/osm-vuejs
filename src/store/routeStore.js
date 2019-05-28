@@ -367,6 +367,7 @@ export default {
         isAnon: false,
         formerName: null,
         formerId: null,
+        disableNotif:false,
         notifProfil: 0,
         trophies: [],
         explorationHistory: [],
@@ -387,7 +388,8 @@ export default {
         time: {
           timer : null,
           startTime : -1,
-          timeLeft : -1
+          timeLeft : -1,
+          duration:-1
         },
         activities: []
       },
@@ -485,24 +487,14 @@ export default {
         updateProgression(state, param) {
           if (updateCompletion(state, param.operation, param.releve)) state.completion++
         },
-        setTime(state, time) {
-          state.time.startTime = time.startTime
-          state.time.timeLeft = time.duration
-          if (time.duration!=-1) {
-            state.time.timer = setInterval( () => {
-            var timestamp = (new Date()).getTime()
-            state.time.timeLeft = time.duration - (timestamp - time.startTime)
-            if (state.time.timeLeft <= 0) {
-              state.time.timeLeft = 0
-              clearInterval(state.time.timer)
-            }
-            }, 1000); 
-          }    
+        updateTime(state){
+
         },
 
         resetTime(state) {
           state.time.startTime = -1
           state.time.timeLeft = -1
+          state.time.duration = -1
           clearInterval(state.time.timer)
         },
         identification(state, releve) {
@@ -513,6 +505,20 @@ export default {
         }
       },
       actions: {
+        setTime({state,commit}, time) {
+          state.time.duration = time.duration
+          if (time.duration!=-1) {
+            state.time.timer = setInterval( () => {
+            state.time.duration = state.time.duration - 1000
+            commit('updateTime')
+            if (state.time.duration <= 0) {
+              state.time.duration = 0
+              clearInterval(state.time.timer)
+            }
+            }, 1000); 
+          }    
+        },
+
         extractExplorationPoints({
           commit, state
         }, actions) {
@@ -587,14 +593,15 @@ export default {
             })
         },
         loadObservation({
-          commit
+          commit,state
         }) {
           axios.get('/api/observation')
             .then(function (res) {
               commit('releve/addMultiple', res.data, {
                 root: true
               })
-              commit('arboretum/addMultiple', res.data, {
+              let userObservation=res.data.filter(val=>val.osmId==state.id)
+              commit('arboretum/addMultiple', userObservation, {
                 root: true
               })
             })

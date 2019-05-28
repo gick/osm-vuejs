@@ -128,7 +128,7 @@ export default {
       return  this.goal > 0 ? (this.completion / this.goal * 100) : 0
     },
     timeLeft() {
-      return this.$store.state.user.time.timeLeft
+      return this.$store.state.user.time.duration
     },
     backup(){
         return this.$store.state.user.sessionBackup
@@ -159,6 +159,9 @@ export default {
       handler(){
         if(this.backup && this.backup.mission){
           this.$store.commit('user/restoreBackup')
+          if(this.backup.time && this.backup.time.duration>0){
+            this.$store.dispatch('user/setTime',{duration:this.backup.time.duration})
+          }
           return
         }
          this.newMission();
@@ -333,11 +336,8 @@ export default {
         }
       }
 
-      var date = new Date();
-      var startTime = date.getTime();
       var duration = totalSecondes ? totalSecondes * 1000 : -1
-      this.$store.commit('user/setTime', {
-        startTime : startTime,
+      this.$store.dispatch('user/setTime', {
         duration : duration
       })
 
