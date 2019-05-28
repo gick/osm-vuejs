@@ -16,7 +16,7 @@
 			 <v-ons-card>
 	    	<v-ons-row @click='displayScoreDetails'>
 	    		<v-ons-col>
-	        	Points d'observation : {{ score }}
+	        	Points d'exploration : {{ score }}
 	    		</v-ons-col>
 	    		<v-ons-col style="text-align: right" >
 	        	<v-ons-icon icon="fa-info-circle" style="color:#cca108"></v-ons-icon> 

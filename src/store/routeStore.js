@@ -685,8 +685,6 @@ function updateCompletion(state, operation, releve) {
 
   let {specie, genus} = releve
 
-  var differentID = !(releve.osmId == releve.modifierId)
-
   var type = state.activite.type
 
   if (type == 'VERIFY' && alreadyVerified(releve, state.id)) return false
@@ -707,8 +705,8 @@ function updateCompletion(state, operation, releve) {
         return genusAdded
       default :
         return false
-      }
     }
+  }
 }
 
 function extractActions(releve, operation) {

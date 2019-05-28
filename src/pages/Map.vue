@@ -128,7 +128,7 @@
     </v-ons-fab>
 
   <ons-bottom-toolbar style="background-color:#F44336; color:white">
-      <center v-show='userID'>
+      <center v-show='userID && !missionDone'>
         {{instruction}}
         <v-ons-row>
           <v-ons-col v-if="timeLeft!=-1">
@@ -241,6 +241,12 @@ export default {
     };
   },
   computed: {
+    missionDone() {
+      if (this.$store.state.user.activite) {
+        return false
+      }
+      return true
+    },
     userID() {
       return this.$store.state.user.id;
     },
