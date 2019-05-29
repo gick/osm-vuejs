@@ -1,18 +1,18 @@
 <template>
-  <v-ons-page>   
+  <v-ons-page>  
 
     <v-ons-card v-show="!$store.state.user.id">
-      <div  class="title">Authentifiez vous!</div>
+      <div  class="title">{{ $t('authenticate')}}</div>
       <div class="content">
-        <p>Bienvenue dans AlbiziApp</p>
-        <p>Merci de vous authentifier. </p>
-        <v-ons-button @click="authenticate">Authenticate</v-ons-button>
+        <p>{{ $t('welcome')}}</p>
+        <p>{{ $t('authenticatePlease')}}</p>
+        <v-ons-button @click="authenticate">{{ $t('authenticateButton')}}</v-ons-button>
       </div>
     </v-ons-card>
 
     <v-ons-card v-show="$store.state.user.id && !missionDone">
       <div class="title">
-        Mission en cours ( {{ indexActivite + 1}} / {{activities.length}} )
+       {{ $t('currentMission')}} ( {{ indexActivite + 1}} / {{activities.length}} )
       </div>          
     </v-ons-card>
 
@@ -28,7 +28,7 @@
                   {{completion}} / {{goal}}
                 </VmProgress>
                 <div v-else>
-                  Nombre de relevé : {{completion}}
+                 {{ $t('tracingsDone')}} : {{completion}}
                 </div>
               </v-ons-col>  
               <v-ons-col width="10%">
@@ -47,19 +47,15 @@
         </div>
     </v-card>
 
-    <v-ons-card v-show="$store.state.user.id && missionDone">
-      <p>Vous avez terminé la mission, merci d'avoir participé !</p>
-    </v-ons-card>
-
     <v-ons-alert-dialog modifier="rowfooter"
-      :title="'Êtes-vous sûr de vouloir passer cette activité ?'"
-      :footer="{
-        Annuler: () => showDialog = false,
-        Passer() {activityEnd('skipped'); showDialog = false }
-      }"
       :visible.sync="showDialog"
     >
-      Cette action est irréversible
+      <span slot="title">{{ $t('skipActivityTitle') }}</span>
+      {{ $t('skipActivityDesc') }}
+      <template slot="footer">
+        <v-ons-alert-dialog-button @click="showDialog = false">{{ $t('cancelButton') }}</v-ons-alert-dialog-button>
+        <v-ons-alert-dialog-button @click="skipActivityPressed">{{ $t('skipButton') }}</v-ons-alert-dialog-button>
+      </template>
     </v-ons-alert-dialog>
 
 </v-ons-card>
@@ -190,6 +186,10 @@ export default {
       }
   },
   methods: {
+    skipActivityPressed() {
+      this.activityEnd('skipped')
+      this.showDialog = false
+    },
     authenticate(){
      this.$store.dispatch('user/login')
     },
@@ -232,7 +232,7 @@ export default {
             let name = this.currentActivity.mechanics[i].title
             if (!this.tropheeDejaGagne(name)) {     
               this.$store.commit('user/winTrophy', name)
-              let toast = this.$toasted.show("Nouveau trophée '" + name + "'", { 
+              let toast = this.$toasted.show(this.$t('newTrophy') + " '" + name + "'", { 
                 fullWidth : true,
                 position: "bottom-center", 
                 duration : 5000,
@@ -355,7 +355,7 @@ export default {
       })
 
       if (totalSecondes) {
-         let toast = this.$toasted.show("Une activité chronométrée vient de commencer !", { 
+         let toast = this.$toasted.show(this.$t('timedActivity'), { 
                 fullWidth : true,
                 position: "bottom-center", 
                 duration : 5000,
@@ -389,7 +389,7 @@ export default {
               let name = this.currentMission.mechanics[i].trophiesList[j].title
               if (!this.tropheeDejaGagne(name)) {
                 this.$store.commit('user/winTrophy', name)
-                let toast = this.$toasted.show("Nouveau trophée '" + name + "'", { 
+                let toast = this.$toasted.show(this.$t('newTrophy') + " '" + name + "'", { 
                   fullWidth : true,
                   position: "bottom-center", 
                   duration : 5000,

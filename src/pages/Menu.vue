@@ -15,6 +15,13 @@
       </v-ons-list-item>
       <v-ons-list-item @click="logout">Logout</v-ons-list-item>
       <v-ons-list-item @click="admin">Admin</v-ons-list-item>
+      <v-ons-list-item>Langue &nbsp;
+        <select v-model="$i18n.locale">
+          <option v-for="(lang, i) in langs" :key="`Lang${i}`" :value="lang">
+            {{ lang }}
+          </option>
+        </select>
+      </v-ons-list-item>
     </v-ons-list>
   </v-ons-page>
 </template>
@@ -74,7 +81,7 @@ export default {
     
   }}*/
   data() {
-    return {};
+    return {langs: ['fr', 'en']};
   },
   computed: {
     gamificationMode() {

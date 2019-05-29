@@ -195,20 +195,20 @@ export default {
       var tab = 
       [
         {
-          label: "Carte",
+          label: this.$t('map'),
           icon: "ion-map",
           active: false,
           page: Map,
           theme: red
         },
         {
-          label: "Mission",
+          label: this.$t('mission'),
           icon: "ion-home",
           page: Home,
           theme: red
         },       
         {
-          label: "Relevés",
+          label: this.$t('relevés'),
           icon: "ion-edit",
           page: Releve,
           theme: purple,
@@ -231,7 +231,7 @@ export default {
       if (this.gamificationMode) {
         var profil = 
          {
-          label: "Score",
+          label: this.$t('score'),
           icon: "ion-trophy",
           page: Profile,
           theme: red,
@@ -242,7 +242,7 @@ export default {
         };
         var arboretum =
         {
-          label: "Arboretum",
+          label: this.$t('arboretum'),
           icon: "ion-leaf",
           page: Arboretum,
           theme: blue

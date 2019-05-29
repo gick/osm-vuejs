@@ -294,7 +294,7 @@
          ],
          "endCondition":[  
             {  
-               "time":900
+               "time":5
             }
          ]
       }

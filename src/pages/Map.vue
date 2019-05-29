@@ -98,29 +98,26 @@
 
         <l-tile-layer :url="url" :options="mapOptions" :attribution="attribution"/>
       </l-map>
+
       <v-ons-card>
         <v-ons-button @click="centerMap">Centrer carte</v-ons-button>
       </v-ons-card>
 
-      <v-ons-alert-dialog modifier="rowfooter"
-      :title="'Mission terminée'"
-      :footer="{
-        Ok: () => closeDialog()
-      }"
-      :visible.sync="missionOver"
-      >
-        Vous avez terminé votre mission, place à la mission suivante
+      <v-ons-alert-dialog modifier="rowfooter" :visible.sync="missionOver">
+        <span slot="title">{{ $t('missionOverTitle') }}</span>
+        {{ $t('missionOverDesc') }} 
+        <template slot="footer">
+          <v-ons-alert-dialog-button @click="closeDialog">OK</v-ons-alert-dialog-button>
+        </template>
       </v-ons-alert-dialog>
 
-      <v-ons-alert-dialog modifier="rowfooter"
-      :title="'Activité terminée'"
-      :footer="{
-        Ok: () => closeDialog()
-      }"
-      :visible.sync="activityOver"
-      >
-        Vous avez terminé votre activité, place à l'activité suivante
-      </v-ons-alert-dialog>
+    <v-ons-alert-dialog modifier="rowfooter" :visible.sync="activityOver">
+      <span slot="title">{{ $t('activityOverTitle') }}</span>
+      {{ $t('activityOverDesc') }} 
+      <template slot="footer">
+        <v-ons-alert-dialog-button @click="closeDialog">OK</v-ons-alert-dialog-button>
+      </template>
+    </v-ons-alert-dialog>
 
     </div>
     <v-ons-fab @click="centerMap" modifier="mini" position='bottom right'>
@@ -514,7 +511,7 @@ export default {
       };
       console.log("clicked on map");
       this.$ons.notification
-        .confirm("Voulez vous réaliser un nouveau relevé?")
+        .confirm(this.$t('confirmDesc'))
         .then(response => {
           if (response) {
             let coordinates = [
