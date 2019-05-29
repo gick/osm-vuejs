@@ -10,13 +10,13 @@
       </div>
     </v-ons-card>
 
-    <v-ons-card v-show="$store.state.user.id && !missionDone">
+    <v-ons-card v-show="$store.state.user.id && currentActivity">
       <div class="title">
        {{ $t('currentMission')}} ( {{ indexActivite + 1}} / {{activities.length}} )
       </div>          
     </v-ons-card>
 
-    <v-card v-show="$store.state.user.id && !missionDone">
+    <v-card v-show="$store.state.user.id && currentActivity">
         <div v-for="item in activities">
 
           <v-ons-card v-if="(item.statut=='onGoing')">
@@ -46,6 +46,10 @@
           </v-ons-card>       
         </div>
     </v-card>
+
+    <v-ons-card v-show="$store.state.user.id && !currentActivity"> 
+      <p>Vous avez terminé la mission, merci d'avoir participé !</p>  
+    </v-ons-card>
 
     <v-ons-alert-dialog modifier="rowfooter"
       :visible.sync="showDialog"
@@ -98,12 +102,6 @@ export default {
     },
     uid() {
       return this.$store.state.user.id;
-    },
-    missionDone() {
-      if (this.currentActivity) {
-        return false
-      }
-      return true
     },
     goal() {
       return this.$store.state.user.goal;

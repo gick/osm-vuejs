@@ -330,7 +330,7 @@ export default {
       return this.$store.state.user.goal;
     },
     timeLeft() {
-       return this.$store.state.user.time.timeLeft
+       return this.$store.state.user.time.duration
     }
   },
 
@@ -338,15 +338,22 @@ export default {
     completion: {
       handler: function(newValue, oldValue) {
         if (newValue == this.goal) {
-          if (this.indexActivite + 1 == this.nbActivite) {
-          this.missionOver = true;
-          } else {
+          if (this.indexActivite + 1 != this.nbActivite) {
             this.activityOver = true;
           }
         }  
       },
       deep: true
-    }
+    },
+    missionDone: {
+      handler: function(newValue, oldValue) {
+        if (newValue == true && oldValue == false) {
+          this.missionOver = true
+        }
+      },
+      deep: true
+    },
+
   },
   created() {
     this.$nextTick(() => {
