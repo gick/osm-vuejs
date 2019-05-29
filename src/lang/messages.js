@@ -1,13 +1,20 @@
 export default {
   en: {
 
-    // MENU
+    // APPTABBAR
 
     map: "MAP",
     mission: "MISSION",
     score: "SCORE",
     arboretum: "ARBORETUM",
     relevés: "TRACINGS",
+
+    //MENU
+
+    missionMenu: "Current mission",
+    scoreMenu: "Score",
+    arboretumMenu: "My arboretum",
+    tracingsMenu: "My tracings",
 
     //HOME
 
@@ -38,13 +45,20 @@ export default {
   },
   fr: {
     
-    // MENU
+    // APPTABBAR
 
     map: "CARTE",
     mission: "MISSION",
     score: "SCORE",
     arboretum: "ARBORETUM",
     relevés: "RELEVÉS",
+
+    //MENU
+
+    missionMenu: "Mission en cours",
+    scoreMenu: "Score",
+    arboretumMenu: "Mon arboretum",
+    tracingsMenu: "Mes relevés",
 
     //HOME
 

@@ -212,7 +212,6 @@ export default {
   },
   data() {
     return {
-      instruction: "",
       missionOver: false,
       activityOver: false,
       newCircle: null,
@@ -238,6 +237,11 @@ export default {
     };
   },
   computed: {
+    instruction() {
+      if(this.currentMission) {
+        return this.currentMission.activities[this.indexActivite].instruction.short
+      }    
+    },
     missionDone() {
       if (this.$store.state.user.activite) {
         return false
@@ -340,15 +344,6 @@ export default {
             this.activityOver = true;
           }
         }  
-      },
-      deep: true
-    },
-    indexActivite: {
-      handler: function(newIndex, oldIndex) {
-        if (this.newIndex == -1) {
-          return
-        }
-        this.instruction = this.currentMission.activities[newIndex].instruction.short
       },
       deep: true
     }

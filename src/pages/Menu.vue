@@ -90,11 +90,11 @@ export default {
     access() {
       var access = [
         {
-          title: "Mission en cours",
+          title: this.$t('missionMenu'),
           icon: "ion-home"
         },
         {
-          title: "Mes relevés",
+          title: this.$t('tracingsMenu'),
           icon: "ion-edit"
         },
         {
@@ -104,11 +104,11 @@ export default {
       ];
       if (this.gamificationMode) {
         var profil = {
-          title: "Profil",
-          icon: "ion-person"
+          title: this.$t('scoreMenu'),
+          icon: "ion-trophy"
         };
         var arboretum = {
-          title: "Mon arboretum",
+          title: this.$t('arboretumMenu'),
           icon: "ion-leaf"
         };
         access.splice(1, 0, profil, arboretum);
