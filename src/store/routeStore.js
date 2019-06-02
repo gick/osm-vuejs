@@ -307,7 +307,8 @@ export default {
         setObservation({
           state,
           commit,
-          dispatch
+          dispatch,
+          rootState
         }, releve) {
 
           // commit('add', releve)
@@ -315,31 +316,39 @@ export default {
           if (state.identificationMode) {
             releve.identificationMode = true
           }
-          axios.post('/api/observation', {
-            releve
-          }).then(function (response) {
-            if (response.data.observation) {
-              commit('add', response.data.observation)
-              if (!releve.identificationMode) {
-                commit('user/updateProgression', {
-                  releve: response.data.observation,
-                  operation: "INVENTORY"
-                }, {
-                    root: true
-                  })
-                if (response.data.observation.specie) {
-                  commit('arboretum/add', response.data.observation.specie, {
-                    root: true
-                  })
+          if (!rootState.user.isAnon){
+            axios.post('/api/observation', {
+              releve
+            }).then(function (response) {
+              if (response.data.observation) {
+                commit('add', response.data.observation)
+                if (!releve.identificationMode) {
+                  commit('user/updateProgression', {
+                    releve: response.data.observation,
+                    operation: "INVENTORY"
+                  }, {
+                      root: true
+                    })
+                  if (response.data.observation.specie) {
+                    commit('arboretum/add', response.data.observation.specie, {
+                      root: true
+                    })
+                  }
                 }
               }
-            }
-          })
+            })
           var actions = extractActions(releve, "inventory")
           dispatch('user/extractExplorationPoints', actions.explorationActions, {
             root: true
           })
         }
+      else{
+        axios.post('/api/observationAnon', {
+          releve
+        })
+      }
+      
+      }
       }
     },
 
@@ -563,36 +572,6 @@ export default {
             name: null,
             id: null
           });
-        },
-        setAnonymous({
-          commit,
-          state
-        }) {
-          state.isAnon = true
-          axios.post('/api/anonymous')
-            .then(function (response) {
-              let {
-                username,
-                userId
-              } = response.data
-              commit('changeIdentity', {
-                name: username,
-                id: userId
-              })
-            })
-        },
-        restoreSession({
-          state,
-          commit
-        }) {
-          state.isAnon = false
-          axios.post('/api/restoreSession', {
-            id: state.formerId,
-            username: state.formerName
-          })
-            .then(function (response) {
-              commit('restoreIdentity')
-            })
         },
         loadObservation({
           commit, state

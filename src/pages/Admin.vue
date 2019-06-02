@@ -11,9 +11,9 @@
           </div>
         </v-ons-list-item>
         <v-ons-list-item>
-          <div class="center">Mode anonyme (vos relevés seront vus comme ceux d'un autre joueur)</div>
+          <div class="center">Mode création de relevé anonyme (les relevés seront vus comme ceux d'un autre joueur)</div>
           <div class="right">
-            <v-ons-switch v-model="isAnon" @change="setAnonymous"></v-ons-switch>
+            <v-ons-switch v-model="$store.state.user.isAnon"></v-ons-switch>
           </div>
         </v-ons-list-item>
         <v-ons-list-item>
@@ -160,14 +160,6 @@ export default {
         }.bind(this))
     },
 
-    setAnonymous(evt){
-      if(evt.value){
-        this.$store.dispatch('user/setAnonymous')
-      } else {
-        this.$store.dispatch('user/restoreSession')
-
-      }
-    },
     resetSession(){
       axios.post("/api/resetBackup").then(
         function(response) {
