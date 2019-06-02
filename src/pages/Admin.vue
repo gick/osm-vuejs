@@ -11,12 +11,6 @@
           </div>
         </v-ons-list-item>
         <v-ons-list-item>
-          <div class="center">Relevé de vérification</div>
-          <div class="right">
-            <v-ons-switch v-model="verifCheck" @change="setVerificationMode"></v-ons-switch>
-          </div>
-        </v-ons-list-item>
-        <v-ons-list-item>
           <div class="center">Mode anonyme (vos relevés seront vus comme ceux d'un autre joueur)</div>
           <div class="right">
             <v-ons-switch v-model="isAnon" @change="setAnonymous"></v-ons-switch>
@@ -215,16 +209,11 @@ export default {
       return [...new Set(array.map(x => x.username))];
     },
     setIdentificationMode(event) {
-      if (event.value) {
-        this.verifCheck = false;
-      }
       this.$store.commit("releve/setIdentificationMode", event.value);
-    },
-    setVerificationMode(event) {
-      if (event.value) {
-        this.identCheck = false;
-      }
-      this.$store.commit("releve/setVerificationMode", event.value);
+      if(!event.value)
+        return
+      
+      this.$store.commit("commonData/setIdentificationMode",true)
     }
   }
 };

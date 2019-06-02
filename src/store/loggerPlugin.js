@@ -52,10 +52,10 @@ let loggerPlugin = store => {
         }
         switch(action.type){
             case 'releve/setNoTree' :
-                logEntry('questionTree',question.payload,activity)
+                logEntry('questionTree',action.payload,activity)
                 break  
             case 'releve/identification' :
-                logEntry('identification',question.payload,activity)
+                logEntry('identification',action.payload,activity)
                 break  
                              
 

@@ -97,17 +97,17 @@
     <v-ons-list v-show="releve.identificationValue.success">
       <v-ons-list-item>
         <div class="center">Espèce identifiée par l'expert : {{releve.specie}}</div>
-        <div v-if="releve.specie==releve.identificationValue.specie" class="right">Bravo!</div>
+        <div v-if="releve.specie && releve.specie==releve.identificationValue.specie" class="right">Bravo!</div>
         <div v-else class="right">Raté!</div>
       </v-ons-list-item>
       <v-ons-list-item>
         <div class="center">Genre identifié par l'expert : {{releve.genus}}</div>
-        <div v-if="releve.genus==releve.identificationValue.genus" class="right">Bravo!</div>
+        <div v-if="releve.genus && releve.genus==releve.identificationValue.genus" class="right">Bravo!</div>
         <div v-else class="right">Raté!</div>
       </v-ons-list-item>
       <v-ons-list-item>
         <div class="center">Nom vernaculaire identifiée par l'expert : {{releve.common}}</div>
-        <div v-if="releve.common==releve.identificationValue.common" class="right">Bravo!</div>
+        <div v-if="releve.common && releve.common==releve.identificationValue.common" class="right">Bravo!</div>
         <div v-else class="right">Raté!</div>
       </v-ons-list-item>
     </v-ons-list>
