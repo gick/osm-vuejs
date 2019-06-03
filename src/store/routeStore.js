@@ -15,8 +15,8 @@ export default {
           'Peu confiant',
           'Confiant',
         ],
-        knowledgeRules:[],
-        explorationRules:[]
+        knowledgeRules: [],
+        explorationRules: []
       },
       mutations: {
         setVerificationMode(state, mode) {
@@ -131,7 +131,7 @@ export default {
           state.verificationMode = mode
         },
         add(state, releve) {
-          state.releves.push(releve)     
+          state.releves.push(releve)
         },
         addFromOutside(state, releve) {
           state.releves.push(releve)
@@ -151,9 +151,9 @@ export default {
         modify(state, newReleve) {
           let index = state.releves.findIndex(releve => releve._id == newReleve._id)
           if (index != -1) {
-           // state.releves[index].test='truc'    
-            state.releves.splice(index,1,newReleve)
-            state.releves[index].prev=newReleve.prev
+            // state.releves[index].test='truc'    
+            state.releves.splice(index, 1, newReleve)
+            state.releves[index].prev = newReleve.prev
           }
         },
         modifyFromOutside(state, newReleve) {
@@ -170,13 +170,13 @@ export default {
             state.releves.push(observation)
           }
         },
-        validate(state, currentReleve) { 
+        validate(state, currentReleve) {
           let index = state.releves.findIndex(releve => releve._id == currentReleve._id)
           if (index != -1) {
             state.releves.splice(index, 1, currentReleve)
           }
         },
-        validateFromOutside(state,observation){
+        validateFromOutside(state, observation) {
           let index = state.releves.findIndex(releve => releve._id == observation._id)
           if (index != -1) {
             state.releves.splice(index, 1, observation)
@@ -196,20 +196,20 @@ export default {
           axios.defaults.withCredentials = true
 
           axios.post('/api/validate', {
-              releve: releve
-            })
+            releve: releve
+          })
             .then(function (response) {
               commit('validate', response.data.observation)
               commit('user/updateProgression', {
-                releve : response.data.observation,
-                operation : "VERIFY"
+                releve: response.data.observation,
+                operation: "VERIFY"
               }, {
-                root : true
-              })
+                  root: true
+                })
             })
 
           dispatch("user/extractKnowledgePoints", ["validate"], {
-            root : true
+            root: true
           })
         },
         modifyObservation({
@@ -219,23 +219,23 @@ export default {
         }, newReleve) {
           axios.defaults.withCredentials = true
           axios.post('/api/modifyObservation', {
-              releve: newReleve
-            })
+            releve: newReleve
+          })
             .then(function (response) {
               commit('modify', response.data.observation)
               let index = state.releves.findIndex(releve => releve._id == response.data.observation._id)
               commit('user/updateProgression', {
-                releve : state.releves[index],
-                operation : "VERIFY"
+                releve: state.releves[index],
+                operation: "VERIFY"
               }, {
-                root : true
-              })
+                  root: true
+                })
               var actions = extractActions(state.releves[index], "verify")
               dispatch("user/extractExplorationPoints", actions.explorationActions, {
-                root : true
+                root: true
               })
               dispatch("user/extractKnowledgePoints", actions.knowledgeActions, {
-                root : true
+                root: true
               })
             })
         },
@@ -244,16 +244,16 @@ export default {
         }, releve) {
           axios.defaults.withCredentials = true
           axios.post('/api/noTree', {
-              releve: releve
-            })
+            releve: releve
+          })
             .then(function (response) {
               commit('setNoTree', response.data.observation)
               commit('user/updateProgression', {
-                releve : response.data.observation,
-                operation : "VERIFY"
+                releve: response.data.observation,
+                operation: "VERIFY"
               }, {
-                root : true
-              })
+                  root: true
+                })
             })
         },
         unsetNoTree({
@@ -261,8 +261,8 @@ export default {
         }, releve) {
           axios.defaults.withCredentials = true
           axios.post('/api/unsetNoTree', {
-              releve: releve
-            })
+            releve: releve
+          })
             .then(function (response) {
               commit('setNoTree', response.data.observation)
             })
@@ -273,8 +273,8 @@ export default {
         }, releve) {
           axios.defaults.withCredentials = true
           axios.post('/api/remove', {
-              releve: releve
-            })
+            releve: releve
+          })
             .then(function (response) {
               commit('removeObservation', releve)
             })
@@ -285,29 +285,30 @@ export default {
           commit
         }, releve) {
           commit("user/updateProgression", {
-            releve : releve,
-            operation : "IDENTIFY"
+            releve: releve,
+            operation: "IDENTIFY"
           }, {
-            root : true
-          })
+              root: true
+            })
           axios.defaults.withCredentials = true
           axios.post('/api/identification', {
             releve: releve
           })
         },
-        importObservation({state,commit},observation){
+        importObservation({ state, commit }, observation) {
           axios.defaults.withCredentials = true
-          axios.post('/api/importFromOSM',{releve:observation})
-          .then(function(response){
-            if(response.data.observation){
-              commit('add',response.data.observation)
-            }
-          })
+          axios.post('/api/importFromOSM', { releve: observation })
+            .then(function (response) {
+              if (response.data.observation) {
+                commit('add', response.data.observation)
+              }
+            })
         },
         setObservation({
           state,
           commit,
-          dispatch
+          dispatch,
+          rootState
         }, releve) {
 
           // commit('add', releve)
@@ -315,29 +316,39 @@ export default {
           if (state.identificationMode) {
             releve.identificationMode = true
           }
-          axios.post('/api/observation', {
-            releve
-          }).then(function (response) {
-            if (response.data.observation) {
-              commit('add', response.data.observation)
-              commit('user/updateProgression', {
-                releve : response.data.observation,
-                operation : "INVENTORY"
-              }, {
-                root : true
-              })
-              if (response.data.observation.specie) {
-                commit('arboretum/add', response.data.observation.specie, {
-                  root: true
-                })
+          if (!rootState.user.isAnon){
+            axios.post('/api/observation', {
+              releve
+            }).then(function (response) {
+              if (response.data.observation) {
+                commit('add', response.data.observation)
+                if (!releve.identificationMode) {
+                  commit('user/updateProgression', {
+                    releve: response.data.observation,
+                    operation: "INVENTORY"
+                  }, {
+                      root: true
+                    })
+                  if (response.data.observation.specie) {
+                    commit('arboretum/add', response.data.observation.specie, {
+                      root: true
+                    })
+                  }
+                }
               }
-            }
-          })
+            })
           var actions = extractActions(releve, "inventory")
           dispatch('user/extractExplorationPoints', actions.explorationActions, {
-            root : true
+            root: true
           })
         }
+      else{
+        axios.post('/api/observationAnon', {
+          releve
+        })
+      }
+      
+      }
       }
     },
 
@@ -367,35 +378,35 @@ export default {
         isAnon: false,
         formerName: null,
         formerId: null,
-        disableNotif:false,
+        disableNotif: false,
         notifProfil: 0,
         trophies: [],
         explorationHistory: [],
         explorationScore: 0,
-        knowledgeScore:0,
-        knowledgeHistory:[],
+        knowledgeScore: 0,
+        knowledgeHistory: [],
         actionsTransActivite: new Map(),
         gamificationMode: true,
         differentSpecie: new Array(),
         differentGenus: new Array(),
-        sessionBackup:{},
-        status:[],
+        sessionBackup: {},
+        status: [],
         mission: null,
         activite: null,
         indexActivite: 0,
         completion: 0,
         goal: 0,
         time: {
-          timer : null,
-          startTime : -1,
-          timeLeft : -1,
-          duration:-1
+          timer: null,
+          startTime: -1,
+          timeLeft: -1,
+          duration: -1
         },
         activities: []
       },
       mutations: {
-        updateStatus(state,status){
-          state.status=status
+        updateStatus(state, status) {
+          state.status = status
         },
         setActivities(state, activities) {
           state.activities = activities
@@ -406,10 +417,10 @@ export default {
         setCompletion(state, completion) {
           state.completion = completion;
         },
-        restoreBackup(state){
+        restoreBackup(state) {
 
         },
-        startFolia(state){
+        startFolia(state) {
 
         },
         setGoal(state, goal) {
@@ -428,14 +439,14 @@ export default {
           state.differentSpecie.length = 0
           state.differentGenus.length = 0
         },
-        addKnowledgePoints(state,knowledgeResult){
+        addKnowledgePoints(state, knowledgeResult) {
           state.knowledgeScore += knowledgeResult.points
           state.knowledgeHistory.unshift(knowledgeResult)
         },
         setGamificationMode(state, mode) {
           state.gamificationMode = mode
         },
-        addActionTransActivite(state, param){
+        addActionTransActivite(state, param) {
           state.actionsTransActivite.set(param.action, param.nbPoint)
         },
         clearActionsTransActivite(state) {
@@ -445,21 +456,21 @@ export default {
           if (state.gamificationMode) {
             state.explorationHistory.unshift(explorationResult)
             state.explorationScore += explorationResult.points
-          }     
+          }
         },
         addTrophy(state, trophie) {
-          for (let i = 0 ; i < state.trophies.length; i++) {
+          for (let i = 0; i < state.trophies.length; i++) {
             if (state.trophies[i].name == trophie.name) return
           }
           state.trophies.push(trophie)
         },
         winTrophy(state, trophyName) {
-          for (let i = 0; i<state.trophies.length; i++) {
+          for (let i = 0; i < state.trophies.length; i++) {
             if (state.trophies[i].name == trophyName && state.trophies[i].obtenu == false) {
               state.trophies[i].obtenu = true
               state.notifProfil++
             }
-          }  
+          }
         },
         addNotifProfil(state, nbNotif) {
           if (state.nbNotif == null) {
@@ -487,7 +498,7 @@ export default {
         updateProgression(state, param) {
           if (updateCompletion(state, param.operation, param.releve)) state.completion++
         },
-        updateTime(state){
+        updateTime(state) {
 
         },
 
@@ -500,23 +511,23 @@ export default {
         identification(state, releve) {
           if (updateCompletion(state, "IDENTIFY", releve)) state.completion++
         },
-        setBackup(state,sessionBackup){
-          state.sessionBackup=sessionBackup
+        setBackup(state, sessionBackup) {
+          state.sessionBackup = sessionBackup
         }
       },
       actions: {
-        setTime({state,commit}, time) {
+        setTime({ state, commit }, time) {
           state.time.duration = time.duration
-          if (time.duration!=-1) {
-            state.time.timer = setInterval( () => {
-            state.time.duration = state.time.duration - 1000
-            commit('updateTime')
-            if (state.time.duration <= 0) {
-              state.time.duration = 0
-              clearInterval(state.time.timer)
-            }
-            }, 1000); 
-          }    
+          if (time.duration != -1) {
+            state.time.timer = setInterval(() => {
+              state.time.duration = state.time.duration - 1000
+              commit('updateTime')
+              if (state.time.duration <= 0) {
+                state.time.duration = 0
+                clearInterval(state.time.timer)
+              }
+            }, 1000);
+          }
         },
 
         extractExplorationPoints({
@@ -527,12 +538,12 @@ export default {
               if (state.actionsTransActivite.has(actions[i])) {
                 var points = parseInt(state.actionsTransActivite.get(actions[i]))
                 commit('addExplorationPoints', {
-                  points:points,
-                  action:actions[i]
+                  points: points,
+                  action: actions[i]
                 })
               }
             }
-          } 
+          }
         },
         extractKnowledgePoints({
           commit, state
@@ -542,12 +553,12 @@ export default {
               if (state.actionsTransActivite.has(actions[i])) {
                 var points = parseInt(state.actionsTransActivite.get(actions[i]))
                 commit('addKnowledgePoints', {
-                  points:points,
-                  action:actions[i]
+                  points: points,
+                  action: actions[i]
                 })
               }
             }
-          } 
+          }
         },
         logout({
           commit
@@ -562,45 +573,15 @@ export default {
             id: null
           });
         },
-        setAnonymous({
-          commit,
-          state
-        }) {
-          state.isAnon = true
-          axios.post('/api/anonymous')
-            .then(function (response) {
-              let {
-                username,
-                userId
-              } = response.data
-              commit('changeIdentity', {
-                name: username,
-                id: userId
-              })
-            })
-        },
-        restoreSession({
-          state,
-          commit
-        }) {
-          state.isAnon = false
-          axios.post('/api/restoreSession', {
-              id: state.formerId,
-              username: state.formerName
-            })
-            .then(function (response) {
-              commit('restoreIdentity')
-            })
-        },
         loadObservation({
-          commit,state
+          commit, state
         }) {
           axios.get('/api/observation')
             .then(function (res) {
               commit('releve/addMultiple', res.data, {
                 root: true
               })
-              let userObservation=res.data.filter(val=>val.osmId==state.id)
+              let userObservation = res.data.filter(val => val.osmId == state.id)
               commit('arboretum/addMultiple', userObservation, {
                 root: true
               })
@@ -639,7 +620,7 @@ export default {
                   name: user.getAttribute('display_name'),
                 }
               }).then(function (response) {
-                commit('setBackup',response.data.user)
+                commit('setBackup', response.data.user)
                 commit('set', userObject)
 
                 dispatch('loadObservation')
@@ -690,27 +671,27 @@ export default {
 
 function updateCompletion(state, operation, releve) {
 
-  let {specie, genus} = releve
+  let { specie, genus } = releve
 
   var type = state.activite.type
 
   if (type == 'VERIFY' && alreadyVerified(releve, state.id)) return false
-      
+
   if (type == operation) {
 
-    let {specieAdded, genusAdded} = updateDifferentSet(state, specie, genus)            
+    let { specieAdded, genusAdded } = updateDifferentSet(state, specie, genus)
     switch (state.activite.object) {
-      case 'NONE' :
+      case 'NONE':
         return true;
-      case 'SPECIE' :
+      case 'SPECIE':
         return (specie != null && state.activite.specie.toUpperCase() == specie.toUpperCase())
-      case 'GENUS' :
+      case 'GENUS':
         return (genus != null && state.activite.genus.toUpperCase() == genus.toUpperCase())
-      case 'DIFFERENTSPECIE' :
+      case 'DIFFERENTSPECIE':
         return specieAdded
-      case 'DIFFERENTGENUS' :
+      case 'DIFFERENTGENUS':
         return genusAdded
-      default :
+      default:
         return false
     }
   }
@@ -718,28 +699,28 @@ function updateCompletion(state, operation, releve) {
 
 function extractActions(releve, operation) {
   var actions = {
-    explorationActions : [],
-    knowledgeActions : []
+    explorationActions: [],
+    knowledgeActions: []
   }
-  switch(operation) {
-    case "inventory" : 
+  switch (operation) {
+    case "inventory":
       actions.explorationActions.push("gps")
       if (releve.specie) actions.explorationActions.push("completeSpecie")
       if (releve.genus) actions.explorationActions.push("completeGenus")
       if (releve.common) actions.explorationActions.push("completeCommon")
       if (releve.image) actions.explorationActions.push("photograph")
       break
-    case "verify" :
+    case "verify":
       var prev = releve.prev.splice(-1)[0]
       if (releve.specie != prev.specie && prev.specie) actions.knowledgeActions.push("modifySpecie")
-        else if (releve.specie && !prev.specie) actions.explorationActions.push("completeSpecie")
+      else if (releve.specie && !prev.specie) actions.explorationActions.push("completeSpecie")
       if (releve.genus != prev.genus && prev.genus) actions.knowledgeActions.push("modifyGenus")
-        else if (releve.genus && !prev.genus) actions.explorationActions.push("completeGenus")
+      else if (releve.genus && !prev.genus) actions.explorationActions.push("completeGenus")
       if (releve.common != prev.common && prev.common) actions.knowledgeActions.push("modifyCommon")
-        else if (releve.common && !prev.common) actions.explorationActions.push("completeCommon")
+      else if (releve.common && !prev.common) actions.explorationActions.push("completeCommon")
       if (releve.image != prev.image) actions.explorationActions.push("photograph")
       break
-  } 
+  }
   return actions
 }
 
@@ -747,25 +728,25 @@ function updateDifferentSet(state, specie, genus) {
   var res = new Object()
   if (specie != null && !state.differentSpecie.includes(specie)) {
     state.differentSpecie.push(specie)
-    res.specieAdded=true
+    res.specieAdded = true
   }
 
   if (genus != null && !state.differentGenus.includes(genus)) {
-    state.differentGenus.push(genus) 
-    res.genusAdded=true
-  } 
+    state.differentGenus.push(genus)
+    res.genusAdded = true
+  }
   return res
-} 
+}
 
 function alreadyVerified(releve, userId) {
   if (releve.osmId == userId) return true
- 
+
   for (let i = 0; i < releve.prev.length; i++) {
     if (releve.prev[i].osmId == userId) return true
     if (releve.prev[i].modifierId == userId) return true
-     
+
     for (let j = 0; j < releve.prev[i].validation.length; j++) {
-      if(releve.prev[i].validation[j].id == userId) return true
+      if (releve.prev[i].validation[j].id == userId) return true
     }
   }
   return false

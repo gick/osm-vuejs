@@ -11,15 +11,9 @@
           </div>
         </v-ons-list-item>
         <v-ons-list-item>
-          <div class="center">Relevé de vérification</div>
+          <div class="center">Mode création de relevé anonyme (les relevés seront vus comme ceux d'un autre joueur)</div>
           <div class="right">
-            <v-ons-switch v-model="verifCheck" @change="setVerificationMode"></v-ons-switch>
-          </div>
-        </v-ons-list-item>
-        <v-ons-list-item>
-          <div class="center">Mode anonyme (vos relevés seront vus comme ceux d'un autre joueur)</div>
-          <div class="right">
-            <v-ons-switch v-model="isAnon" @change="setAnonymous"></v-ons-switch>
+            <v-ons-switch v-model="$store.state.user.isAnon"></v-ons-switch>
           </div>
         </v-ons-list-item>
         <v-ons-list-item>
@@ -166,14 +160,6 @@ export default {
         }.bind(this))
     },
 
-    setAnonymous(evt){
-      if(evt.value){
-        this.$store.dispatch('user/setAnonymous')
-      } else {
-        this.$store.dispatch('user/restoreSession')
-
-      }
-    },
     resetSession(){
       axios.post("/api/resetBackup").then(
         function(response) {
@@ -215,16 +201,11 @@ export default {
       return [...new Set(array.map(x => x.username))];
     },
     setIdentificationMode(event) {
-      if (event.value) {
-        this.verifCheck = false;
-      }
       this.$store.commit("releve/setIdentificationMode", event.value);
-    },
-    setVerificationMode(event) {
-      if (event.value) {
-        this.identCheck = false;
-      }
-      this.$store.commit("releve/setVerificationMode", event.value);
+      if(!event.value)
+        return
+      
+      this.$store.commit("commonData/setIdentificationMode",true)
     }
   }
 };
