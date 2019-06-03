@@ -29,7 +29,7 @@ import CustomToolbar from './partials/CustomToolbar.vue';
 import AppNavigator from './AppNavigator.vue';
 import 'vue-select/dist/vue-select.css';
 import backupPlugin from './store/backupPlugin'
-import knowledgePlugin from './store/knowledgePlugin'
+import scorePlugin from './store/scorePlugin'
 import loggerPlugin from './store/loggerPlugin'
 import statusPlugin from './store/statusPlugin'
 
@@ -83,7 +83,7 @@ new Vue({
   el: '#app',
   i18n,
   render: h => h(AppNavigator),
-  store: new Vuex.Store({modules:storeLike.modules,  plugins: [knowledgePlugin,backupPlugin,loggerPlugin,statusPlugin]  }),
+  store: new Vuex.Store({modules:storeLike.modules,  plugins: [scorePlugin,backupPlugin,loggerPlugin,statusPlugin]  }),
   beforeCreate() {
     // Shortcut for Material Design
     Vue.prototype.md = this.$ons.platform.isAndroid();

@@ -65,7 +65,7 @@ export default {
     authenticate: "Authentifiez-vous!",
     welcome: "Bienvenue dans Albiziapp",
     authenticatePlease : "Merci de vous authentifier",
-    authenticateButton : "AUTHENTIFIER",
+    authenticateButton : "S'AUTHENTIFIER",
     currentMission: "Mission en cours",
     skipActivityTitle: "Êtes-vous sûr de vouloir passer cette activité ?",
     skipActivityDesc: "Cette action est irréversible",
