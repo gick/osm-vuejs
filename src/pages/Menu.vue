@@ -97,7 +97,7 @@ export default {
       ];
       if (this.gamificationMode) {
         var profil = {
-          title: "Profil",
+          title: "Score",
           icon: "ion-person"
         };
         var arboretum = {

@@ -6,8 +6,8 @@
       </div>
     </v-ons-toolbar>
     <v-ons-list>
-      <v-ons-list-header v-if="!modify">Nouveau relevé</v-ons-list-header>
-      <v-ons-list-header v-if="modify">Modifier un relevé</v-ons-list-header>
+      <v-ons-list-header class="head" v-if="!modify">Nouveau relevé</v-ons-list-header>
+      <v-ons-list-header class="head" v-if="modify">Modifier un relevé</v-ons-list-header>
       <v-ons-list-title
         style="margin-top: 10px;
     font-size: 15px;
@@ -19,7 +19,9 @@
           <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>
         </div>
         <div class="center">
+          <label class="tag">Espèce</label>
           <v-select
+          class="selector"
             v-model="releve.specie"
             ref="species"
             :reduce="option=>option.espece"
@@ -35,7 +37,9 @@
           <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>
         </div>
         <div class="center">
+          <label class="tag">Genre</label>
           <v-select
+            class="selector"
             v-model="releve.genus"
             ref="genus"
             :options="genusList"
@@ -50,8 +54,9 @@
         <div class="left">
           <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>
         </div>
-
+        <label class="tag">Vernaculaire</label>
         <v-select
+          class="selector"
           v-model="releve.common"
           label="vernaculaire"
           ref="common"
@@ -63,10 +68,11 @@
       </v-ons-list-item>
       <v-ons-list-item>
         <div class="left">
-          <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>Degré de confiance
+          <v-ons-icon icon="ion-leaf" class="list-item__icon"></v-ons-icon>
         </div>
         <div class="center">
-          <v-ons-select :disabled="noTree" style="margin-left:15px;" v-model="releve.confidence">
+          <label class="tag">Confiance</label>
+          <v-ons-select :disabled="noTree" class="selector" v-model="releve.confidence">
             <option
               v-for="(confidence,index) in confidenceValues"
               :value="confidence"
@@ -121,6 +127,17 @@
 }
 .vs__dropdown-menu {
   z-index: 10005;
+}
+.selector{
+  width: 70%!important;
+  margin-left:auto;
+}
+.tag{
+  padding-top: 9px;
+  font-weight: bold;
+}
+.head{
+ font-size:36px;
 }
 </style>
 <script>
