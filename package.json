@@ -28,6 +28,7 @@
     "pusher-js": "^4.4.0",
     "v-autocomplete": "^1.8.2",
     "vue": "^2.6.10",
+    "vue-i18n": "^8.11.2",
     "vue-instant": "^1.0.4",
     "vue-loader": "^11.0.0",
     "vue-lodash": "^2.0.2",

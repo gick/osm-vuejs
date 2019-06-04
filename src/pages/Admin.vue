@@ -48,16 +48,11 @@
             <v-ons-button @click="resetSession">Reset</v-ons-button>
           </div>
         </v-ons-list-item>
-        <v-ons-list-item>
-          <div class="center">Add exploration points</div>
+
+        <v-ons-list-item v-for="score in scores">
+          <div class="center">Add {{score.displayName}}</div>
           <div class="right">
-            <v-ons-button @click="addExp">Add</v-ons-button>
-          </div>
-        </v-ons-list-item>
-        <v-ons-list-item>
-          <div class="center">Add knowledge points</div>
-          <div class="right">
-            <v-ons-button @click="addKnow">Add</v-ons-button>
+            <v-ons-button @click="addPoints(score)">Add</v-ons-button>
           </div>
         </v-ons-list-item>
       </v-ons-list>
@@ -148,6 +143,9 @@ export default {
     userList() {
       return this.$store.state.users.userList;
     },
+    scores() {
+      return this.$store.state.user.scores;
+    },
     identificationMode : {
       get(){
         return this.$store.state.commonData.identification
@@ -164,26 +162,23 @@ export default {
         this.$store.commit('commonData/setVerificationMode',val)
       }
     }
-
   },
   methods: {
-    addExp(){
-        this.$ons.notification
-        .prompt("Number of points", {inputType:'number',title:'Add exp points',defaultValue:0})
-        .then(function(points){
-          if(points){
-            this.$store.commit('user/addExplorationPoints',{points:parseInt(points)})
-          }
-        }.bind(this))
-    },
-    addKnow(){
-        this.$ons.notification
-        .prompt("Number of points", {inputType:'number',title:'Add knowledge points',defaultValue:0})
-        .then(function(points){
-          if(points){
-            this.$store.commit('user/addKnowledgePoints',{points:parseInt(points)})
-          }
-        }.bind(this))
+    addPoints(score) {
+      this.$ons.notification
+      .prompt("Number of points", {inputType:'number',title:'Add ' + score.displayName ,defaultValue:0})
+      .then(function(points){
+        if(points){
+          this.$store.commit('user/addPoints', 
+          {
+            name: score.name,
+            history: {
+              text: "via admin",
+              points : parseInt(points)
+            }
+          })
+        }
+      }.bind(this))
     },
 
     resetSession(){

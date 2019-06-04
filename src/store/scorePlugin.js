@@ -66,26 +66,43 @@ let testModification = (obs, uid) => {
     return {actions:[],context:{activity:'extConfirmation',details:{}}}
 }
 
-let knowledgePlugin = store => {
+let scorePlugin = store => {
     store.subscribe((mutation, state) => {
         switch (mutation.type) {
+
             case 'user/startFolia':
-                store.dispatch('user/extractKnowledgePoints', ["useFolia"])
+                store.dispatch('user/extractPoints', ["useFolia"])
                 break;
+
             case 'releve/validateFromOutside':
                 var result = testValidation(mutation.payload, userId)
                 if (result.actions.length != 0) {
-                    store.dispatch('user/extractKnowledgePoints', result.actions)
+                    store.dispatch('user/extractPoints', result.actions)
                 }
                 break;
+
             case 'releve/modifyFromOutside':                
                 var userId = store.state.user.id
                 var result = testModification(mutation.payload, userId)
                 if (result.actions.length != 0) {
-                    store.dispatch('user/extractKnowledgePoints', result.actions)
+                    store.dispatch('user/extractPoints', result.actions)
                 }
-              break;
+                break;
 
+            case 'releve/add':
+                var actions = extractActions(mutation.payload, "inventory")
+                store.dispatch('user/extractPoints', actions, {
+                    root: true
+                })
+                break;
+
+            case 'releve/modify':
+                let index = store.state.releve.releves.findIndex(releve => releve._id == mutation.payload._id)
+                var actions = extractActions(store.state.releve.releves[index], "verify")
+                store.dispatch("user/extractPoints", actions, {
+                    root: true
+                })
+                break;
         }
     })
     store.subscribeAction((action, state) => {
@@ -97,16 +114,40 @@ let knowledgePlugin = store => {
                 if (result.specie) actions.push("identifiedSpecie")
                 if (result.common) actions.push("identifiedCommon")
                 if (actions.length != 0) {
-                    store.dispatch('user/extractKnowledgePoints', actions)
+                    store.dispatch('user/extractPoints', actions)
                 }
                 break
 
             case 'releve/setNoTree':
-                store.dispatch('user/extractKnowledgePoints', ["question"])
+                store.dispatch('user/extractPoints', ["question"])
                 break
         }
     })
 
 }
 
-export default knowledgePlugin
+function extractActions(releve, operation) {
+  var actions = []
+  switch (operation) {
+    case "inventory":
+      actions.push("gps")
+      if (releve.specie) actions.push("completeSpecie")
+      if (releve.genus) actions.push("completeGenus")
+      if (releve.common) actions.push("completeCommon")
+      if (releve.image) actions.push("photograph")
+      break
+    case "verify":
+      var prev = releve.prev.splice(-1)[0]
+      if (releve.specie != prev.specie) 
+        action.push( prev.specie ? "modifySpecie" : "completeSpecie")
+      if (releve.genus != prev.genus) 
+        action.push( prev.genus ? "modifyGenus" : "completeGenus")
+      if (releve.common != prev.common) 
+        action.push( prev.specie ? "modifyCommon" : "completeCommon")
+      if (releve.image != prev.image)
+        actions.push("photograph")
+  }
+  return actions
+}
+
+export default scorePlugin
