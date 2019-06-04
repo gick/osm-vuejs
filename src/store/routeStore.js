@@ -14,9 +14,7 @@ export default {
           'Non renseigné',
           'Peu confiant',
           'Confiant',
-        ],
-        knowledgeRules: [],
-        explorationRules: []
+        ]
       },
       mutations: {
         setVerificationMode(state, mode) {
@@ -24,12 +22,6 @@ export default {
         },
         setIdentificationMode(state, mode) {
           state.identification = mode
-        },
-        addKnowledgeRule(state, rule) {
-          state.knowledgeRules.push(rule)
-        },
-        addExplorationRule(state, rule) {
-          state.explorationRules.push(rule)
         }
       }
     },
@@ -230,13 +222,13 @@ export default {
               }, {
                   root: true
                 })
-              var actions = extractActions(state.releves[index], "verify")
+              /*var actions = extractActions(state.releves[index], "verify")
               dispatch("user/extractExplorationPoints", actions.explorationActions, {
                 root: true
               })
               dispatch("user/extractKnowledgePoints", actions.knowledgeActions, {
                 root: true
-              })
+              })*/
             })
         },
         setNoTree({
@@ -337,18 +329,13 @@ export default {
                 }
               }
             })
-          var actions = extractActions(releve, "inventory")
-          dispatch('user/extractExplorationPoints', actions.explorationActions, {
-            root: true
-          })
+          }
+          else {
+            axios.post('/api/observationAnon', {
+            releve
+            })
+          }
         }
-      else{
-        axios.post('/api/observationAnon', {
-          releve
-        })
-      }
-      
-      }
       }
     },
 
@@ -382,11 +369,7 @@ export default {
         disableNotif: false,
         notifProfil: 0,
         trophies: [],
-        explorationHistory: [],
-        explorationScore: 0,
-        knowledgeScore: 0,
-        knowledgeHistory: [],
-        actionsTransActivite: new Map(),
+        scores: [],
         gamificationMode: true,
         differentSpecie: new Array(),
         differentGenus: new Array(),
@@ -427,6 +410,14 @@ export default {
         setGoal(state, goal) {
           state.goal = goal;
         },
+        setScores(state, scores) {
+          state.scores = scores
+        },
+        displayScore(state, scoreName) {
+          for (let i = 0; i <state.scores.length; i++) {
+            state.scores[i].display = (state.scores[i].name == scoreName) ? true : false
+          }
+        },
         setIndexActivite(state, index) {
           state.indexActivite = index
         },
@@ -440,30 +431,22 @@ export default {
           state.differentSpecie.length = 0
           state.differentGenus.length = 0
         },
-        addKnowledgePoints(state, knowledgeResult) {
-          state.knowledgeScore += knowledgeResult.points
-          state.knowledgeHistory.unshift(knowledgeResult)
+        addPoints(state, score) {
+          for (let i = 0; i < state.scores.length; i++) {
+            if (state.scores[i].name == score.name) {
+              state.scores[i].nbPoint += score.history.points
+              state.scores[i].history.unshift(score.history)
+            }
+          }
         },
         setGamificationMode(state, mode) {
           state.gamificationMode = mode
         },
-        addActionTransActivite(state, param) {
-          state.actionsTransActivite.set(param.action, param.nbPoint)
-        },
-        clearActionsTransActivite(state) {
-          state.actionsTransActivite.clear()
-        },
-        addExplorationPoints(state, explorationResult) {
-          if (state.gamificationMode) {
-            state.explorationHistory.unshift(explorationResult)
-            state.explorationScore += explorationResult.points
-          }
-        },
-        addTrophy(state, trophie) {
+        addTrophy(state, trophy) {
           for (let i = 0; i < state.trophies.length; i++) {
-            if (state.trophies[i].name == trophie.name) return
+            if (state.trophies[i].name == trophy.name) return
           }
-          state.trophies.push(trophie)
+          state.trophies.push(trophy)
         },
         winTrophy(state, trophyName) {
           for (let i = 0; i < state.trophies.length; i++) {
@@ -531,32 +514,26 @@ export default {
           }
         },
 
-        extractExplorationPoints({
+        extractPoints({
           commit, state
         }, actions) {
           if (state.gamificationMode) {
-            for (let i = 0; i < actions.length; i++) {
-              if (state.actionsTransActivite.has(actions[i])) {
-                var points = parseInt(state.actionsTransActivite.get(actions[i]))
-                commit('addExplorationPoints', {
-                  points: points,
-                  action: actions[i]
-                })
-              }
-            }
-          }
-        },
-        extractKnowledgePoints({
-          commit, state
-        }, actions) {
-          if (state.gamificationMode) {
-            for (let i = 0; i < actions.length; i++) {
-              if (state.actionsTransActivite.has(actions[i])) {
-                var points = parseInt(state.actionsTransActivite.get(actions[i]))
-                commit('addKnowledgePoints', {
-                  points: points,
-                  action: actions[i]
-                })
+            console.log(JSON.stringify(state.scores))
+            for (var score of state.scores) {
+              console.log(JSON.stringify(score))
+              for (var rule of score.rules) {
+                console.log(JSON.stringify(actions))
+                console.log(rule.code)
+                console.log(actions.includes(rule.code))
+                if (actions.includes(rule.code)) {
+                  commit('addPoints', {
+                    name: score.name,
+                    history: {
+                      text: rule.text,
+                      points : rule.nbPoint
+                    }
+                  })
+                }
               }
             }
           }
@@ -674,8 +651,6 @@ function updateCompletion(state, operation, releve) {
 
   let { specie, genus } = releve
 
-  var differentID = !(releve.osmId == releve.modifierId)
-
   var type = state.activite.type
 
   if (type == 'VERIFY' && alreadyVerified(releve, state.id)) return false
@@ -698,33 +673,6 @@ function updateCompletion(state, operation, releve) {
         return false
     }
   }
-}
-
-function extractActions(releve, operation) {
-  var actions = {
-    explorationActions: [],
-    knowledgeActions: []
-  }
-  switch (operation) {
-    case "inventory":
-      actions.explorationActions.push("gps")
-      if (releve.specie) actions.explorationActions.push("completeSpecie")
-      if (releve.genus) actions.explorationActions.push("completeGenus")
-      if (releve.common) actions.explorationActions.push("completeCommon")
-      if (releve.image) actions.explorationActions.push("photograph")
-      break
-    case "verify":
-      var prev = releve.prev.splice(-1)[0]
-      if (releve.specie != prev.specie && prev.specie) actions.knowledgeActions.push("modifySpecie")
-      else if (releve.specie && !prev.specie) actions.explorationActions.push("completeSpecie")
-      if (releve.genus != prev.genus && prev.genus) actions.knowledgeActions.push("modifyGenus")
-      else if (releve.genus && !prev.genus) actions.explorationActions.push("completeGenus")
-      if (releve.common != prev.common && prev.common) actions.knowledgeActions.push("modifyCommon")
-      else if (releve.common && !prev.common) actions.explorationActions.push("completeCommon")
-      if (releve.image != prev.image) actions.explorationActions.push("photograph")
-      break
-  }
-  return actions
 }
 
 function updateDifferentSet(state, specie, genus) {

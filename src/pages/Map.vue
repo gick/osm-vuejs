@@ -98,29 +98,26 @@
 
         <l-tile-layer :url="url" :options="mapOptions" :attribution="attribution"/>
       </l-map>
+
       <v-ons-card>
         <v-ons-button @click="centerMap">Centrer carte</v-ons-button>
       </v-ons-card>
 
-      <v-ons-alert-dialog modifier="rowfooter"
-      :title="'Mission terminée'"
-      :footer="{
-        Ok: () => closeDialog()
-      }"
-      :visible.sync="missionOver"
-      >
-        Vous avez terminé votre mission, place à la mission suivante
+      <v-ons-alert-dialog modifier="rowfooter" :visible.sync="missionOver">
+        <span slot="title">{{ $t('missionOverTitle') }}</span>
+        {{ $t('missionOverDesc') }} 
+        <template slot="footer">
+          <v-ons-alert-dialog-button @click="closeDialog">OK</v-ons-alert-dialog-button>
+        </template>
       </v-ons-alert-dialog>
 
-      <v-ons-alert-dialog modifier="rowfooter"
-      :title="'Activité terminée'"
-      :footer="{
-        Ok: () => closeDialog()
-      }"
-      :visible.sync="activityOver"
-      >
-        Vous avez terminé votre activité, place à l'activité suivante
-      </v-ons-alert-dialog>
+    <v-ons-alert-dialog modifier="rowfooter" :visible.sync="activityOver">
+      <span slot="title">{{ $t('activityOverTitle') }}</span>
+      {{ $t('activityOverDesc') }} 
+      <template slot="footer">
+        <v-ons-alert-dialog-button @click="closeDialog">OK</v-ons-alert-dialog-button>
+      </template>
+    </v-ons-alert-dialog>
 
     </div>
     <v-ons-fab @click="centerMap" modifier="mini" position='bottom right'>
@@ -128,7 +125,7 @@
     </v-ons-fab>
 
   <ons-bottom-toolbar style="background-color:#F44336; color:white">
-      <center v-show='userID'>
+      <center v-show='userID && !missionDone'>
         {{instruction}}
         <v-ons-row>
           <v-ons-col v-if="timeLeft!=-1">
@@ -215,7 +212,6 @@ export default {
   },
   data() {
     return {
-      instruction: "",
       missionOver: false,
       activityOver: false,
       newCircle: null,
@@ -241,6 +237,17 @@ export default {
     };
   },
   computed: {
+    instruction() {
+      if(this.currentMission) {
+        return this.currentMission.activities[this.indexActivite].instruction.short
+      }    
+    },
+    missionDone() {
+      if (this.$store.state.user.activite) {
+        return false
+      }
+      return true
+    },
     userID() {
       return this.$store.state.user.id;
     },
@@ -323,7 +330,7 @@ export default {
       return this.$store.state.user.goal;
     },
     timeLeft() {
-       return this.$store.state.user.time.timeLeft
+       return this.$store.state.user.time.duration
     }
   },
 
@@ -331,24 +338,22 @@ export default {
     completion: {
       handler: function(newValue, oldValue) {
         if (newValue == this.goal) {
-          if (this.indexActivite + 1 == this.nbActivite) {
-          this.missionOver = true;
-          } else {
+          if (this.indexActivite + 1 != this.nbActivite) {
             this.activityOver = true;
           }
         }  
       },
       deep: true
     },
-    indexActivite: {
-      handler: function(newIndex, oldIndex) {
-        if (this.newIndex == -1) {
-          return
+    missionDone: {
+      handler: function(newValue, oldValue) {
+        if (newValue == true && oldValue == false) {
+          this.missionOver = true
         }
-        this.instruction = this.currentMission.activities[newIndex].instruction.short
       },
       deep: true
-    }
+    },
+
   },
   created() {
     this.$nextTick(() => {
@@ -511,7 +516,7 @@ export default {
       };
       console.log("clicked on map");
       this.$ons.notification
-        .confirm("Voulez vous réaliser un nouveau relevé?")
+        .confirm(this.$t('confirmDesc'))
         .then(response => {
           if (response) {
             let coordinates = [

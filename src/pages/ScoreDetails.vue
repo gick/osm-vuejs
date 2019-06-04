@@ -8,10 +8,10 @@
     <v-ons-card>
     	<v-ons-row>
     		<v-ons-col>
-    			Points d'exploration
+    			{{ displayedScore.displayName }}
     		</v-ons-col>
     		<v-ons-col style="text-align: right">
-    			{{explorationScore}}
+    			{{ displayedScore.nbPoint }}
     		</v-ons-col>
     	</v-ons-row>   	 
     </v-ons-card>
@@ -19,10 +19,10 @@
     <v-ons-card>
     	<v-ons-list-header>Points acquis</v-ons-list-header>
     	<v-ons-list style="max-height:200px; overflow: auto">
-    		<v-ons-list-item v-for="item in journal">
+    		<v-ons-list-item v-for="item in displayedScore.history">
     			<v-ons-row>
     				<v-ons-col>
-    					{{ getText(item.action) }}
+    					{{ item.text }}
     				</v-ons-col>
     				<v-ons-col style="text-align: right" width='20%'>
     					{{ item.points }}
@@ -35,13 +35,13 @@
     <v-ons-card>
     	<v-ons-list-header>Comment obtenir des points ?</v-ons-list-header>
     	<v-ons-list>
-    		<v-ons-list-item v-for="(item,index) in explorationRules" v-bind:key='index + "rules"'>
+    		<v-ons-list-item v-for="(item,index) in displayedScore.rules" v-bind:key='index + "rules"'>
     			<v-ons-row>
     				<v-ons-col>
     					{{ item.text}}
     				</v-ons-col>
     				<v-ons-col style="text-align: right" width='20%'>
-    					{{item.points}}
+    					{{item.nbPoint}}
     				</v-ons-col>	 
     			</v-ons-row>
     		</v-ons-list-item>
@@ -61,35 +61,19 @@
 			}
 		},
 		computed : {
-			journal() {
-				return this.$store.state.user.explorationHistory
+			scores() {
+				return this.$store.state.user.scores
 			},
-			explorationScore() {
-      	return this.$store.state.user.explorationScore
-    	},
-    	explorationRules() {
-				return this.$store.state.commonData.explorationRules
-			},
+			displayedScore() {
+				for (let i = 0; i < this.scores.length; i++) {
+					if (this.scores[i].display) {
+						return this.scores[i]
+					}
+				}
+			}
 		},
 		methods : {
-			getText(action) {
-			  switch (action) {
-			    case "completeGenus" :
-			      return "Genre renseigné"
-			    case "completeSpecie" :
-			      return "Espèce renseignée"
-			    case "completeCommon" :
-			      return "Nom commun renseigné"
-			    case "photograph" :
-			      return "Prise de photo"
-			    case "validate" :
-			      return "Validation"
-			    case "successfulActivity" :
-			      return "Activité réussie"
-			    case "gps" :
-			      return "Faire un relevé"
-			  }
-			}
+			
 		}
 	}
 

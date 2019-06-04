@@ -13,20 +13,10 @@
 	      </v-ons-row>
 	    </v-ons-card>
 
-			 <v-ons-card>
-	    	<v-ons-row @click='displayScoreDetails'>
+	    <v-ons-card v-for="score in scores">
+	    	<v-ons-row @click='displayScoreDetails(score.name)'>
 	    		<v-ons-col>
-	        	Points d'observation : {{ score }}
-	    		</v-ons-col>
-	    		<v-ons-col style="text-align: right" >
-	        	<v-ons-icon icon="fa-info-circle" style="color:#cca108"></v-ons-icon> 
-	       	</v-ons-col>
-	      </v-ons-row>
-	    </v-ons-card>
-			 <v-ons-card>
-	    	<v-ons-row @click='displayKnowledgeDetails'>
-	    		<v-ons-col>
-	        	Points de connaissance : {{ knowledgeScore }}
+	        	{{score.displayName}} : {{ score.nbPoint}}
 	    		</v-ons-col>
 	    		<v-ons-col style="text-align: right" >
 	        	<v-ons-icon icon="fa-info-circle" style="color:#cca108"></v-ons-icon> 
@@ -52,8 +42,7 @@
 
 <script>
 
-import ScoreExplorationDetails from "./ScoreExplorationDetails.vue"
-import ScoreKnowledgeDetails from "./ScoreKnowledgeDetails.vue"
+import ScoreDetails from "./ScoreDetails.vue"
 import TrophiesDetails from "./TrophiesDetails.vue"
 import StatusDetails from './StatusDetails.vue'
 export default {
@@ -63,8 +52,8 @@ export default {
     }
   },
   computed : {
-  	score() {
-      return this.$store.state.user.explorationScore
+  	scores() {
+			return this.$store.state.user.scores
 		},
 		status(){
 			return this.$store.state.user.status
@@ -73,10 +62,6 @@ export default {
     username() {
       return this.$store.state.user.name
 		},
-		knowledgeScore(){
-			return this.$store.state.user.knowledgeScore
-		}
-		,
     trophies() {
     	return this.$store.state.user.trophies
     },
@@ -109,17 +94,12 @@ export default {
       });
 
 		},
-  	displayScoreDetails() {
+  	displayScoreDetails(scoreName) {
+  		this.$store.commit("user/displayScore", scoreName)
   		this.$store.commit("navigator/push", {
-        extends: ScoreExplorationDetails  
+        extends: ScoreDetails  
       });
 		},
-		displayKnowledgeDetails() {
-  		this.$store.commit("navigator/push", {
-        extends: ScoreKnowledgeDetails  
-      });
-		}	
-		,
   	resetBadge() {
   		this.$store.commit('user/clearNotifProfil')
   	},

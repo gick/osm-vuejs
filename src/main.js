@@ -29,7 +29,7 @@ import CustomToolbar from './partials/CustomToolbar.vue';
 import AppNavigator from './AppNavigator.vue';
 import 'vue-select/dist/vue-select.css';
 import backupPlugin from './store/backupPlugin'
-import knowledgePlugin from './store/knowledgePlugin'
+import scorePlugin from './store/scorePlugin'
 import loggerPlugin from './store/loggerPlugin'
 import statusPlugin from './store/statusPlugin'
 
@@ -66,10 +66,24 @@ Vue.component('b-progress-bar', BProgressBar);
 import Progress from 'vue-multiple-progress'
 Vue.component('VmProgress', Progress)
 
+import VueI18n from 'vue-i18n'
+import messages from './lang/messages'
+Vue.use(VueI18n)
+
+let locale = navigator.language
+console.log(locale)
+
+const i18n = new VueI18n({
+  fallbackLocale: 'fr',
+  locale: locale,
+  messages
+})
+
 new Vue({
   el: '#app',
+  i18n,
   render: h => h(AppNavigator),
-  store: new Vuex.Store({modules:storeLike.modules,  plugins: [knowledgePlugin,backupPlugin,loggerPlugin,statusPlugin]  }),
+  store: new Vuex.Store({modules:storeLike.modules,  plugins: [scorePlugin,backupPlugin,loggerPlugin,statusPlugin]  }),
   beforeCreate() {
     // Shortcut for Material Design
     Vue.prototype.md = this.$ons.platform.isAndroid();
