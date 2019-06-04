@@ -1,10 +1,10 @@
 let getStatus=function(userScores,statusRules){
     return statusRules.filter(function(item){
-        for (let i = 0; i < userScores.length; i++) {
-            let scoreName = userScores[i].name
+        for (let userScore of userScores) {
+            let scoreName = userScore.name
             for (let j = 1; j < Object.keys(item).length; j++) {  
                 if (item[scoreName] != null) {
-                    if (item[scoreName] > userScores[i].nbPoint) {
+                    if (item[scoreName] > userScore.nbPoint) {
                         return false
                     }
                 }  

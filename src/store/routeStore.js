@@ -518,20 +518,21 @@ export default {
           commit, state
         }, actions) {
           if (state.gamificationMode) {
-            for (let i = 0; i < actions.length; i++) {
-              for (let j = 0; j < state.scores.length; j++) {
-                for (let k = 0; k < state.scores[j].rules.length; k++) {
-                  if (state.scores[j].rules[k].code == actions[i]) {
-                    var points = state.scores[j].rules[k].nbPoint
-                    var text = state.scores[j].rules[k].text
-                    commit('addPoints', {
-                      name: state.scores[j].name,
-                      history: {
-                        text: text,
-                        points : points
-                      }
-                    })
-                  }
+            console.log(JSON.stringify(state.scores))
+            for (var score of state.scores) {
+              console.log(JSON.stringify(score))
+              for (var rule of score.rules) {
+                console.log(JSON.stringify(actions))
+                console.log(rule.code)
+                console.log(actions.includes(rule.code))
+                if (actions.includes(rule.code)) {
+                  commit('addPoints', {
+                    name: score.name,
+                    history: {
+                      text: rule.text,
+                      points : rule.nbPoint
+                    }
+                  })
                 }
               }
             }

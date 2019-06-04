@@ -138,14 +138,14 @@ function extractActions(releve, operation) {
       break
     case "verify":
       var prev = releve.prev.splice(-1)[0]
-      if (releve.specie != prev.specie && prev.specie) actions.push("modifySpecie")
-      else if (releve.specie && !prev.specie) actions.push("completeSpecie")
-      if (releve.genus != prev.genus && prev.genus) actions.push("modifyGenus")
-      else if (releve.genus && !prev.genus) actions.push("completeGenus")
-      if (releve.common != prev.common && prev.common) actions.push("modifyCommon")
-      else if (releve.common && !prev.common) actions.push("completeCommon")
-      if (releve.image != prev.image) actions.push("photograph")
-      break
+      if (releve.specie != prev.specie) 
+        action.push( prev.specie ? "modifySpecie" : "completeSpecie")
+      if (releve.genus != prev.genus) 
+        action.push( prev.genus ? "modifyGenus" : "completeGenus")
+      if (releve.common != prev.common) 
+        action.push( prev.specie ? "modifyCommon" : "completeCommon")
+      if (releve.image != prev.image)
+        actions.push("photograph")
   }
   return actions
 }
