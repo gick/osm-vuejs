@@ -18,7 +18,7 @@
           v-for="(circle,index) in observations"
           custom="10"
           v-bind:key="index+osmCircles.length"
-          :lat-lng="circle.coordinates"
+          :lat-lng="getGeoJSONCoordinate(circle.location.coordinates)"
           :radius="6"
           :color="getColor(circle)"
         />
@@ -28,7 +28,7 @@
           v-for="(circle,index) in observationsFromOSM"
           custom="10"
           v-bind:key='index+"fromosm"'
-          :lat-lng="circle.coordinates"
+          :lat-lng="getGeoJSONCoordinate(circle.location.coordinates)"
           :radius="6"
           :color="'orange'"
         />
@@ -39,7 +39,7 @@
           v-for="(circle,index) in identificationsTodo"
           custom="10"
           v-bind:key="index+'identification'"
-          :lat-lng="circle.coordinates"
+          :lat-lng="getGeoJSONCoordinate(circle.location.coordinates)"
           :radius="6"
           color="blue"
         />
@@ -48,7 +48,7 @@
           v-for="(circle,index) in identificationsDone"
           custom="10"
           v-bind:key="index+'identificationDone'"
-          :lat-lng="circle.coordinates"
+          :lat-lng="getGeoJSONCoordinate(circle.location.coordinates)"
           :radius="6"
           color="blue"
         />
@@ -58,7 +58,7 @@
           v-for="(circle,index) in observationsOther"
           custom="10"
           v-bind:key="index+'observationOther'"
-          :lat-lng="circle.coordinates"
+          :lat-lng="getGeoJSONCoordinate(circle.location.coordinates)"
           :radius="6"
           color="lime"
         />
@@ -69,7 +69,7 @@
           v-for="(circle,index) in observationsOtherTodo"
           custom="10"
           v-bind:key="index+'observationOtherTodo'"
-          :lat-lng="circle.coordinates"
+          :lat-lng="getGeoJSONCoordinate(circle.location.coordinates)"
           :radius="6"
           color="lime"
         />
@@ -79,7 +79,7 @@
           v-for="(circle,index) in observationsOtherDone"
           custom="10"
           v-bind:key="index+'observationOtherDone'"
-          :lat-lng="circle.coordinates"
+          :lat-lng="getGeoJSONCoordinate(circle.location.coordinates)"
           :radius="6"
           color="lime"
         />
@@ -393,6 +393,9 @@ export default {
     mapShow() {
       this.map.invalidateSize();
     },
+    getGeoJSONCoordinate(coordinates){
+      return {lat : coordinates[1],lng :coordinates[0]}
+    },
     getCoordinate(circle) {
       return { lat: circle.lat, lng: circle.lon };
     },
@@ -433,7 +436,7 @@ export default {
       let newReleve = {};
       newReleve.specie = releve.tags.species;
       newReleve.source="OSM"
-      newReleve.coordinates=[releve.lat,releve.lon]
+      newReleve.coordinates=[releve.lon,releve.lat]
       newReleve.nodeId=releve.id
       this.$store.commit("navigator/push", {
         extends: ReleveOSM,
@@ -512,8 +515,8 @@ export default {
         .then(response => {
           if (response) {
             let coordinates = [
-              this.newCircle.center[0],
-              this.newCircle.center[1]
+              this.newCircle.center[1],
+              this.newCircle.center[0]
             ];
             this.newCircle = null;
 
