@@ -278,32 +278,24 @@ export default {
 
       for (let i = 0; i < this.currentMission.mechanics.length; i++) {
         if (this.currentMission.mechanics[i].name == 'score') {
-          for (let j = 0; j < this.currentMission.mechanics[i].explorationPoints.length; j++) {
-            var action = this.currentMission.mechanics[i].explorationPoints[j].code
-            var nbPoint = this.currentMission.mechanics[i].explorationPoints[j].nbPoint
-            var text = this.currentMission.mechanics[i].explorationPoints[j].text
-            this.$store.commit('user/addActionTransActivite', {
-              action:action,
-              nbPoint:nbPoint
-            })
-            this.$store.commit('commonData/addExplorationRule', {
-              text:text,
-              points:nbPoint
-            })
-          }
-          for (let j = 0; j < this.currentMission.mechanics[i].knowledgePoints.length; j++) {
-            var action = this.currentMission.mechanics[i].knowledgePoints[j].code
-            var nbPoint = this.currentMission.mechanics[i].knowledgePoints[j].nbPoint
-            var text = this.currentMission.mechanics[i].knowledgePoints[j].text
-            this.$store.commit('user/addActionTransActivite', {
-              action:action,
-              nbPoint:nbPoint
-            })
-            this.$store.commit('commonData/addKnowledgeRule', {
-              text:text,
-              points:nbPoint
+          var scores = []
+          for(let j = 0; j < this.currentMission.mechanics[i].scores.length; j++) {
+            let score =  this.currentMission.mechanics[i].scores[j]
+            scores.push({
+              name : score.name,
+              rules : score.actions,
+              nbPoint: 0,
+              icon : score.icon,
+              displayName : score.displayName,
+              history: [],
+              display: false
             })
           }
+
+          if (scores.length) {
+            this.$store.commit('user/setScores', scores)
+          }
+  
         } else if (this.currentMission.mechanics[i].name == 'trophy') {
             for (let j = 0 ; j < this.currentMission.mechanics[i].trophiesList.length; j++) {
                 var trophy = new Object()
