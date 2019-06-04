@@ -119,6 +119,10 @@
       >Valider</v-ons-button>
       <v-ons-button modifier="outline" @click="cancel" style="margin: 6px 0">Retour</v-ons-button>
     </section>
+      <section style="margin: 16px" v-if="isGod">
+          <p class="center">Supprimer l'exercice d'identification</p>
+          <v-ons-button @click="removeObs"  style="margin: 6px 0">Supprimer</v-ons-button>
+        </section>
   </v-ons-page>
 </template>
 <style>
@@ -154,9 +158,22 @@ export default {
         return true;
       }
       return false
+    },
+    isGod(){
+      return this.$store.state.user.isGod
     }
   },
   methods: {
+    removeObs() {
+      this.$store.dispatch("releve/remove", this.releve);
+      this.$store.commit("navigator/pop");
+      this.$toasted.show("Votre relevé a été supprimé", {
+        fullWidth: true,
+        position: "bottom-center",
+        duration: 2000
+      }); // Shows from 0s to 2s
+    },
+
     onChange() {
       var that = this;
       //this.image = this.$refs.pictureInput.image;

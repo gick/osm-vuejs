@@ -47,7 +47,7 @@
         </section>
         <section style="margin: 16px">
           <p class="center">Supprimer le relevé, cette opération est définitive!</p>
-          <v-ons-button @click="removeObs" :disabled="!allowRemove" style="margin: 6px 0">Supprimer</v-ons-button>
+          <v-ons-button @click="removeObs" :disabled="(!allowRemove) || !isGod" style="margin: 6px 0">Supprimer</v-ons-button>
         </section>
 
         <section v-if="releve.prev.length>0" style="margin: 16px">
@@ -98,6 +98,9 @@ export default {
   computed: {
     releve() {
       return this.$store.state.releve.releves.find(rel => rel._id == this.id);
+    },
+    isGod(){
+      return this.$store.state.user.isGod
     },
     noTreeValue: {
       get() {

@@ -17,15 +17,22 @@
           </div>
         </v-ons-list-item>
         <v-ons-list-item>
+          <div class="center">Mode suppression (EVITEZ DE SUPPRIMER DES RELEVES D'AUTRES ADMINS)</div>
+          <div class="right">
+            <v-ons-switch v-model="$store.state.user.isGod"></v-ons-switch>
+          </div>
+        </v-ons-list-item>
+
+        <v-ons-list-item>
           <div class="center">Mode vérification des identifications expertes</div>
           <div class="right">
-            <v-ons-switch v-model="$store.state.commonData.identification"></v-ons-switch>
+            <v-ons-switch v-model="identificationMode"></v-ons-switch>
           </div>
         </v-ons-list-item>
         <v-ons-list-item>
           <div class="center">Mode vérification des relevés utilisateurs</div>
           <div class="right">
-            <v-ons-switch v-model="$store.state.commonData.verification"></v-ons-switch>
+            <v-ons-switch v-model="verificationMode"></v-ons-switch>
           </div>
         </v-ons-list-item>
 
@@ -48,6 +55,8 @@
             <v-ons-button @click="addPoints(score)">Add</v-ons-button>
           </div>
         </v-ons-list-item>
+      </v-ons-list>
+      <v-ons-list>
 
       </v-ons-list>
       <v-ons-list>
@@ -136,6 +145,22 @@ export default {
     },
     scores() {
       return this.$store.state.user.scores;
+    }
+    identificationMode : {
+      get(){
+        return this.$store.state.commonData.identification
+      },
+      set(val){
+        this.$store.commit('commonData/setIdentificationMode',val)
+      }
+    },
+    verificationMode : {
+      get(){
+        return this.$store.state.commonData.verification
+      },
+      set(val){
+        this.$store.commit('commonData/setVerificationMode',val)
+      }
     }
   },
   methods: {
