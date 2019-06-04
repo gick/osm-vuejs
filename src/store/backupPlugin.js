@@ -95,6 +95,12 @@ let backupPlugin = store => {
             case 'commonData/setIdentificationMode' :
                 backup('commonData_identification',state.commonData.identification)
                 break
+            case 'user/setScores' :
+                backup('scores',state.user.scores)
+                break
+            case 'user/displayScore' :
+                backup('scores',state.user.scores)
+                break
 
             }   
     })
