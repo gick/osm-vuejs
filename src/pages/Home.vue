@@ -92,6 +92,7 @@ export default {
     };
   },
   mounted() {
+    console.log(new Date())
   },
   computed: {
     gamificationMode() {

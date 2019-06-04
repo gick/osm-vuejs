@@ -145,7 +145,7 @@ export default {
     },
     scores() {
       return this.$store.state.user.scores;
-    }
+    },
     identificationMode : {
       get(){
         return this.$store.state.commonData.identification
