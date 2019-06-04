@@ -375,6 +375,7 @@ export default {
       state: {
         name: null,
         id: null,
+        isGod:false,
         isAnon: false,
         formerName: null,
         formerId: null,
