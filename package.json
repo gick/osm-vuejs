@@ -42,7 +42,8 @@
     "vue2-leaflet": "^1.2.3",
     "vuejs-auto-complete": "^0.9.0",
     "vuex": "^3.0.1",
-    "vuex-persistedstate": "^2.5.4"
+    "vuex-persistedstate": "^2.5.4",
+    "xml-js": "^1.6.11"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",
