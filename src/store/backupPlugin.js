@@ -41,9 +41,8 @@ let backupPlugin = store => {
             case 'user/setCompletion' :
                 backup('completion',state.user.completion)
                 break
-            case 'user/addExplorationPoints' :
-                backup('explorationScore',state.user.explorationScore)
-                backup('explorationHistory',state.user.explorationHistory)
+            case 'user/addPoints' :
+                backup('scores',state.user.scores)
                 break
             case 'user/setActivities' :
                 backup('activities',state.user.activities)
@@ -52,10 +51,6 @@ let backupPlugin = store => {
             case 'user/setActivityStatus' :
                 backup('activities',state.user.activities)
                 break
-            case 'user/addKnowledgePoints' :
-                  backup('knowledgeHistory',state.user.knowledgeHistory)
-                  backup('knowledgeScore',state.user.knowledgeScore)
-                  break
             case 'user/gamificationMode':
                 backup('gamificationMode',state.user.gamificationMode)
                 break

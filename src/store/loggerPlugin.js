@@ -11,14 +11,11 @@ let loggerPlugin = store => {
             activity={index:state.user.indexActivite,name:state.user.activite.instruction.long}
         }
         switch(mutation.type){
-            case 'user/addExplorationPoints' :
-                logEntry('observationScore',state.user.explorationScore,activity)
+            case 'user/addPoints' :
+                logEntry('updateScore',state.user.scores,activity)
                 break
             case 'user/startFolia' :
                 logEntry('startFolia',{},activity)
-            break
-            case 'user/addKnowledgePoints' :
-                logEntry('knowledgeScore',state.user.knowledgeScore,activity)
             break
             case 'releve/add':
                  logEntry('newObservation',mutation.payload,activity)
