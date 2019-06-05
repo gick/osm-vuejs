@@ -24,7 +24,7 @@
 	      </v-ons-row>
 	    </v-ons-card>
 
-			<v-ons-card>
+			<v-ons-card v-if="trophies.length">
 	      		<v-ons-row @click='displayTrophiesDetails'>
 	        		<v-ons-col>
 	        				{{tropheesObtenus}}/{{trophies.length}}

@@ -222,13 +222,6 @@ export default {
               }, {
                   root: true
                 })
-              /*var actions = extractActions(state.releves[index], "verify")
-              dispatch("user/extractExplorationPoints", actions.explorationActions, {
-                root: true
-              })
-              dispatch("user/extractKnowledgePoints", actions.knowledgeActions, {
-                root: true
-              })*/
             })
         },
         setNoTree({
@@ -518,13 +511,8 @@ export default {
           commit, state
         }, actions) {
           if (state.gamificationMode) {
-            console.log(JSON.stringify(state.scores))
             for (var score of state.scores) {
-              console.log(JSON.stringify(score))
               for (var rule of score.rules) {
-                console.log(JSON.stringify(actions))
-                console.log(rule.code)
-                console.log(actions.includes(rule.code))
                 if (actions.includes(rule.code)) {
                   commit('addPoints', {
                     name: score.name,

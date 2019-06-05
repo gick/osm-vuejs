@@ -36,48 +36,6 @@
                     ]
                 },
                 {  
-                	"name":"testPoints",
-                	"icon":"",
-                	"displayName":"Points de test",
-                    "actions":[  
-                        {  
-                            "code":"gps",
-                            "text":"Faire un relevé",
-                            "nbPoint":1
-                        },
-                        {  
-                            "code":"photograph",
-                            "text":"Photographier un arbre",
-                            "nbPoint":2
-                        },
-                        {  
-                            "code":"completeGenus",
-                            "text":"Compléter le champ 'genre' d'un relevé",
-                            "nbPoint":3
-                        },
-                        {  
-                            "code":"completeSpecie",
-                            "text":"Compléter le champ 'espèce' d'un relevé",
-                            "nbPoint":6
-                        },
-                        {  
-                            "code":"completeCommon",
-                            "text":"Compléter le champ 'nom commun' d'un relevé",
-                            "nbPoint":6
-                        },
-                        {  
-                            "code":"question",
-                            "text":"Déclarer un arbre douteux",
-                            "nbPoint":1
-                        },
-                        {  
-                            "code":"useFolia",
-                            "text":"Utiliser Folia",
-                            "nbPoint":2
-                        }
-                    ]
-                },
-                {  
                     "name":"knowledgePoints",
                 	"icon":"",
                 	"displayName":"Points de connaissance",
