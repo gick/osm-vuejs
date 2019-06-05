@@ -116,6 +116,7 @@
       </v-ons-list-item>
     </v-ons-list>
     <section style="margin: 16px">
+      <v-ons-button v-if="false" @click="uploadToOSM" style="margin: 6px 0">Upload to osm</v-ons-button>
       <v-ons-button @click="complete" style="margin: 6px 0">Envoyer</v-ons-button>
       <v-ons-button modifier="outline" @click="cancel" style="margin: 6px 0">Annuler</v-ons-button>
     </section>
@@ -146,6 +147,7 @@
 import PictureInput from "vue-picture-input";
 import Identification from "./Identification.vue";
 import imageCompression from "browser-image-compression";
+import intermediateRequest from "../js/osmPost"
 import genusList from "../js/genus.js";
 import speciesList from "../js/species_ver.js";
 export default {
@@ -180,6 +182,11 @@ export default {
     }
   },
   methods: {
+    uploadToOSM(){
+      this.releve.location={coordinates:this.coordinates}
+      intermediateRequest(this.releve)
+    },
+
     noResult(e) {
       console.log(e);
     },

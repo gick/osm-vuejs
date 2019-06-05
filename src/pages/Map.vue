@@ -440,6 +440,7 @@ export default {
       console.log(releve);
       let newReleve = {};
       newReleve.specie = releve.tags.species;
+      newReleve.genus=releve.tags.genus
       newReleve.source="OSM"
       newReleve.coordinates=[releve.lon,releve.lat]
       newReleve.nodeId=releve.id

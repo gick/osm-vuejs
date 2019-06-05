@@ -78,7 +78,6 @@
 import Progress from "./Progress.vue";
 import SimplePage from "./SimplePage.vue";
 import mission from "../mission.json";
-
 function Activite(intitule, statut) {
     this.intitule = intitule;
     this.statut = statut;
