@@ -1,6 +1,7 @@
 import {
   cpus
 } from "os";
+import { EventBus } from '../js/eventBus.js';
 var osmAuth = require("osm-auth");
 export default {
   modules: {
@@ -199,10 +200,6 @@ export default {
                   root: true
                 })
             })
-
-          dispatch("user/extractKnowledgePoints", ["validate"], {
-            root: true
-          })
         },
         modifyObservation({
           commit,
@@ -425,8 +422,11 @@ export default {
           state.differentGenus.length = 0
         },
         addPoints(state, score) {
+          console.log("ok")
           for (let i = 0; i < state.scores.length; i++) {
+            console.log(state.scores[i].name)
             if (state.scores[i].name == score.name) {
+              console.log("ok2")
               state.scores[i].nbPoint += score.history.points
               state.scores[i].history.unshift(score.history)
             }
@@ -473,7 +473,12 @@ export default {
           state.id = state.formerId
         },
         updateProgression(state, param) {
-          if (updateCompletion(state, param.operation, param.releve)) state.completion++
+          let success = updateCompletion(state, param.operation, param.releve)
+          if (success) {
+            state.completion++
+          } else {
+            displayHelpMessage(state, param.operation, param.releve)
+          }
         },
         updateTime(state) {
 
@@ -486,7 +491,12 @@ export default {
           clearInterval(state.time.timer)
         },
         identification(state, releve) {
-          if (updateCompletion(state, "IDENTIFY", releve)) state.completion++
+          let success = updateCompletion(state, "IDENTIFY", releve)
+          if (success) {
+            state.completion++
+          } else {
+            displayHelpMessage(state, "IDENTIFY", releve)
+          }
         },
         setBackup(state, sessionBackup) {
           state.sessionBackup = sessionBackup
@@ -690,3 +700,13 @@ function alreadyVerified(releve, userId) {
   }
   return false
 }
+
+function displayHelpMessage(state, operation, releve) {
+  if (state.activite.type == operation) {
+    EventBus.$emit('displayHelpMessage', {
+      object: state.activite.object, 
+      releve: releve
+    });
+  }
+}
+  

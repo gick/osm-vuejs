@@ -103,6 +103,13 @@ let scorePlugin = store => {
                     root: true
                 })
                 break;
+
+            case 'releve/validate':
+                var actions = ["validate"]
+                store.dispatch("user/extractPoints", actions, {
+                    root: true
+                })
+                break;
         }
     })
     store.subscribeAction((action, state) => {
@@ -139,11 +146,11 @@ function extractActions(releve, operation) {
     case "verify":
       var prev = releve.prev.splice(-1)[0]
       if (releve.specie != prev.specie) 
-        action.push( prev.specie ? "modifySpecie" : "completeSpecie")
+        actions.push( prev.specie ? "modifySpecie" : "completeSpecie")
       if (releve.genus != prev.genus) 
-        action.push( prev.genus ? "modifyGenus" : "completeGenus")
+        actions.push( prev.genus ? "modifyGenus" : "completeGenus")
       if (releve.common != prev.common) 
-        action.push( prev.specie ? "modifyCommon" : "completeCommon")
+        actions.push( prev.specie ? "modifyCommon" : "completeCommon")
       if (releve.image != prev.image)
         actions.push("photograph")
   }

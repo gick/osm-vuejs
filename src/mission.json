@@ -218,12 +218,6 @@
                 "long":"Faites 5 relevés",
                 "short":"Faites relevés"
             },
-            "mechanics":[  
-                {  
-                    "name":"score",
-                    "nbPoint":10
-                }
-            ],
             "endCondition":[  
                 {  
                     "nbAction":5
@@ -237,12 +231,6 @@
                 "long":"Faites 3 relevés de genres différents",
                 "short":"Faites relevés genres différents"
             },
-            "mechanics":[  
-                {  
-                    "name":"score",
-                    "nbPoint":12
-                }
-            ],
             "endCondition":[  
                 {  
                     "nbAction":3
@@ -256,12 +244,6 @@
                 "long":"Vérifiez 3 relevés d'un autre utilisateur (cercle vert clignotant)",
                 "short":"Vérifiez relevés"
             },
-            "mechanics":[  
-                {  
-                    "name":"score",
-                    "nbPoint":12
-                }
-            ],
             "endCondition":[  
                 {  
                     "nbAction":3
@@ -275,12 +257,6 @@
                 "long":"Identifiez 3 relevés d'expert (cercle bleu clignotant)",
                 "short":"Identifiez relevés experts"
             },
-            "mechanics":[  
-                {  
-                    "name":"score",
-                    "nbPoint":12
-                }
-            ],
             "endCondition":[  
                 {  
                     "nbAction":3
@@ -298,10 +274,6 @@
                 {  
                     "name":"countdown",
                     "endCondition":"time"
-                },
-                {  
-                    "name":"score",
-                    "nbPoint":12
                 }
             ],
             "endCondition":[  
