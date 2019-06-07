@@ -31,13 +31,29 @@ export default {
       namespaced: true,
       state: {
         data: [],
+        tempMarker:[],
+        tempSuppressed:[],
       },
       mutations: {
         setData(state, data) {
           state.data = data
+        },
+        addTempMarker(state,coordinates){
+          state.tempMarker.push(coordinates)
+        },
+        removeTempMarker(state){
+          state.tempMarker.shift()
+        },
+        addTempSuppressed(state,id){
+          state.tempSuppressed.push(id)
         }
+
       },
       actions: {
+        addTempMarker({commit},coordinates){
+          commit('addTempMarker',coordinates)
+          setTimeout(()=>{commit('removeTempMarker')},60000)
+        },
         getOSMData({
           commit
         }, boundary) {
