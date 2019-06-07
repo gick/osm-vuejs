@@ -61,16 +61,6 @@ export default {
           let west = boundary.boundary._southWest.lng
           let north = boundary.boundary._northEast.lat
           let east = boundary.boundary._northEast.lng
-          axios.get('/api/osmdata', {
-            params: {
-              south: south,
-              west: west,
-              north: north,
-              east: east
-            }
-          }).then(function (response) {
-            console.log(response.data)
-          })
           axios.get('/api/getOsmData', {
             params: {
               south: south,
