@@ -54,7 +54,7 @@
         </section>
         <section v-if="fromOSM" style="margin: 16px">
           <p class="center">Renvoyer le relevé sur OSM</p>
-          <v-ons-button @click="uploadAndRemove" style="margin: 6px 0">Envoyer vers OSM</v-ons-button>
+          <v-ons-button @click="uploadAndRemove" style="margin: 6px 0">Renvoyer vers OSM</v-ons-button>
         </section>
 
         <section v-if="releve.prev.length>0" style="margin: 16px">
@@ -154,9 +154,7 @@ export default {
   },
   methods: {
     uploadToOSM(){
-
       uploadObservationToOSM(this.releve)
-      this.$store.dispatch('osmData/addTempMarker',this.releve)
       this.$store.commit("navigator/pop");
       this.$store.dispatch("releve/remove", this.releve);
     },

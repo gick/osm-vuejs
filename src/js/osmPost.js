@@ -6,7 +6,9 @@ var auth = osmAuth({
     oauth_consumer_key: '1zPARMhKbBJfy6lZa9Jt3SvXOM4D3bxr1s3pMly0'
 });
 import initOSM from './initOSM'
-import uploadPost from './uploadPost'
+import uploadOSMPost from './uploadPost'
+import {EventBus} from './osmBus'
+
 let initOSMasXML = xmljs.json2xml(initOSM)
 let setAttributes = function (releve, uploadPost) {
     let kv = {
@@ -43,6 +45,7 @@ let setAttributes = function (releve, uploadPost) {
 
 }
 let createTreeRequest = function (releve) {
+    let uploadPost=_.cloneDeep(uploadOSMPost)
     auth.xhr({
         method: 'PUT', path: '/api/0.6/changeset/create', dataType: "text/xml",
         options: { header: { "Content-Type": "text/xml" } },
@@ -68,10 +71,12 @@ let createTreeRequest = function (releve) {
                 auth.xhr({
                     method: 'PUT', path: urlClose, dataType: "text/xml",
                     options: { header: { "Content-Type": "text/xml" } }
+                },function(){
+                    EventBus.$emit('updateOSM')
+
                 })
             
             },function(err,details){
-                
             })
         })
 

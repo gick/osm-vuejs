@@ -19,7 +19,7 @@
 
         <section style="margin: 16px">
           <v-ons-button :disabled="importDone" @click="importObservation" style="margin: 6px 0">Importer dans Albiziapp</v-ons-button>
-          <v-ons-button  @click="remove" style="margin: 6px 0">Supprimer l'arbre</v-ons-button>
+          <v-ons-button  @click="remove" style="margin: 6px 0">Supprimer l'arbre d'OSM</v-ons-button>
         </section>
       </div>
     </ons-card>
@@ -28,6 +28,7 @@
 <script>
 import SimplePage from "./SimplePage.vue";
 import removeTree from "../js/osmRemoveTree"
+import EventBus from "../js/osmBus"
 export default {
   data() {
     return { 
@@ -39,7 +40,6 @@ export default {
   methods: {
     remove(){
       removeTree(this.releve)
-      this.$store.commit('osmData/addTempSuppressed',this.releve.nodeId)
       this.$store.commit("navigator/pop");
     },
     visualizeReleve() {

@@ -5,9 +5,9 @@ var auth = osmAuth({
     oauth_secret: 'ycJOK6xrlW0tPXb280k1VLkH4zGlsaGyTPm4vGvr',
     oauth_consumer_key: '1zPARMhKbBJfy6lZa9Jt3SvXOM4D3bxr1s3pMly0'
 });
-import treeTemplate from './treeTemplate'
+import OSMTreeTemplate from './treeTemplate'
 import initOSM from './initOSM'
-
+import {EventBus} from './osmBus'
 let initOSMasXML = xmljs.json2xml(initOSM)
 let setAttributes = function (releve, update) {
     let kv = {
@@ -45,6 +45,7 @@ let setAttributes = function (releve, update) {
 }
 
 let osmUpdate = function (releve) {
+    let treeTemplate=_.cloneDeep(OSMTreeTemplate)
     auth.xhr({
         method: 'PUT', path: '/api/0.6/changeset/create', dataType: "text/xml",
         options: { header: { "Content-Type": "text/xml" } },
@@ -65,6 +66,7 @@ let osmUpdate = function (releve) {
                 content: template
             },
                 function (err, details) {
+                    EventBus.$emit('updateOSM')
                 })
         })
 }

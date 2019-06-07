@@ -2,6 +2,9 @@ import {
   cpus
 } from "os";
 var osmAuth = require("osm-auth");
+var removeTree = require('../js/osmRemoveTree')
+var addTree = require('../js/osmPost')
+
 export default {
   modules: {
     commonData: {
@@ -36,23 +39,20 @@ export default {
       mutations: {
         setData(state, data) {
           state.data = data
-        },
-        addTempMarker(state,coordinates){
-          state.tempMarker.push(coordinates)
-        },
-        removeTempMarker(state){
-          state.tempMarker.shift()
-        },
-        addTempSuppressed(state,id){
-          state.tempSuppressed.push(id)
         }
-
       },
       actions: {
-        addTempMarker({commit},coordinates){
-          commit('addTempMarker',coordinates)
-          setTimeout(()=>{commit('removeTempMarker')},60000)
+        removeOSMTree({commit},osmTree){
+          addTree(osmTree)
         },
+        addOSMTree({commit},releve){
+          addTree(releve).then(
+            function(){
+              osmBus.$emit('updateOSM')
+            }
+          )
+        },
+
         getOSMData({
           commit
         }, boundary) {
@@ -70,8 +70,18 @@ export default {
             }
           }).then(function (response) {
             console.log(response.data)
+          })
+          axios.get('/api/getOsmData', {
+            params: {
+              south: south,
+              west: west,
+              north: north,
+              east: east
+            }
+          }).then(function (response) {
             commit('setData', response.data)
           })
+
         }
       }
     },
@@ -562,10 +572,6 @@ export default {
             oauth_consumer_key: 'WLwXbm6XFMG7WrVnE8enIF6GzyefYIN6oUJSxG65'
           });
           auth.logout();
-          commit("set", {
-            name: null,
-            id: null
-          });
         },
         loadObservation({
           commit, state

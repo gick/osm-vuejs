@@ -116,7 +116,7 @@
       </v-ons-list-item>
     </v-ons-list>
     <section style="margin: 16px">
-      <v-ons-button @click="uploadToOSM" style="margin: 6px 0">Envoyer vers OSM</v-ons-button>
+      <v-ons-button v-if="!modify" @click="uploadToOSM" style="margin: 6px 0">Envoyer vers OSM</v-ons-button>
       <v-ons-button @click="complete" style="margin: 6px 0">Enregistrer</v-ons-button>
       <v-ons-button modifier="outline" @click="cancel" style="margin: 6px 0">Annuler</v-ons-button>
     </section>
@@ -186,7 +186,6 @@ export default {
     uploadToOSM(){
       this.releve.location={coordinates:this.coordinates}
       uploadObservationToOSM(this.releve)
-      this.$store.dispatch('osmData/addTempMarker',this.releve)
       this.$store.commit("navigator/pop");
     },
 
@@ -234,10 +233,6 @@ export default {
       } else {
         this.$store.dispatch("releve/modifyObservation", releve);
         this.$store.commit("navigator/pop");
-        if(this.releve.source=="OSM"){
-          osmUpdate(this.releve)
-        }
-
       }
     },
     cancel() {

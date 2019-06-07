@@ -89,7 +89,7 @@
           custom="10"
           @click="osmClick(index)"
           v-bind:key="'OSM'+index"
-          :lat-lng="getCoordinate(circle)"
+          :lat-lng="getGeoJSONCoordinate(circle.geometry.coordinates)"
           :radius="6"
           :color="'yellow'"
         />
@@ -209,6 +209,8 @@ import SimplePage from "./SimplePage.vue";
 import Releve from "./Releve.vue";
 import ReleveOSM from "./ReleveOSM.vue";
 import ReleveIdentification from "./ReleveIdentification.vue";
+import { EventBus } from '../js/osmBus';
+
 //Utility function extracting all contributors id
 // including from prev
 
@@ -348,10 +350,7 @@ export default {
     osmData() {
       let importedObs = this.observationsFromOSM.map(val => val.nodeId);
       return this.$store.state.osmData.data
-        .filter(val => !importedObs.includes(val.id.toString()))
-        .filter(val => {
-          return !this.tempSuppressed.includes(val.id);
-        });
+        .filter(val => !importedObs.includes(val.id.replace('node/','')))
     },
     currentMission() {
       return this.$store.state.user.mission;
@@ -374,13 +373,6 @@ export default {
   },
 
   watch: {
-    tempMarker: {
-      handler: function() {
-        this.$store.dispatch("osmData/getOSMData", {
-          boundary: this.map.getBounds()
-        });
-      }
-    },
     completion: {
       handler: function(newValue, oldValue) {
         if (newValue == this.goal) {
@@ -416,6 +408,10 @@ export default {
     });
   },
   mounted() {
+    EventBus.$on('updateOSM',()=>{ 
+      this.$store.dispatch("osmData/getOSMData", {
+          boundary: this.map.getBounds()
+        });})
     this.$root.$on("changeCenter", coordinates => {
       this.map.flyTo(coordinates);
     });
@@ -431,22 +427,6 @@ export default {
     );
   },
   methods: {
-    tempMarkerClick() {
-            this.circleClicked = true;
-
-      this.$nextTick(() => {
-        this.circleClicked = false;
-      });
-
-      this.$toasted.show(
-        "Cette observation est en cours d'import vers OSM, merci de patientez",
-        {
-          fullWidth: true,
-          position: "bottom-center",
-          duration: 5000
-        }
-      );
-    },
     getColor(releve) {
       if (releve.identification) {
         return "blue";
@@ -500,16 +480,15 @@ export default {
 
       console.log(releve);
       let newReleve = {};
-      newReleve.specie = releve.tags.species;
-      newReleve.genus = releve.tags.genus;
-      newReleve.common = releve.tags["name:fr"];
+      newReleve.specie = releve.properties.species;
+      newReleve.genus = releve.properties.genus;
+      newReleve.common = releve.properties["name:fr"];
       newReleve.source = "OSM";
       newReleve.coordinates = [releve.lon, releve.lat];
-      newReleve.nodeId = releve.id;
-      newReleve.changeset = releve.changeset;
-      newReleve.version = releve.version;
-      newReleve.lon = releve.lon;
-      newReleve.lat = releve.lat;
+      newReleve.nodeId = releve.properties.id.replace('node/','');
+      newReleve.changeset = releve.properties.changeset;
+      newReleve.version = releve.properties.version;
+      newReleve.coordinates = releve.geometry.coordinates;
       this.$store.commit("navigator/push", {
         extends: ReleveOSM,
         data() {
@@ -611,6 +590,7 @@ export default {
       this.currentZoom = zoom;
     },
     centerUpdate(center) {
+
       this.$store.dispatch("osmData/getOSMData", {
         boundary: this.map.getBounds()
       });

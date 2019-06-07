@@ -39,7 +39,7 @@ export default {
     },
     logout() {
       this.$store.dispatch("user/logout");
-      this.$store.commit("splitter/toggle");
+         window.location.reload()
     },
     admin() {
       this.$store.commit("navigator/push", {
