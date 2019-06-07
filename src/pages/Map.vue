@@ -22,17 +22,15 @@
           :radius="6"
           :color="getColor(circle)"
         />
-
         <l-circle
           @click="circleClick(circle)"
           v-for="(circle,index) in observationsFromOSM"
           custom="10"
-          v-bind:key='index+"fromosm"'
+          v-bind:key="index+'fromOSM'"
           :lat-lng="getGeoJSONCoordinate(circle.location.coordinates)"
           :radius="6"
           :color="'orange'"
         />
-
         <l-circle
           @click="identificationClick(circle)"
           className="pulse"
@@ -54,7 +52,7 @@
         />
         <l-circle
           @click="circleClick(circle)"
-          className=""
+          class
           v-for="(circle,index) in observationsOther"
           custom="10"
           v-bind:key="index+'observationOther'"
@@ -96,6 +94,17 @@
           :color="'yellow'"
         />
 
+        <l-circle
+          v-for="(circle,index) in tempMarker"
+          custom="10"
+          @click="tempMarkerClick()"
+          className="waitingCreation"
+          v-bind:key="'OSMTemp'+index"
+          :lat-lng="getGeoJSONCoordinate(circle.location.coordinates)"
+          :radius="6"
+          :color="'yellow'"
+        />
+
         <l-tile-layer :url="url" :options="mapOptions" :attribution="attribution"/>
       </l-map>
 
@@ -105,49 +114,66 @@
 
       <v-ons-alert-dialog modifier="rowfooter" :visible.sync="missionOver">
         <span slot="title">{{ $t('missionOverTitle') }}</span>
-        {{ $t('missionOverDesc') }} 
+        {{ $t('missionOverDesc') }}
         <template slot="footer">
           <v-ons-alert-dialog-button @click="closeDialog">OK</v-ons-alert-dialog-button>
         </template>
       </v-ons-alert-dialog>
 
-    <v-ons-alert-dialog modifier="rowfooter" :visible.sync="activityOver">
-      <span slot="title">{{ $t('activityOverTitle') }}</span>
-      {{ $t('activityOverDesc') }} 
-      <template slot="footer">
-        <v-ons-alert-dialog-button @click="closeDialog">OK</v-ons-alert-dialog-button>
-      </template>
-    </v-ons-alert-dialog>
-
+      <v-ons-alert-dialog modifier="rowfooter" :visible.sync="activityOver">
+        <span slot="title">{{ $t('activityOverTitle') }}</span>
+        {{ $t('activityOverDesc') }}
+        <template slot="footer">
+          <v-ons-alert-dialog-button @click="closeDialog">OK</v-ons-alert-dialog-button>
+        </template>
+      </v-ons-alert-dialog>
     </div>
-    <v-ons-fab @click="centerMap" modifier="mini" position='bottom right'>
+    <v-ons-fab @click="centerMap" modifier="mini" position="bottom right">
       <v-ons-icon icon="md-pin"></v-ons-icon>
     </v-ons-fab>
 
-  <ons-bottom-toolbar style="background-color:#F44336; color:white">
-      <center v-show='userID && !missionDone'>
+    <ons-bottom-toolbar style="background-color:#F44336; color:white">
+      <center v-show="userID && !missionDone">
         {{instruction}}
         <v-ons-row>
           <v-ons-col v-if="timeLeft!=-1">
-          <v-ons-icon icon="fa-clock"></v-ons-icon>
+            <v-ons-icon icon="fa-clock"></v-ons-icon>
             {{ timeLeft | duration('asSeconds') | moment("mm:ss") }}
           </v-ons-col>
           <v-ons-col>
-            <div v-if="goal>0"> {{completion}}/{{goal}}</div>
-            <div v-else> {{completion}}</div> 
+            <div v-if="goal>0">{{completion}}/{{goal}}</div>
+            <div v-else>{{completion}}</div>
           </v-ons-col>
-        </v-ons-row> 
-      </center>  
-  </ons-bottom-toolbar>
-
+        </v-ons-row>
+      </center>
+    </ons-bottom-toolbar>
   </v-ons-page>
 </template>
 <style>
+.waitingCreation {
+  animation: wait 1s ease-out;
+  -webkit-animation: wait 1s ease-out;
+  -webkit-animation-iteration-count: infinite;
+  fill-opacity: 1;
+}
+
+@keyframes wait {
+  0% {
+    stroke-width: 5;
+  }
+  50% {
+    stroke-width: 0;
+  }
+  100% {
+    stroke-width: 5;
+  }
+}
+
 .lorem-dialog .dialog-container {
   height: 200px;
 }
-.null{
-  display:none;
+.null {
+  display: none;
 }
 .pulse {
   animation: pulsate 1s ease-out;
@@ -183,24 +209,25 @@ import SimplePage from "./SimplePage.vue";
 import Releve from "./Releve.vue";
 import ReleveOSM from "./ReleveOSM.vue";
 import ReleveIdentification from "./ReleveIdentification.vue";
-//Utility function extracting all contributors id 
+//Utility function extracting all contributors id
 // including from prev
-
 
 //TODO Mettre bouton flottant sur la carte pour le centrage
 // carte à 100% height
-let extractContributor=function(releve){
-  let extractValidator=item=>item.validation.map(val=>val.id)
-  let extractModifier=item=>item.modifierId
-  let author=releve.osmId
-  let notree=releve.noTree.map(val=>val.osmId)
-  let extractAll=function(acc,current){
-    return acc.concat(extractValidator(current)).concat(extractModifier(current))
-  }
-  let currentContributors=[releve].reduce(extractAll,notree.concat(author))
-  let allContributors=releve.prev.reduce(extractAll,currentContributors)
-  return [... new Set(allContributors)].filter(val=>val)
-}
+let extractContributor = function(releve) {
+  let extractValidator = item => item.validation.map(val => val.id);
+  let extractModifier = item => item.modifierId;
+  let author = releve.osmId;
+  let notree = releve.noTree.map(val => val.osmId);
+  let extractAll = function(acc, current) {
+    return acc
+      .concat(extractValidator(current))
+      .concat(extractModifier(current));
+  };
+  let currentContributors = [releve].reduce(extractAll, notree.concat(author));
+  let allContributors = releve.prev.reduce(extractAll, currentContributors);
+  return [...new Set(allContributors)].filter(val => val);
+};
 export default {
   components: {
     LCircle,
@@ -238,81 +265,93 @@ export default {
   },
   computed: {
     instruction() {
-      if(this.currentMission) {
-        return this.currentMission.activities[this.indexActivite].instruction.short
-      }    
+      if (this.currentMission) {
+        return this.currentMission.activities[this.indexActivite].instruction
+          .short;
+      }
     },
     missionDone() {
       if (this.$store.state.user.activite) {
-        return false
+        return false;
       }
-      return true
+      return true;
     },
     userID() {
       return this.$store.state.user.id;
     },
-    identification(){
-        return this.$store.state.commonData.identification;
+    identification() {
+      return this.$store.state.commonData.identification;
     },
-    verification(){
-        return this.$store.state.commonData.verification;
-    }
-    ,
-
+    verification() {
+      return this.$store.state.commonData.verification;
+    },
     observations() {
       return this.$store.state.releve.releves
-      .filter(value=>!value.identificationValue.identification)
-      .filter(value=>value.osmId==this.userID)
-      .filter(value=>value.source!="OSM")
+        .filter(value => !value.identificationValue.identification)
+        .filter(value => value.osmId == this.userID)
+        .filter(value => value.source != "OSM");
     },
     observationsFromOSM() {
       return this.$store.state.releve.releves
-      .filter(value=>!value.identificationValue.identification)
-      .filter(value=>value.osmId==this.userID)
-      .filter(value=>value.source=="OSM")
-    }   
-    ,
-    identifications(){
-      return this.$store.state.releve.releves.filter(value=>value.identificationValue.identification);
+        .filter(value => !value.identificationValue.identification)
+        .filter(value => value.osmId == this.userID)
+        .filter(value => value.source == "OSM");
     },
-    identificationsTodo(){
-      if(this.identification)
-      return this.identifications.filter(value=>!value.identificationValue.success);
-      return []
+    identifications() {
+      return this.$store.state.releve.releves.filter(
+        value => value.identificationValue.identification
+      );
     },
-    identificationsDone(){
-      if(this.identification)
-      return this.identifications.filter(value=>value.identificationValue.success);
-      return []
+    identificationsTodo() {
+      if (this.identification)
+        return this.identifications.filter(
+          value => !value.identificationValue.success
+        );
+      return [];
     },
-    observationsOther(){
-      if(!this.verification)
-      return this.$store.state.releve.releves
-      .filter(value=>!value.identificationValue.identification)
-      .filter(value=>value.osmId!=this.userID)
-      return []
+    identificationsDone() {
+      if (this.identification)
+        return this.identifications.filter(
+          value => value.identificationValue.success
+        );
+      return [];
     },
-    observationsOtherTodo(){
-      if(this.verification)
-      return this.$store.state.releve.releves
-      .filter(value=>!value.identificationValue.identification)
-      .filter(value=>value.osmId!=this.userID)
-      .filter(value=>!extractContributor(value).includes(this.userID))
-      return []
-    }
-    ,
-    observationsOtherDone(){
-      if(this.verification)
-      return this.$store.state.releve.releves
-      .filter(value=>!value.identificationValue.identification)
-      .filter(value=>value.osmId!=this.userID)
-      .filter(value=>extractContributor(value).includes(this.userID))
-      return []
+    observationsOther() {
+      if (!this.verification)
+        return this.$store.state.releve.releves
+          .filter(value => !value.identificationValue.identification)
+          .filter(value => value.osmId != this.userID);
+      return [];
     },
-
+    observationsOtherTodo() {
+      if (this.verification)
+        return this.$store.state.releve.releves
+          .filter(value => !value.identificationValue.identification)
+          .filter(value => value.osmId != this.userID)
+          .filter(value => !extractContributor(value).includes(this.userID));
+      return [];
+    },
+    tempMarker() {
+      return this.$store.state.osmData.tempMarker;
+    },
+    observationsOtherDone() {
+      if (this.verification)
+        return this.$store.state.releve.releves
+          .filter(value => !value.identificationValue.identification)
+          .filter(value => value.osmId != this.userID)
+          .filter(value => extractContributor(value).includes(this.userID));
+      return [];
+    },
+    tempSuppressed() {
+      return this.$store.state.osmData.tempSuppressed;
+    },
     osmData() {
-      let importedObs=this.observationsFromOSM.map(val=>val.osmNodeId)
-      return this.$store.state.osmData.data.filter(val=>!(importedObs.includes(val.id.toString())));
+      let importedObs = this.observationsFromOSM.map(val => val.nodeId);
+      return this.$store.state.osmData.data
+        .filter(val => !importedObs.includes(val.id.toString()))
+        .filter(val => {
+          return !this.tempSuppressed.includes(val.id);
+        });
     },
     currentMission() {
       return this.$store.state.user.mission;
@@ -330,30 +369,36 @@ export default {
       return this.$store.state.user.goal;
     },
     timeLeft() {
-       return this.$store.state.user.time.duration
+      return this.$store.state.user.time.duration;
     }
   },
 
   watch: {
+    tempMarker: {
+      handler: function() {
+        this.$store.dispatch("osmData/getOSMData", {
+          boundary: this.map.getBounds()
+        });
+      }
+    },
     completion: {
       handler: function(newValue, oldValue) {
         if (newValue == this.goal) {
           if (this.indexActivite + 1 != this.nbActivite) {
             this.activityOver = true;
           }
-        }  
+        }
       },
       deep: true
     },
     missionDone: {
       handler: function(newValue, oldValue) {
         if (newValue == true && oldValue == false) {
-          this.missionOver = true
+          this.missionOver = true;
         }
       },
       deep: true
-    },
-
+    }
   },
   created() {
     this.$nextTick(() => {
@@ -386,6 +431,22 @@ export default {
     );
   },
   methods: {
+    tempMarkerClick() {
+            this.circleClicked = true;
+
+      this.$nextTick(() => {
+        this.circleClicked = false;
+      });
+
+      this.$toasted.show(
+        "Cette observation est en cours d'import vers OSM, merci de patientez",
+        {
+          fullWidth: true,
+          position: "bottom-center",
+          duration: 5000
+        }
+      );
+    },
     getColor(releve) {
       if (releve.identification) {
         return "blue";
@@ -398,8 +459,8 @@ export default {
     mapShow() {
       this.map.invalidateSize();
     },
-    getGeoJSONCoordinate(coordinates){
-      return {lat : coordinates[1],lng :coordinates[0]}
+    getGeoJSONCoordinate(coordinates) {
+      return { lat: coordinates[1], lng: coordinates[0] };
     },
     getCoordinate(circle) {
       return { lat: circle.lat, lng: circle.lon };
@@ -440,10 +501,15 @@ export default {
       console.log(releve);
       let newReleve = {};
       newReleve.specie = releve.tags.species;
-      newReleve.genus=releve.tags.genus
-      newReleve.source="OSM"
-      newReleve.coordinates=[releve.lon,releve.lat]
-      newReleve.nodeId=releve.id
+      newReleve.genus = releve.tags.genus;
+      newReleve.common = releve.tags["name:fr"];
+      newReleve.source = "OSM";
+      newReleve.coordinates = [releve.lon, releve.lat];
+      newReleve.nodeId = releve.id;
+      newReleve.changeset = releve.changeset;
+      newReleve.version = releve.version;
+      newReleve.lon = releve.lon;
+      newReleve.lat = releve.lat;
       this.$store.commit("navigator/push", {
         extends: ReleveOSM,
         data() {
@@ -458,50 +524,49 @@ export default {
     },
     circleClick(releve) {
       this.circleClicked = true;
-        this.$store.commit("navigator/push", {
-          extends: Releve,
-          data() {
-            return {
-              id: releve._id
-            };
-          }
-        });
-      
-      this.$nextTick(() => {
-        this.circleClicked = false;
-      });
-    },
-    identificationClick(releve){
-        this.circleClicked = true;
-        this.$store.commit("navigator/push", {
-          extends: ReleveIdentification,
-          data() {
-            return {
-              releve: releve
-            };
-          }
-        });
-      
-      this.$nextTick(() => {
-        this.circleClicked = false;
-      });
-    },
-    validateObservation(releve){
-        this.circleClicked = true;
-        this.$store.commit("navigator/push", {
-          extends: SimplePage,
-          data() {
-            return {
-              releve: releve,
-              validation:true
-            };
-          }
-        });
-      
-      this.$nextTick(() => {
-        this.circleClicked = false;
+      this.$store.commit("navigator/push", {
+        extends: Releve,
+        data() {
+          return {
+            id: releve._id
+          };
+        }
       });
 
+      this.$nextTick(() => {
+        this.circleClicked = false;
+      });
+    },
+    identificationClick(releve) {
+      this.circleClicked = true;
+      this.$store.commit("navigator/push", {
+        extends: ReleveIdentification,
+        data() {
+          return {
+            releve: releve
+          };
+        }
+      });
+
+      this.$nextTick(() => {
+        this.circleClicked = false;
+      });
+    },
+    validateObservation(releve) {
+      this.circleClicked = true;
+      this.$store.commit("navigator/push", {
+        extends: SimplePage,
+        data() {
+          return {
+            releve: releve,
+            validation: true
+          };
+        }
+      });
+
+      this.$nextTick(() => {
+        this.circleClicked = false;
+      });
     },
     onMapClick(evt) {
       console.log(evt);
@@ -516,33 +581,31 @@ export default {
         radius: 10
       };
       console.log("clicked on map");
-      this.$ons.notification
-        .confirm(this.$t('confirmDesc'))
-        .then(response => {
-          if (response) {
-            let coordinates = [
-              this.newCircle.center[1],
-              this.newCircle.center[0]
-            ];
-            this.newCircle = null;
+      this.$ons.notification.confirm(this.$t("confirmDesc")).then(response => {
+        if (response) {
+          let coordinates = [
+            this.newCircle.center[1],
+            this.newCircle.center[0]
+          ];
+          this.newCircle = null;
 
-            //this.$store.commit("releve/add", { coordinates:coordinates });
-            this.$store.commit("navigator/push", {
-              extends: SimplePage,
-              data() {
-                return {
-                  coordinates: coordinates,
-                  toolbarInfo: {
-                    backLabel: "Home",
-                    title: "key"
-                  }
-                };
-              }
-            });
-          } else {
-            this.newCircle = null;
-          }
-        });
+          //this.$store.commit("releve/add", { coordinates:coordinates });
+          this.$store.commit("navigator/push", {
+            extends: SimplePage,
+            data() {
+              return {
+                coordinates: coordinates,
+                toolbarInfo: {
+                  backLabel: "Home",
+                  title: "key"
+                }
+              };
+            }
+          });
+        } else {
+          this.newCircle = null;
+        }
+      });
     },
     zoomUpdate(zoom) {
       this.currentZoom = zoom;

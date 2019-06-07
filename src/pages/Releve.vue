@@ -2,7 +2,8 @@
   <v-ons-page>
     <custom-toolbar backLabel="Retour"></custom-toolbar>
     <ons-card v-if="releve">
-      <div class="title">Relevé</div>
+      <div class="title" v-if="!fromOSM">Relevé</div>
+      <div class="title" v-if="fromOSM">Relevé importé d'OSM</div>
       <div class="content">
         <ons-list>
           <ons-list-header>Information</ons-list-header>
@@ -32,6 +33,8 @@
           </p>
           <v-ons-button @click="modify" :disabled="noTreeValue" style="margin: 6px 0">Modifier</v-ons-button>
           <v-ons-button :disabled="validated || noTreeValue" @click="validate" style="margin: 6px 0">Confirmer</v-ons-button>
+          <v-ons-button v-if="allowImport && !fromOSM" @click="uploadToOSM" style="margin: 6px 0">Envoyer vers OSM</v-ons-button>
+
           <v-ons-button v-if="visualize" @click="visualizeReleve" style="margin: 6px 0">Voir</v-ons-button>
         </section>
         <section style="margin: 16px">
@@ -45,9 +48,13 @@
             style="margin: 6px 0"
           ></v-ons-switch>
         </section>
-        <section style="margin: 16px">
+        <section v-if="!fromOSM" style="margin: 16px">
           <p class="center">Supprimer le relevé, cette opération est définitive!</p>
           <v-ons-button @click="removeObs" :disabled="(!allowRemove) || !isGod" style="margin: 6px 0">Supprimer</v-ons-button>
+        </section>
+        <section v-if="fromOSM" style="margin: 16px">
+          <p class="center">Renvoyer le relevé sur OSM</p>
+          <v-ons-button @click="uploadAndRemove" style="margin: 6px 0">Envoyer vers OSM</v-ons-button>
         </section>
 
         <section v-if="releve.prev.length>0" style="margin: 16px">
@@ -85,6 +92,9 @@
 </template>
 <script>
 import SimplePage from "./SimplePage.vue";
+import uploadObservationToOSM from "../js/osmPost"
+import osmUpdate from "../js/osmUpdate"
+
 // TODO cacher supprimer relevé si l'utilisateur ne peut pas le supprimer
 export default {
   data() {
@@ -122,6 +132,10 @@ export default {
       let val = this.releve.validation.find(val => val.id == this.userID);
       return val ? true : false;
     },
+    fromOSM(){
+      return this.releve.source=="OSM"
+    }
+    ,
     allowNoTree() {
       if(this.releve.source=="OSM"){
         return false
@@ -133,9 +147,25 @@ export default {
     },
     allowRemove() {
       return this.releve.osmId == this.userID && this.releve.prev.length == 0;
+    },
+    allowImport(){
+      return this.releve.osmId==this.userID
     }
   },
   methods: {
+    uploadToOSM(){
+
+      uploadObservationToOSM(this.releve)
+      this.$store.dispatch('osmData/addTempMarker',this.releve)
+      this.$store.commit("navigator/pop");
+      this.$store.dispatch("releve/remove", this.releve);
+    },
+    uploadAndRemove(){
+      osmUpdate(this.releve)
+      this.$store.dispatch("releve/remove", this.releve);
+      this.$store.commit("navigator/pop");
+    },
+
     visualizeReleve() {
       this.$store.commit("navigator/pop");
       this.$store.commit("tabbar/set", 0);

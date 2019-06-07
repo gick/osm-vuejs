@@ -116,8 +116,8 @@
       </v-ons-list-item>
     </v-ons-list>
     <section style="margin: 16px">
-      <v-ons-button v-if="false" @click="uploadToOSM" style="margin: 6px 0">Upload to osm</v-ons-button>
-      <v-ons-button @click="complete" style="margin: 6px 0">Envoyer</v-ons-button>
+      <v-ons-button @click="uploadToOSM" style="margin: 6px 0">Envoyer vers OSM</v-ons-button>
+      <v-ons-button @click="complete" style="margin: 6px 0">Enregistrer</v-ons-button>
       <v-ons-button modifier="outline" @click="cancel" style="margin: 6px 0">Annuler</v-ons-button>
     </section>
   </v-ons-page>
@@ -147,7 +147,8 @@
 import PictureInput from "vue-picture-input";
 import Identification from "./Identification.vue";
 import imageCompression from "browser-image-compression";
-import intermediateRequest from "../js/osmPost"
+import uploadObservationToOSM from "../js/osmPost"
+import osmUpdate from "../js/osmUpdate"
 import genusList from "../js/genus.js";
 import speciesList from "../js/species_ver.js";
 export default {
@@ -184,7 +185,9 @@ export default {
   methods: {
     uploadToOSM(){
       this.releve.location={coordinates:this.coordinates}
-      intermediateRequest(this.releve)
+      uploadObservationToOSM(this.releve)
+      this.$store.dispatch('osmData/addTempMarker',this.releve)
+      this.$store.commit("navigator/pop");
     },
 
     noResult(e) {
@@ -231,6 +234,10 @@ export default {
       } else {
         this.$store.dispatch("releve/modifyObservation", releve);
         this.$store.commit("navigator/pop");
+        if(this.releve.source=="OSM"){
+          osmUpdate(this.releve)
+        }
+
       }
     },
     cancel() {
