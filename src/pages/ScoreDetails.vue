@@ -17,7 +17,7 @@
     </v-ons-card>
    
     <v-ons-card>
-    	<v-ons-list-header>Points acquis</v-ons-list-header>
+    	<v-ons-list-header>{{ $t('pointsObtained') }}</v-ons-list-header>
     	<v-ons-list style="max-height:200px; overflow: auto">
     		<v-ons-list-item v-for="item in displayedScore.history">
     			<v-ons-row>
@@ -33,7 +33,7 @@
     </v-ons-card>
    
     <v-ons-card>
-    	<v-ons-list-header>Comment obtenir des points ?</v-ons-list-header>
+    	<v-ons-list-header>{{ $t('pointsHelp') }}</v-ons-list-header>
     	<v-ons-list>
     		<v-ons-list-item v-for="(item,index) in displayedScore.rules" v-bind:key='index + "rules"'>
     			<v-ons-row>

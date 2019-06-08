@@ -70,8 +70,9 @@ import VueI18n from 'vue-i18n'
 import messages from './lang/messages'
 Vue.use(VueI18n)
 
-let locale = navigator.language
-console.log(locale)
+let language = navigator.language
+let index = language.indexOf("-")
+let locale = language.substring(0,index)
 
 const i18n = new VueI18n({
   fallbackLocale: 'fr',

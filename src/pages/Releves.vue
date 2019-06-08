@@ -1,7 +1,7 @@
 <template>
   <v-ons-page>
     <v-ons-list>
-      <v-ons-list-header>Liste des relevés</v-ons-list-header>
+      <v-ons-list-header>{{ $t('tracingsList') }}</v-ons-list-header>
       <v-ons-list-item
         v-for="(releve,index) in releves"
         :key="index"
@@ -12,7 +12,7 @@
           <span class="list-item__subtitle">{{releve.specie}}</span>
           <span class="list-item__subtitle">{{releve.common}}</span>
           <span class="list-item__subtitle">{{releve.genus}}</span>
-          <span class="list-item__subtitle" v-if="!(releve.specie && releve.common)"> Arbre non renseigné</span>
+          <span class="list-item__subtitle" v-if="!(releve.specie && releve.common && releve.genus)"> {{ $t('unspecifiedTree') }}</span>
         </div>
         <badge-info  :ref="'rel'+releve._id" :releve="releve"></badge-info>
       </v-ons-list-item>
