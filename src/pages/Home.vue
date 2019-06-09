@@ -77,7 +77,6 @@
 <script>
 import Progress from "./Progress.vue";
 import SimplePage from "./SimplePage.vue";
-import mission from "../mission.json";
 function Activite(intitule, statut) {
     this.intitule = intitule;
     this.statut = statut;
@@ -249,7 +248,9 @@ export default {
         this.newActivity()
       }
     },
-    newMission() {
+     async newMission() {
+      let missionResponse=await axios.get('/api/mission') 
+      let mission=missionResponse.data
       this.$store.commit('user/setMission', mission)
       this.$store.commit('user/setIndexActivite', -1)
       var activities = []

@@ -377,6 +377,7 @@ export default {
       namespaced: true,
       state: {
         name: null,
+        lostProgression:0,
         id: null,
         isGod:false,
         isAnon: false,
@@ -407,6 +408,9 @@ export default {
       mutations: {
         updateStatus(state, status) {
           state.status = status
+        },
+        lostProgression(state) {
+          state.lostProgression = 0
         },
         setActivities(state, activities) {
           state.activities = activities
@@ -512,6 +516,9 @@ export default {
           if (updateCompletion(state, "IDENTIFY", releve)) state.completion++
         },
         setBackup(state, sessionBackup) {
+          if(sessionBackup.lostProgression==1){
+            state.lostProgression=1
+          }
           state.sessionBackup = sessionBackup
         }
       },

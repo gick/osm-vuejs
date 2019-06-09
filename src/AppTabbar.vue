@@ -49,6 +49,18 @@ export default {
   },
   mounted() {},
   watch: {
+    'lostProgression':{
+      handler:function(val){
+        if(val==1){
+       this.$toasted.show("La mission à été modifié, vous avez perdu votre progression", {
+          theme: "bubble",
+          position: "top-center",
+          duration: 5000
+      });
+        this.$store.commit('user/lostProgression')
+        }
+      }
+    },
     userID() {
       Pusher.logToConsole = true;
 
@@ -98,6 +110,20 @@ export default {
           this.$store.commit("releve/addFromOutside", observation);
         }.bind(this)
       );
+      channel.bind(
+        "progression_lost",
+        function(data) {
+        this.$toasted.show("Vous allez être deconnecté suite à un changement de la mission", {
+          theme: "bubble",
+          position: "top-center",
+          duration: 5000,
+          onComplete:()=>{window.location.reload();
+          }
+        });
+
+        }.bind(this)
+      );
+
       channel.bind(
         "modify_obs",
         function(data) {
@@ -256,6 +282,9 @@ export default {
     },
     userID() {
       return this.$store.state.user.id;
+    },
+    lostProgression(){
+      return this.$store.state.user.lostProgression;
     },
     index: {
       get() {

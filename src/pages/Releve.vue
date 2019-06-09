@@ -50,7 +50,7 @@
         </section>
         <section v-if="!fromOSM" style="margin: 16px">
           <p class="center">Supprimer le relevé, cette opération est définitive!</p>
-          <v-ons-button @click="removeObs" :disabled="(!allowRemove) || !isGod" style="margin: 6px 0">Supprimer</v-ons-button>
+          <v-ons-button @click="removeObs" :disabled="(!allowRemove)" style="margin: 6px 0">Supprimer</v-ons-button>
         </section>
         <section v-if="fromOSM" style="margin: 16px">
           <p class="center">Renvoyer le relevé sur OSM</p>
@@ -146,6 +146,9 @@ export default {
       );
     },
     allowRemove() {
+      if(this.isGod){
+        return true
+      }
       return this.releve.osmId == this.userID && this.releve.prev.length == 0;
     },
     allowImport(){
