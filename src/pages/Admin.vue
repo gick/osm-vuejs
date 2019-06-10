@@ -56,10 +56,28 @@
           </div>
         </v-ons-list-item>
 
-      </v-ons-list>
-      <v-ons-list>
+        <v-ons-list-item>
+          <div class="center">Upload</div>
+          <div class="right">
+            <file-upload
+              accept=".json"
+              class="upload"
+              url="/api/uploadMission"
+              :thumb-url="thumbUrl"
+              @error="error"
+              @success="success"
+            ></file-upload>
+          </div>
+        </v-ons-list-item>
+        <v-ons-list-item>
+          <div class="center">Restore mission</div>
+          <div class="right">
+            <v-ons-button @click="restoreMission">Restore</v-ons-button>
+          </div>
+        </v-ons-list-item>
 
       </v-ons-list>
+      <v-ons-list></v-ons-list>
       <v-ons-list>
         <v-ons-list-title>{{ $t('usersConnected') }}</v-ons-list-title>
         <v-ons-list-item v-for="(user,index) in userList" v-bind:key="index">
@@ -96,7 +114,7 @@
           </v-ons-list>
         </v-ons-list-item>
       </v-ons-list>
-     <v-ons-list
+      <v-ons-list
         v-for="(identification,index) in identificationByUser"
         v-bind:key="index+'identification'"
       >
@@ -124,10 +142,16 @@
           </v-ons-list>
         </v-ons-list-item>
       </v-ons-list>
-
     </div>
   </v-ons-page>
 </template>
+<style>
+.upload {
+    height: 42px;
+    width: 69px;
+    border-radius: 3px;
+    overflow: hidden;}
+</style>
 
 <script>
 export default {
@@ -135,9 +159,9 @@ export default {
     return {
       identCheck: this.$store.state.releve.identificationMode,
       verifCheck: this.$store.state.releve.verificationMode,
-      isAnon:this.$store.state.user.isAnon,
+      isAnon: this.$store.state.user.isAnon,
       verificationsByUser: [],
-      identificationByUser:[]
+      identificationByUser: []
     };
   },
   computed: {
@@ -147,51 +171,72 @@ export default {
     scores() {
       return this.$store.state.user.scores;
     },
-    identificationMode : {
-      get(){
-        return this.$store.state.commonData.identification
+    identificationMode: {
+      get() {
+        return this.$store.state.commonData.identification;
       },
-      set(val){
-        this.$store.commit('commonData/setIdentificationMode',val)
+      set(val) {
+        this.$store.commit("commonData/setIdentificationMode", val);
       }
     },
-    verificationMode : {
-      get(){
-        return this.$store.state.commonData.verification
+    verificationMode: {
+      get() {
+        return this.$store.state.commonData.verification;
       },
-      set(val){
-        this.$store.commit('commonData/setVerificationMode',val)
+      set(val) {
+        this.$store.commit("commonData/setVerificationMode", val);
       }
     }
   },
   methods: {
-    addPoints(score) {
-      this.$ons.notification
-      .prompt("Number of points", {inputType:'number',title:'Add ' + score.displayName ,defaultValue:0})
-      .then(function(points){
-        if(points){
-          this.$store.commit('user/addPoints', 
-          {
-            name: score.name,
-            history: {
-              text: "via admin",
-              points : parseInt(points)
-            }
-          })
-        }
-      }.bind(this))
+    success() {
+      //this.resetSession()
     },
-
-    resetSession(){
-      axios.post("/api/resetBackup").then(
-        function(response) {
-          if(response.data.success){
-            window.location.reload()
-          }
-        }.bind(this))
-
+    restoreMission(){
+      axios.post('/api/restoreMission')
     }
     ,
+    error() {
+      this.$toasted.show("Votre fichier n'est pas un JSON valide", {
+        theme: "bubble",
+        position: "top-center",
+        duration: 5000
+      });
+    },
+    thumbUrl() {
+      return "";
+    },
+    addPoints(score) {
+      this.$ons.notification
+        .prompt("Number of points", {
+          inputType: "number",
+          title: "Add " + score.displayName,
+          defaultValue: 0
+        })
+        .then(
+          function(points) {
+            if (points) {
+              this.$store.commit("user/addPoints", {
+                name: score.name,
+                history: {
+                  text: "via admin",
+                  points: parseInt(points)
+                }
+              });
+            }
+          }.bind(this)
+        );
+    },
+
+    resetSession() {
+      axios.post("/api/resetBackup").then(
+        function(response) {
+          if (response.data.success) {
+            window.location.reload();
+          }
+        }.bind(this)
+      );
+    },
     visualizeReleve(releve) {
       this.$store.commit("navigator/pop");
       this.$store.commit("tabbar/set", 0);
@@ -206,7 +251,7 @@ export default {
       );
       axios.get("/api/identification").then(
         function(response) {
-          this.identificationByUser=this.formatResult(response.data);
+          this.identificationByUser = this.formatResult(response.data);
         }.bind(this)
       );
     },
@@ -224,10 +269,9 @@ export default {
     },
     setIdentificationMode(event) {
       this.$store.commit("releve/setIdentificationMode", event.value);
-      if(!event.value)
-        return
-      
-      this.$store.commit("commonData/setIdentificationMode",true)
+      if (!event.value) return;
+
+      this.$store.commit("commonData/setIdentificationMode", true);
     }
   }
 };

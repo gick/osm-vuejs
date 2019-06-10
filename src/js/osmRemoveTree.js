@@ -7,6 +7,7 @@ var auth = osmAuth({
 });
 import removeTreeTemplate from './treeTemplate'
 import initOSM from './initOSM'
+import {EventBus} from './osmBus'
 
 let initOSMasXML = xmljs.json2xml(initOSM)
 
@@ -18,18 +19,19 @@ let removeTree = function (osmTree) {
     },
         function (err, details) {
             removeTreeTemplate.elements[0].elements[0].attributes.changeset = details
-            removeTreeTemplate.elements[0].elements[0].attributes.lon = osmTree.lon
-            removeTreeTemplate.elements[0].elements[0].attributes.lat = osmTree.lat
+            removeTreeTemplate.elements[0].elements[0].attributes.lon = osmTree.coordinates[0]
+            removeTreeTemplate.elements[0].elements[0].attributes.lat = osmTree.coordinates[1]
             removeTreeTemplate.elements[0].elements[0].attributes.id = osmTree.nodeId
             removeTreeTemplate.elements[0].elements[0].attributes.version = osmTree.version
             let removeTreeXML = xmljs.json2xml(removeTreeTemplate)
 
-            auth.xhr({
+          auth.xhr({
                 method: 'DELETE', path: '/api/0.6/node/' + osmTree.nodeId, dataType: "text/xml",
                 options: { header: { "Content-Type": "text/xml" } },
                 content: removeTreeXML
             },
                 function (err, details) {
+                    EventBus.$emit('updateOSM')
                 })
         })
 }

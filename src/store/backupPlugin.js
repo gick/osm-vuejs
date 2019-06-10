@@ -38,6 +38,9 @@ let backupPlugin = store => {
             case 'user/updateStatus':
                 backup('status',state.user.status)
                 break
+            case 'user/lostProgression':
+                backup('lostProgression',state.user.lostProgression)
+                break
             case 'user/setCompletion' :
                 backup('completion',state.user.completion)
                 break

@@ -3,6 +3,8 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+require("babel-polyfill");
+
 
 var browserTargets = [
   '> 1%',
@@ -21,7 +23,10 @@ var babelOptions = {
 
 module.exports = {
   watch: process.env.WEBPACK_WATCH === 'true',
-  entry: './src/main.js',
+  watchOptions: {
+    ignored: /static/
+  },
+  entry: ['babel-polyfill','./src/main.js'],
   output: {
     path: path.resolve(__dirname, './www'),
     publicPath: '',

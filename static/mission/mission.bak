@@ -1,0 +1,286 @@
+{  
+    "mechanics":[  
+        {  
+            "name":"score",
+            "scores":[  
+                {  
+                	"name":"explorationPoints",
+                	"icon":"",
+                	"displayName":"Points d'exploration",
+                    "actions":[  
+                        {  
+                            "code":"gps",
+                            "text":"Faire un relevé",
+                            "nbPoint":1
+                        },
+                        {  
+                            "code":"photograph",
+                            "text":"Photographier un arbre",
+                            "nbPoint":2
+                        },
+                        {  
+                            "code":"completeGenus",
+                            "text":"Compléter le champ 'genre' d'un relevé",
+                            "nbPoint":3
+                        },
+                        {  
+                            "code":"completeSpecie",
+                            "text":"Compléter le champ 'espèce' d'un relevé",
+                            "nbPoint":6
+                        },
+                        {  
+                            "code":"completeCommon",
+                            "text":"Compléter le champ 'nom commun' d'un relevé",
+                            "nbPoint":6
+                        }
+                    ]
+                },
+                {  
+                    "name":"knowledgePoints",
+                	"icon":"",
+                	"displayName":"Points de connaissance",
+                   	"actions":[  
+                        {  
+                            "code":"question",
+                            "text":"Déclarer un arbre douteux",
+                            "nbPoint":1
+                        },
+                        {  
+                            "code":"useFolia",
+                            "text":"Utiliser Folia",
+                            "nbPoint":2
+                        },
+                        {  
+                            "code":"sameGenusPropagation",
+                            "text":"Validation d'un de vos relevés avec le même genre",
+                            "nbPoint":2
+                        },
+                        {  
+                            "code":"sameSpeciePropagation",
+                            "text":"Validation d'un de vos relevés avec la même espèce",
+                            "nbPoint":4
+                        },
+                        {  
+                            "code":"sameCommonPropagation",
+                            "text":"Validation d'un de vos relevés avec le même nom commun",
+                            "nbPoint":4
+                        },
+                        {  
+                            "code":"identifiedGenus",
+                            "text":"Genre correctement identifié",
+                            "nbPoint":10
+                        },
+                        {  
+                            "code":"identifiedSpecie",
+                            "text":"Espèce correctement identifiée",
+                            "nbPoint":15
+                        },
+                        {  
+                            "code":"identifiedCommon",
+                            "text":"Nom commun correctement identifié",
+                            "nbPoint":15
+                        },
+                        {  
+                            "code":"modifyGenus",
+                            "text":"Modifier le champ 'genre' d'un relevé",
+                            "nbPoint":0
+                        },
+                        {  
+                            "code":"modifySpecie",
+                            "text":"Modifier le champ 'espèce' d'un relevé",
+                            "nbPoint":0
+                        },
+                        {  
+                            "code":"modifyCommon",
+                            "text":"Modifier le champ 'nom commun' d'un relevé",
+                            "nbPoint":0
+                        },
+                        {  
+                            "code":"validate",
+                            "text":"Valider un relevé",
+                            "nbPoint":0
+                        }
+                    ]
+                }
+            ]
+        },
+        {  
+            "name":"trophy",
+            "trophiesList":[  
+                {  
+                    "title":"1 activité, c’est un bon début",
+                    "image":"trophee4.jpg",
+                    "condition":{  
+                        "nbSuccessfulActivities":1
+                    }
+                },
+                {  
+                    "title":"C’est mieux à 2",
+                    "image":"trophee4.jpg",
+                    "condition":{  
+                        "nbSuccessfulActivities":2
+                    }
+                },
+                {  
+                    "title":"Jamais 2 sans 3",
+                    "image":"trophee4.jpg",
+                    "condition":{  
+                        "nbSuccessfulActivities":3
+                    }
+                },
+                {  
+                    "title":"Les 4 activités de l'apocalypse",
+                    "image":"trophee4.jpg",
+                    "condition":{  
+                        "nbSuccessfulActivities":4
+                    }
+                },
+                {  
+                    "title":"Une mission qui se déroule sans accroc",
+                    "image":"trophee4.jpg",
+                    "condition":{  
+                        "nbSuccessfulActivities":5
+                    }
+                }
+            ]
+        },
+        {  
+            "name":"status",
+            "statusList":[  
+                {  
+                    "name":"Voyageur",
+                    "explorationPoints":54,
+                    "knowledgePoints":0
+                },
+                {  
+                    "name":"Voyageur confirmé",
+                    "explorationPoints":108,
+                    "knowledgePoints":0
+                },
+                {  
+                    "name":"Voyageur expérimenté",
+                    "explorationPoints":162,
+                    "knowledgePoints":0
+                },
+                {  
+                    "name":"Curieux des bois",
+                    "explorationPoints":54,
+                    "knowledgePoints":70
+                },
+                {  
+                    "name":"Explorateur de la forêt",
+                    "explorationPoints":108,
+                    "knowledgePoints":70
+                },
+                {  
+                    "name":"Routard des étendues forestières",
+                    "explorationPoints":162,
+                    "knowledgePoints":70
+                },
+                {  
+                    "name":"Observateur attenboisé",
+                    "explorationPoints":54,
+                    "knowledgePoints":140
+                },
+                {  
+                    "name":"Explorateur-botaniste aguerri",
+                    "explorationPoints":108,
+                    "knowledgePoints":140
+                },
+                {  
+                    "name":"Maître explorateur botaniste",
+                    "explorationPoints":162,
+                    "knowledgePoints":140
+                },
+                {  
+                    "name":"Oeil d'aigle des arbres",
+                    "explorationPoints":54,
+                    "knowledgePoints":210
+                },
+                {  
+                    "name":"Archéologue botaniste",
+                    "explorationPoints":108,
+                    "knowledgePoints":210
+                },
+                {  
+                    "name":"Grand maître arbatéliste",
+                    "explorationPoints":62,
+                    "knowledgePoints":210
+                }
+            ]
+        }
+    ],
+    "activities":[  
+        {  
+            "type":"INVENTORY",
+            "object":"NONE",
+            "instruction":{  
+                "long":"Faites 5 relevés",
+                "short":"Faites relevés"
+            },
+            "endCondition":[  
+                {  
+                    "nbAction":5
+                }
+            ]
+        },
+        {  
+            "type":"INVENTORY",
+            "object":"DIFFERENTGENUS",
+            "instruction":{  
+                "long":"Faites 3 relevés de genres différents",
+                "short":"Faites relevés genres différents"
+            },
+            "endCondition":[  
+                {  
+                    "nbAction":3
+                }
+            ]
+        },
+        {  
+            "type":"VERIFY",
+            "object":"NONE",
+            "instruction":{  
+                "long":"Vérifiez 3 relevés d'un autre utilisateur (cercle vert clignotant)",
+                "short":"Vérifiez relevés"
+            },
+            "endCondition":[  
+                {  
+                    "nbAction":3
+                }
+            ]
+        },
+        {  
+            "type":"IDENTIFY",
+            "object":"NONE",
+            "instruction":{  
+                "long":"Identifiez 3 relevés d'expert (cercle bleu clignotant)",
+                "short":"Identifiez relevés experts"
+            },
+            "endCondition":[  
+                {  
+                    "nbAction":3
+                }
+            ]
+        },
+        {  
+            "type":"INVENTORY",
+            "object":"NONE",
+            "instruction":{  
+                "long":"Faites un maximum de relevé en un temps limite",
+                "short":"Faites relevés"
+            },
+            "mechanics":[  
+                {  
+                    "name":"countdown",
+                    "endCondition":"time"
+                }
+            ],
+            "endCondition":[  
+                {  
+                    "time":900
+                }
+            ]
+        }
+    ]
+}

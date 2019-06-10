@@ -3,6 +3,9 @@ import {
 } from "os";
 import { EventBus } from '../js/eventBus.js';
 var osmAuth = require("osm-auth");
+var removeTree = require('../js/osmRemoveTree')
+var addTree = require('../js/osmPost')
+
 export default {
   modules: {
     commonData: {
@@ -37,23 +40,20 @@ export default {
       mutations: {
         setData(state, data) {
           state.data = data
-        },
-        addTempMarker(state,coordinates){
-          state.tempMarker.push(coordinates)
-        },
-        removeTempMarker(state){
-          state.tempMarker.shift()
-        },
-        addTempSuppressed(state,id){
-          state.tempSuppressed.push(id)
         }
-
       },
       actions: {
-        addTempMarker({commit},coordinates){
-          commit('addTempMarker',coordinates)
-          setTimeout(()=>{commit('removeTempMarker')},60000)
+        removeOSMTree({commit},osmTree){
+          addTree(osmTree)
         },
+        addOSMTree({commit},releve){
+          addTree(releve).then(
+            function(){
+              osmBus.$emit('updateOSM')
+            }
+          )
+        },
+
         getOSMData({
           commit
         }, boundary) {
@@ -62,7 +62,7 @@ export default {
           let west = boundary.boundary._southWest.lng
           let north = boundary.boundary._northEast.lat
           let east = boundary.boundary._northEast.lng
-          axios.get('/api/osmdata', {
+          axios.get('/api/getOsmData', {
             params: {
               south: south,
               west: west,
@@ -70,9 +70,9 @@ export default {
               east: east
             }
           }).then(function (response) {
-            console.log(response.data)
             commit('setData', response.data)
           })
+
         }
       }
     },
@@ -367,6 +367,7 @@ export default {
       namespaced: true,
       state: {
         name: null,
+        lostProgression:0,
         id: null,
         isGod:false,
         isAnon: false,
@@ -397,6 +398,9 @@ export default {
       mutations: {
         updateStatus(state, status) {
           state.status = status
+        },
+        lostProgression(state) {
+          state.lostProgression = 0
         },
         setActivities(state, activities) {
           state.activities = activities
@@ -515,6 +519,9 @@ export default {
           }
         },
         setBackup(state, sessionBackup) {
+          if(sessionBackup.lostProgression==1){
+            state.lostProgression=1
+          }
           state.sessionBackup = sessionBackup
         }
       },
@@ -560,10 +567,6 @@ export default {
             oauth_consumer_key: 'WLwXbm6XFMG7WrVnE8enIF6GzyefYIN6oUJSxG65'
           });
           auth.logout();
-          commit("set", {
-            name: null,
-            id: null
-          });
         },
         loadObservation({
           commit, state

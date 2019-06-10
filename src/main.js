@@ -20,6 +20,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import BProgress from 'bootstrap-vue/es/components/progress/progress'
 import BProgressBar from 'bootstrap-vue/es/components/progress/progress-bar'
 import vSelect from 'vue-select'
+import FileUpload from 'v-file-upload'
 
 
 // import VueOnsen from 'vue-onsenui/esm'; // For ESM
@@ -62,7 +63,7 @@ window.addEventListener("hashchange", function(){
 Vue.component('custom-toolbar', CustomToolbar); // Common toolbar
 Vue.component('b-progress', BProgress);
 Vue.component('b-progress-bar', BProgressBar);
-
+Vue.use(FileUpload)
 import Progress from 'vue-multiple-progress'
 Vue.component('VmProgress', Progress)
 
