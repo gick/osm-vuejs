@@ -1,12 +1,11 @@
 {  
     "mechanics":[  
         {  
-            "name":"score",
             "scores":[  
                 {  
-                	"name":"explorationPoints",
-                	"icon":"",
-                	"displayName":"Points d'exploration",
+                    "name":"explorationPoints",
+                    "icon":"",
+                    "displayName":"Points d'exploration",
                     "actions":[  
                         {  
                             "code":"gps",
@@ -37,9 +36,9 @@
                 },
                 {  
                     "name":"knowledgePoints",
-                	"icon":"",
-                	"displayName":"Points de connaissance",
-                   	"actions":[  
+                    "icon":"",
+                    "displayName":"Points de connaissance",
+                    "actions":[  
                         {  
                             "code":"question",
                             "text":"Déclarer un arbre douteux",
@@ -105,7 +104,6 @@
             ]
         },
         {  
-            "name":"trophy",
             "trophiesList":[  
                 {  
                     "title":"1 activité, c’est un bon début",
@@ -113,6 +111,194 @@
                     "condition":{  
                         "nbSuccessfulActivities":1
                     }
+                },
+                {  
+                    "title":"C’est mieux à 2",
+                    "image":"trophee4.jpg",
+                    "condition":{  
+                        "nbSuccessfulActivities":2
+                    }
+                },
+                {  
+                    "title":"Jamais 2 sans 3",
+                    "image":"trophee4.jpg",
+                    "condition":{  
+                        "nbSuccessfulActivities":3
+                    }
+                },
+                {  
+                    "title":"Les 4 activités de l'apocalypse",
+                    "image":"trophee4.jpg",
+                    "condition":{  
+                        "nbSuccessfulActivities":4
+                    }
+                },
+                {  
+                    "title":"Une mission qui se déroule sans accroc",
+                    "image":"trophee4.jpg",
+                    "condition":{  
+                        "nbSuccessfulActivities":5
+                    }
+                }
+            ]
+        },
+        {  
+            "statusList":[  
+                {  
+                    "name":"Voyageur",
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":64
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":0
+                        }
+                    ]
+                },
+                {  
+                    "name":"Voyageur confirmé",
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":108
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":0
+                        }
+                    ]
+                },
+                {  
+                    "name":"Voyageur expérimenté",
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":162
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":0
+                        }
+                    ]
+                },
+                {  
+                    "name":"Curieux des bois",
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":54
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":70
+                        }
+                    ]
+                },
+                {  
+                    "name":"Explorateur de la forêt",
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":108
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":70
+                        }
+                    ]
+                },
+                {  
+                    "name":"Routard des étendues forestières",
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":162
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":70
+                        }
+                    ]
+                },
+                {  
+                    "name":"Observateur attenboisé",
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":54
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":140
+                        }
+                    ]
+                },
+                {  
+                    "name":"Explorateur-botaniste aguerri",
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":108
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":140
+                        }
+                    ]
+                },
+                {  
+                    "name":"Maître explorateur botaniste",
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":162
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":140
+                        }
+                    ]
+                },
+                {  
+                    "name":"Oeil d'aigle des arbres",
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":54
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":210
+                        }
+                    ]
+                },
+                {  
+                    "name":"Archéologue botaniste",
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":108
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":210
+                        }
+                    ]
+                },
+                {  
+                    "name":"Voyageur",
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":62
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":210
+                        }
+                    ]
                 }
             ]
         }
@@ -120,20 +306,53 @@
     "activities":[  
         {  
             "type":"INVENTORY",
-            "object":"NONE",
+            "option":"NONE",
             "instruction":{  
-                "long":"Faites 2 relevés",
+                "long":"Faites 5 relevés",
                 "short":"Faites relevés"
             },
-            "mechanics":[  
-                {  
-                    "name":"score",
-                    "nbPoint":4
-                }
-            ],
             "endCondition":[  
                 {  
-                    "nbAction":2
+                    "nbAction":5
+                }
+            ]
+        },
+        {  
+            "type":"INVENTORY",
+            "option":"DIFFERENTGENUS",
+            "instruction":{  
+                "long":"Faites 3 relevés de genres différents",
+                "short":"Faites relevés genres différents"
+            },
+            "endCondition":[  
+                {  
+                    "nbAction":3
+                }
+            ]
+        },
+        {  
+            "type":"VERIFY",
+            "option":"NONE",
+            "instruction":{  
+                "long":"Vérifiez 3 relevés d'un autre utilisateur (cercle vert clignotant)",
+                "short":"Vérifiez relevés"
+            },
+            "endCondition":[  
+                {  
+                    "nbAction":3
+                }
+            ]
+        },
+        {  
+            "type":"IDENTIFY",
+            "option":"NONE",
+            "instruction":{  
+                "long":"Identifiez 3 relevés d'expert (cercle bleu clignotant)",
+                "short":"Identifiez relevés experts"
+            },
+            "endCondition":[  
+                {  
+                    "nbAction":3
                 }
             ]
         },
@@ -146,17 +365,13 @@
             },
             "mechanics":[  
                 {  
-                    "name":"countdown",
                     "endCondition":"time"
-                },
-                {  
-                    "name":"score",
-                    "nbPoint":12
+
                 }
             ],
             "endCondition":[  
                 {  
-                    "time":200
+                    "time":900
                 }
             ]
         }

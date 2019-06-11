@@ -1,12 +1,11 @@
 {  
     "mechanics":[  
         {  
-            "name":"score",
             "scores":[  
                 {  
-                	"name":"explorationPoints",
-                	"icon":"",
-                	"displayName":"Points d'exploration",
+                    "name":"explorationPoints",
+                    "icon":"",
+                    "displayName":"Points d'exploration",
                     "actions":[  
                         {  
                             "code":"gps",
@@ -37,9 +36,9 @@
                 },
                 {  
                     "name":"knowledgePoints",
-                	"icon":"",
-                	"displayName":"Points de connaissance",
-                   	"actions":[  
+                    "icon":"",
+                    "displayName":"Points de connaissance",
+                    "actions":[  
                         {  
                             "code":"question",
                             "text":"Déclarer un arbre douteux",
@@ -105,7 +104,6 @@
             ]
         },
         {  
-            "name":"trophy",
             "trophiesList":[  
                 {  
                     "title":"1 activité, c’est un bon début",
@@ -145,67 +143,162 @@
             ]
         },
         {  
-            "name":"status",
             "statusList":[  
                 {  
                     "name":"Voyageur",
-                    "explorationPoints":54,
-                    "knowledgePoints":0
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":64
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":0
+                        }
+                    ]
                 },
                 {  
                     "name":"Voyageur confirmé",
-                    "explorationPoints":108,
-                    "knowledgePoints":0
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":108
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":0
+                        }
+                    ]
                 },
                 {  
                     "name":"Voyageur expérimenté",
-                    "explorationPoints":162,
-                    "knowledgePoints":0
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":162
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":0
+                        }
+                    ]
                 },
                 {  
                     "name":"Curieux des bois",
-                    "explorationPoints":54,
-                    "knowledgePoints":70
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":54
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":70
+                        }
+                    ]
                 },
                 {  
                     "name":"Explorateur de la forêt",
-                    "explorationPoints":108,
-                    "knowledgePoints":70
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":108
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":70
+                        }
+                    ]
                 },
                 {  
                     "name":"Routard des étendues forestières",
-                    "explorationPoints":162,
-                    "knowledgePoints":70
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":162
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":70
+                        }
+                    ]
                 },
                 {  
                     "name":"Observateur attenboisé",
-                    "explorationPoints":54,
-                    "knowledgePoints":140
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":54
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":140
+                        }
+                    ]
                 },
                 {  
                     "name":"Explorateur-botaniste aguerri",
-                    "explorationPoints":108,
-                    "knowledgePoints":140
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":108
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":140
+                        }
+                    ]
                 },
                 {  
                     "name":"Maître explorateur botaniste",
-                    "explorationPoints":162,
-                    "knowledgePoints":140
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":162
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":140
+                        }
+                    ]
                 },
                 {  
                     "name":"Oeil d'aigle des arbres",
-                    "explorationPoints":54,
-                    "knowledgePoints":210
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":54
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":210
+                        }
+                    ]
                 },
                 {  
                     "name":"Archéologue botaniste",
-                    "explorationPoints":108,
-                    "knowledgePoints":210
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":108
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":210
+                        }
+                    ]
                 },
                 {  
-                    "name":"Grand maître arbatéliste",
-                    "explorationPoints":62,
-                    "knowledgePoints":210
+                    "name":"Voyageur",
+                    "requiredScores":[  
+                        {  
+                            "name":"explorationPoints",
+                            "nbPoint":62
+                        },
+                        {  
+                            "name":"knowledgePoints",
+                            "nbPoint":210
+                        }
+                    ]
                 }
             ]
         }
@@ -213,7 +306,7 @@
     "activities":[  
         {  
             "type":"INVENTORY",
-            "object":"NONE",
+            "option":"NONE",
             "instruction":{  
                 "long":"Faites 5 relevés",
                 "short":"Faites relevés"
@@ -226,7 +319,7 @@
         },
         {  
             "type":"INVENTORY",
-            "object":"DIFFERENTGENUS",
+            "option":"DIFFERENTGENUS",
             "instruction":{  
                 "long":"Faites 3 relevés de genres différents",
                 "short":"Faites relevés genres différents"
@@ -239,7 +332,7 @@
         },
         {  
             "type":"VERIFY",
-            "object":"NONE",
+            "option":"NONE",
             "instruction":{  
                 "long":"Vérifiez 3 relevés d'un autre utilisateur (cercle vert clignotant)",
                 "short":"Vérifiez relevés"
@@ -252,7 +345,7 @@
         },
         {  
             "type":"IDENTIFY",
-            "object":"NONE",
+            "option":"NONE",
             "instruction":{  
                 "long":"Identifiez 3 relevés d'expert (cercle bleu clignotant)",
                 "short":"Identifiez relevés experts"
@@ -272,8 +365,8 @@
             },
             "mechanics":[  
                 {  
-                    "name":"countdown",
                     "endCondition":"time"
+
                 }
             ],
             "endCondition":[  

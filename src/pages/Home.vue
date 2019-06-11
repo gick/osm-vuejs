@@ -191,18 +191,18 @@ export default {
   },
   methods: {
     displayHelpMessage(param) {
-      let {object, releve} = param
+      let {option, releve} = param
       let message = ""
-      if ((object == "DIFFERENTGENUS" || object == "GENUS") && releve.genus == null) {
+      if ((option == "DIFFERENTGENUS" || option == "GENUS") && releve.genus == null) {
          message = "Vous devez renseigner le champ 'Genre' d'un relevé pour progresser dans l'activité"
       }
-      if ((object == "DIFFERENTSPECIE" || object == "SPECIE") && releve.specie == null) {
+      if ((option == "DIFFERENTSPECIE" || option == "SPECIE") && releve.specie == null) {
          message = "Vous devez renseigner le champ 'Espèce' d'un relevé pour progresser dans l'activité"
       }
-      if (object == "DIFFERENTGENUS" && releve.genus) {
+      if (option == "DIFFERENTGENUS" && releve.genus) {
          message = "Vous avez déja réalisé une action avec ce genre dans l'activité en cours"
       }
-      if (object == "DIFFERENTSPECIE" && releve.specie) {
+      if (option == "DIFFERENTSPECIE" && releve.specie) {
          message = "Vous avez déja réalisé une action avec cette espèce dans l'activité en cours"
       }
 
@@ -249,11 +249,9 @@ export default {
         index: this.indexActivite 
       })
       if (statut == 'done' && this.gamificationMode && this.currentActivity.mechanics) {
-        for (let i = 0; i < this.currentActivity.mechanics.length; i++) {
-          //attribution des points
-          if (this.currentActivity.mechanics[i].name == 'score') {
-            for (let score of this.currentActivity.mechanics[i].scores) {
-              console.log(JSON.stringify(score))
+        for (let mechanic of this.currentActivity.mechanics) {
+          if (Object.keys(mechanic).includes("scores")) {
+            for (let score of mechanic.scores) {
                this.$store.commit('user/addPoints', {
                     name: score.name,
                     history: {
@@ -262,10 +260,8 @@ export default {
                     }
                   })
             }
-            
-          //attribution des trophées
-          } else if (this.currentActivity.mechanics[i].name == 'trophy') {  
-            let name = this.currentActivity.mechanics[i].title
+          } else if (Object.keys(mechanic).includes("title") && Object.keys(mechanic).includes("image")) {  
+            let name = mechanic.title
             if (!this.tropheeDejaGagne(name)) {     
               this.$store.commit('user/winTrophy', name)
               let toast = this.$toasted.show(this.$t('newTrophy') + " '" + name + "'", { 
@@ -274,10 +270,11 @@ export default {
                 duration : 5000,
                 icon : "trophy"
               });
-            }
+            }   
           }
         }
       }
+
       if (this.indexActivite + 1 ==  this.currentMission.activities.length) {
          this.$store.commit('user/setActivite', null)
       } else {
@@ -291,24 +288,29 @@ export default {
       this.$store.commit('user/setIndexActivite', -1)
       var activities = []
 
-      for (let i = 0; i < this.currentMission.activities.length; i++) {
+      for (let activity of this.currentMission.activities) {
 
-        if (this.currentMission.activities[i].mechanics) {
-          for (let j = 0; j < this.currentMission.activities[i].mechanics.length; j++) {
-            if (this.currentMission.activities[i].mechanics[j].name == 'trophy') {
+        if (activity.mechanics) {
+          for (let mechanic of activity.mechanics) {
+            if (Object.keys(mechanic).includes("image") && Object.keys(mechanic).includes("title")) {
               var trophy = new Object()
-              trophy.path = this.currentMission.activities[i].mechanics[j].image
-              trophy.name = this.currentMission.activities[i].mechanics[j].title
+              trophy.path = mechanic.image
+              trophy.name = mechanic.title
               trophy.obtenu = false
               this.$store.commit('user/addTrophy', trophy)
             } 
           }
         }
-        
 
-        var instruction = this.currentMission.activities[i].instruction.long
+        var instruction = activity.instruction.long
 
-        var nbAction = this.currentMission.activities[i].endCondition[0].nbAction
+        var nbAction = 0
+        for (let endCondition of activity.endCondition) {
+          if (Object.keys(endCondition).includes("nbAction")) {
+            nbAction = endCondition.nbAction
+          }
+        }
+
         this.$store.commit('user/setGoal', nbAction)
 
         activities.push(new Activite(instruction,"toDo"));      
@@ -317,11 +319,10 @@ export default {
       this.$store.commit('user/setActivities', activities)
 
       if (this.currentMission.mechanics) {
-        for (let i = 0; i < this.currentMission.mechanics.length; i++) {
-          if (this.currentMission.mechanics[i].name == 'score') {
+        for (let mechanic of this.currentMission.mechanics) {
+          if (Object.keys(mechanic).includes("scores")) {
             var scores = []
-            for(let j = 0; j < this.currentMission.mechanics[i].scores.length; j++) {
-              let score =  this.currentMission.mechanics[i].scores[j]
+            for (let score of mechanic.scores) {
               scores.push({
                 name : score.name,
                 rules : score.actions,
@@ -337,18 +338,17 @@ export default {
               this.$store.commit('user/setScores', scores)
             }
     
-          } else if (this.currentMission.mechanics[i].name == 'trophy') {
-              for (let j = 0 ; j < this.currentMission.mechanics[i].trophiesList.length; j++) {
-                  var trophy = new Object()
-                  trophy.path = this.currentMission.mechanics[i].trophiesList[j].image
-                  trophy.name = this.currentMission.mechanics[i].trophiesList[j].title
-                  trophy.obtenu = false
-                  this.$store.commit('user/addTrophy', trophy)
+          } else if (Object.keys(mechanic).includes("trophiesList")) {
+            for (let trophy of mechanic.trophiesList) {
+              var param = new Object()
+              param.path = trophy.image
+              param.name = trophy.title
+              param.obtenu = false
+              this.$store.commit('user/addTrophy', param)
               } 
             }
         }
       }
-      
       this.newActivity()
     },
 
@@ -361,11 +361,11 @@ export default {
       var totalSecondes = 0
       var nbAction = -1
       
-      for (let i = 0 ; i < this.currentMission.activities[this.indexActivite].endCondition.length; i++) {
-        if (this.currentMission.activities[this.indexActivite].endCondition[i].time) {
-          totalSecondes = this.currentMission.activities[this.indexActivite].endCondition[i].time
-        } else if (this.currentMission.activities[this.indexActivite].endCondition[i].nbAction){
-          nbAction = this.currentMission.activities[this.indexActivite].endCondition[i].nbAction
+      for (let endCondition of this.currentMission.activities[this.indexActivite].endCondition) {
+        if (endCondition.time) {
+          totalSecondes = endCondition.time
+        } else if (endCondition.nbAction){
+          nbAction = endCondition.nbAction
         }
       }
 
@@ -374,10 +374,13 @@ export default {
         duration : duration
       })
 
-      if (this.currentMission.activities[this.indexActivite].type == 'VERIFY') {
-        this.$store.commit('commonData/setVerificationMode', true)
-      } else if (this.currentMission.activities[this.indexActivite].type == 'IDENTIFY') {
-        this.$store.commit('commonData/setIdentificationMode', true)
+      switch (this.currentMission.activities[this.indexActivite].type) {
+        case "VERIFY": 
+          this.$store.commit('commonData/setVerificationMode', true)
+          break
+        case "IDENTIFY":
+          this.$store.commit('commonData/setIdentificationMode', true)
+          break
       }
 
       this.$store.commit('user/setGoal', nbAction)
@@ -398,8 +401,8 @@ export default {
     },
     tropheeDejaGagne(trophyName) {
       var res = false
-      for (let i = 0 ; i < this.trophies.length; i++) {
-        if (this.trophies[i].name == trophyName && this.trophies[i].obtenu == true) {
+      for (let trophy of this.trophies) {
+        if (trophy.name == trophyName && trophy.obtenu == true) {
           res = true
         } 
       }
@@ -416,11 +419,11 @@ export default {
     },
     updateTrophy(nbSuccessfulActivities) {
       if (this.currentMission.mechanics) {
-        for (let i = 0; i < this.currentMission.mechanics.length; i++) {
-          if (this.currentMission.mechanics[i].name == 'trophy') {
-            for (let j = 0 ; j < this.currentMission.mechanics[i].trophiesList.length; j++) {
-              if (nbSuccessfulActivities == this.currentMission.mechanics[i].trophiesList[j].condition.nbSuccessfulActivities) {
-                let name = this.currentMission.mechanics[i].trophiesList[j].title
+        for (let mechanic of this.currentMission.mechanics) {
+          if (Object.keys(mechanic).includes("trophiesList")) {
+            for (let trophy of mechanic.trophiesList) {
+              if (nbSuccessfulActivities == trophy.condition.nbSuccessfulActivities) {
+                let name = trophy.title
                 if (!this.tropheeDejaGagne(name)) {
                   this.$store.commit('user/winTrophy', name)
                   let toast = this.$toasted.show(this.$t('newTrophy') + " '" + name + "'", { 

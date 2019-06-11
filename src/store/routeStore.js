@@ -442,11 +442,8 @@ export default {
           state.differentGenus.length = 0
         },
         addPoints(state, score) {
-          console.log("ok")
           for (let i = 0; i < state.scores.length; i++) {
-            console.log(state.scores[i].name)
             if (state.scores[i].name == score.name) {
-              console.log("ok2")
               state.scores[i].nbPoint += score.history.points
               state.scores[i].history.unshift(score.history)
             }
@@ -675,7 +672,7 @@ function updateCompletion(state, operation, releve) {
   if (type == operation) {
 
     let { specieAdded, genusAdded } = updateDifferentSet(state, specie, genus)
-    switch (state.activite.object) {
+    switch (state.activite.option) {
       case 'NONE':
         return true;
       case 'SPECIE':
@@ -723,7 +720,7 @@ function alreadyVerified(releve, userId) {
 function displayHelpMessage(state, operation, releve) {
   if (state.activite.type == operation) {
     EventBus.$emit('displayHelpMessage', {
-      object: state.activite.object, 
+      option: state.activite.option, 
       releve: releve
     });
   }
