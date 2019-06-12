@@ -248,10 +248,10 @@ export default {
         statut: statut,
         index: this.indexActivite 
       })
-      if (statut == 'done' && this.gamificationMode && this.currentActivity.mechanics) {
-        for (let mechanic of this.currentActivity.mechanics) {
-          if (Object.keys(mechanic).includes("scores")) {
-            for (let score of mechanic.scores) {
+      if (statut == 'done' && this.gamificationMode && this.currentActivity.AMechanicList) {
+        for (let mechanic of this.currentActivity.AMechanicList) {
+          if (Object.keys(mechanic).includes("AScoreList")) {
+            for (let score of mechanic.AScoreList) {
                this.$store.commit('user/addPoints', {
                     name: score.name,
                     history: {
@@ -260,8 +260,8 @@ export default {
                     }
                   })
             }
-          } else if (Object.keys(mechanic).includes("title") && Object.keys(mechanic).includes("image")) {  
-            let name = mechanic.title
+          } else if (Object.keys(mechanic).includes("ATrophy")) {  
+            let name = mechanic.ATrophy.title
             if (!this.tropheeDejaGagne(name)) {     
               this.$store.commit('user/winTrophy', name)
               let toast = this.$toasted.show(this.$t('newTrophy') + " '" + name + "'", { 
@@ -275,7 +275,7 @@ export default {
         }
       }
 
-      if (this.indexActivite + 1 ==  this.currentMission.activities.length) {
+      if (this.indexActivite + 1 ==  this.currentMission.activityList.length) {
          this.$store.commit('user/setActivite', null)
       } else {
         this.newActivity()
@@ -288,14 +288,14 @@ export default {
       this.$store.commit('user/setIndexActivite', -1)
       var activities = []
 
-      for (let activity of this.currentMission.activities) {
+      for (let activity of this.currentMission.activityList) {
 
-        if (activity.mechanics) {
-          for (let mechanic of activity.mechanics) {
-            if (Object.keys(mechanic).includes("image") && Object.keys(mechanic).includes("title")) {
+        if (activity.AMechanicList) {
+          for (let mechanic of activity.AMechanicList) {
+            if (Object.keys(mechanic).includes("ATrophy")) {
               var trophy = new Object()
-              trophy.path = mechanic.image
-              trophy.name = mechanic.title
+              trophy.path = mechanic.ATrophy.image
+              trophy.name = mechanic.ATrophy.title
               trophy.obtenu = false
               this.$store.commit('user/addTrophy', trophy)
             } 
@@ -318,11 +318,11 @@ export default {
 
       this.$store.commit('user/setActivities', activities)
 
-      if (this.currentMission.mechanics) {
-        for (let mechanic of this.currentMission.mechanics) {
-          if (Object.keys(mechanic).includes("scores")) {
+      if (this.currentMission.MMechanicList) {
+        for (let mechanic of this.currentMission.MMechanicList) {
+          if (Object.keys(mechanic).includes("MScoreList")) {
             var scores = []
-            for (let score of mechanic.scores) {
+            for (let score of mechanic.MScoreList) {
               scores.push({
                 name : score.name,
                 rules : score.actions,
@@ -338,8 +338,8 @@ export default {
               this.$store.commit('user/setScores', scores)
             }
     
-          } else if (Object.keys(mechanic).includes("trophiesList")) {
-            for (let trophy of mechanic.trophiesList) {
+          } else if (Object.keys(mechanic).includes("MTrophyList")) {
+            for (let trophy of mechanic.MTrophyList) {
               var param = new Object()
               param.path = trophy.image
               param.name = trophy.title
@@ -356,12 +356,12 @@ export default {
       this.$store.commit('user/setCompletion', 0)
       this.$store.commit('user/clearSets')
       this.$store.commit('user/setIndexActivite', this.indexActivite + 1)
-      this.$store.commit('user/setActivite', this.currentMission.activities[this.indexActivite])
+      this.$store.commit('user/setActivite', this.currentMission.activityList[this.indexActivite])
 
       var totalSecondes = 0
       var nbAction = -1
       
-      for (let endCondition of this.currentMission.activities[this.indexActivite].endCondition) {
+      for (let endCondition of this.currentMission.activityList[this.indexActivite].endCondition) {
         if (endCondition.time) {
           totalSecondes = endCondition.time
         } else if (endCondition.nbAction){
@@ -374,7 +374,7 @@ export default {
         duration : duration
       })
 
-      switch (this.currentMission.activities[this.indexActivite].type) {
+      switch (this.currentMission.activityList[this.indexActivite].type) {
         case "VERIFY": 
           this.$store.commit('commonData/setVerificationMode', true)
           break
@@ -418,11 +418,11 @@ export default {
       }
     },
     updateTrophy(nbSuccessfulActivities) {
-      if (this.currentMission.mechanics) {
-        for (let mechanic of this.currentMission.mechanics) {
-          if (Object.keys(mechanic).includes("trophiesList")) {
-            for (let trophy of mechanic.trophiesList) {
-              if (nbSuccessfulActivities == trophy.condition.nbSuccessfulActivities) {
+      if (this.currentMission.MMechanicList) {
+        for (let mechanic of this.currentMission.MMechanicList) {
+          if (Object.keys(mechanic).includes("MTrophyList")) {
+            for (let trophy of mechanic.MTrophyList) {
+              if (nbSuccessfulActivities == trophy.nbSuccessfulActivities) {
                 let name = trophy.title
                 if (!this.tropheeDejaGagne(name)) {
                   this.$store.commit('user/winTrophy', name)

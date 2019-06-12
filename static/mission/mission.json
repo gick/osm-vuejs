@@ -1,7 +1,7 @@
 {  
-    "mechanics":[  
+    "MMechanicList":[  
         {  
-            "scores":[  
+            "MScoreList":[  
                 {  
                     "name":"explorationPoints",
                     "icon":"",
@@ -104,49 +104,39 @@
             ]
         },
         {  
-            "trophiesList":[  
+            "MTrophyList":[  
                 {  
                     "title":"1 activité, c’est un bon début",
                     "image":"trophee4.jpg",
-                    "condition":{  
-                        "nbSuccessfulActivities":1
-                    }
+                    "nbSuccessfulActivities":1
                 },
                 {  
                     "title":"C’est mieux à 2",
-                    "image":"trophee4.jpg",
-                    "condition":{  
-                        "nbSuccessfulActivities":2
-                    }
+                    "image":"trophee4.jpg",  
+                    "nbSuccessfulActivities":2
                 },
                 {  
                     "title":"Jamais 2 sans 3",
                     "image":"trophee4.jpg",
-                    "condition":{  
-                        "nbSuccessfulActivities":3
-                    }
+                    "nbSuccessfulActivities":3
                 },
                 {  
                     "title":"Les 4 activités de l'apocalypse",
                     "image":"trophee4.jpg",
-                    "condition":{  
-                        "nbSuccessfulActivities":4
-                    }
+                    "nbSuccessfulActivities":4
                 },
                 {  
                     "title":"Une mission qui se déroule sans accroc",
                     "image":"trophee4.jpg",
-                    "condition":{  
-                        "nbSuccessfulActivities":5
-                    }
+                    "nbSuccessfulActivities":5
                 }
             ]
         },
         {  
-            "statusList":[  
+            "MStatusList":[  
                 {  
                     "name":"Voyageur",
-                    "requiredScores":[  
+                    "MRequiredScoreList":[  
                         {  
                             "name":"explorationPoints",
                             "nbPoint":64
@@ -159,7 +149,7 @@
                 },
                 {  
                     "name":"Voyageur confirmé",
-                    "requiredScores":[  
+                    "MRequiredScoreList":[  
                         {  
                             "name":"explorationPoints",
                             "nbPoint":108
@@ -172,7 +162,7 @@
                 },
                 {  
                     "name":"Voyageur expérimenté",
-                    "requiredScores":[  
+                    "MRequiredScoreList":[  
                         {  
                             "name":"explorationPoints",
                             "nbPoint":162
@@ -185,7 +175,7 @@
                 },
                 {  
                     "name":"Curieux des bois",
-                    "requiredScores":[  
+                    "MRequiredScoreList":[  
                         {  
                             "name":"explorationPoints",
                             "nbPoint":54
@@ -198,7 +188,7 @@
                 },
                 {  
                     "name":"Explorateur de la forêt",
-                    "requiredScores":[  
+                    "MRequiredScoreList":[  
                         {  
                             "name":"explorationPoints",
                             "nbPoint":108
@@ -211,7 +201,7 @@
                 },
                 {  
                     "name":"Routard des étendues forestières",
-                    "requiredScores":[  
+                    "MRequiredScoreList":[  
                         {  
                             "name":"explorationPoints",
                             "nbPoint":162
@@ -224,7 +214,7 @@
                 },
                 {  
                     "name":"Observateur attenboisé",
-                    "requiredScores":[  
+                    "MRequiredScoreList":[  
                         {  
                             "name":"explorationPoints",
                             "nbPoint":54
@@ -237,7 +227,7 @@
                 },
                 {  
                     "name":"Explorateur-botaniste aguerri",
-                    "requiredScores":[  
+                    "MRequiredScoreList":[  
                         {  
                             "name":"explorationPoints",
                             "nbPoint":108
@@ -250,7 +240,7 @@
                 },
                 {  
                     "name":"Maître explorateur botaniste",
-                    "requiredScores":[  
+                    "MRequiredScoreList":[  
                         {  
                             "name":"explorationPoints",
                             "nbPoint":162
@@ -263,7 +253,7 @@
                 },
                 {  
                     "name":"Oeil d'aigle des arbres",
-                    "requiredScores":[  
+                    "MRequiredScoreList":[  
                         {  
                             "name":"explorationPoints",
                             "nbPoint":54
@@ -276,7 +266,7 @@
                 },
                 {  
                     "name":"Archéologue botaniste",
-                    "requiredScores":[  
+                    "MRequiredScoreList":[  
                         {  
                             "name":"explorationPoints",
                             "nbPoint":108
@@ -289,7 +279,7 @@
                 },
                 {  
                     "name":"Voyageur",
-                    "requiredScores":[  
+                    "MRequiredScoreList":[  
                         {  
                             "name":"explorationPoints",
                             "nbPoint":62
@@ -303,7 +293,7 @@
             ]
         }
     ],
-    "activities":[  
+    "activityList":[  
         {  
             "type":"INVENTORY",
             "option":"NONE",
@@ -363,10 +353,11 @@
                 "long":"Faites un maximum de relevé en un temps limite",
                 "short":"Faites relevés"
             },
-            "mechanics":[  
+            "AMechanicList":[  
                 {  
-                    "endCondition":"time"
-
+                    "ACountdown":{
+                        "endCondition":"time"
+                    }
                 }
             ],
             "endCondition":[  
