@@ -15,6 +15,8 @@ export default {
     scoreMenu: "Score",
     arboretumMenu: "My arboretum",
     tracingsMenu: "My tracings",
+    language: "Language",
+    logout: "Logout",
 
     //HOME
 
@@ -40,7 +42,51 @@ export default {
     missionOverTitle: "Mission over",
     missionOverDesc: "You completed your mission",
     activityOverTitle: "Activity over",
-    activityOverDesc: "You have completed your activity, place to the next activity"
+    activityOverDesc: "You have completed your activity, place to the next activity",
+
+    //SCOREDETAILS
+
+    pointsObtained: "Points obtained",
+    pointsHelp: "How to get points?",
+
+    //ADMIN
+
+    administratorTracings: "Administrator tracings",
+    identificationTracings: "Identification tracings",
+    anonymousMode: "Anonymous tracing creation mode (tracings will be seen as those of another player)",
+    deletionMode: "Deletion mode (please avoid removing tracings of other admins)",
+    expertIdentificationVerificationMode: "Verification mode of expert identifications",
+    tracingVerificationMode: "Verification mode of other players tracings",
+    gamificationMode: "Gamification mode",
+    resetSession: "Reset session",
+    resetButton: "Reset",
+    addButton: "Add",
+    usersConnected: "Users connected",
+    VerificationDoneBy: "Verifications done by",
+    originTracing: "Origin tracing :",
+    userAction: "User action :",
+    tracingValidation: "tracing validation",
+    tracingModification: "tracing modification by",
+    identificationDoneBy: "Identifications done by",
+    userTracing: "User tracing :",
+
+    //ARBORETUM
+
+    myArboretum: "My arboretum",
+    nbIdentification: "Number of identification",
+
+    //RELEVES
+
+    tracingsList: "Tracings list",
+    unspecifiedTree: "Unspecified Tree",
+
+    //FOLIA
+
+    identifyLeaf: "Identify a leaf",
+    takePict: "Take a picture of a leaf and then circle the leaf",
+    results: "Results",
+    circleLeaf: "Circle the leaf and validate",
+    validate: "Validate"
 
   },
   fr: {
@@ -59,6 +105,8 @@ export default {
     scoreMenu: "Score",
     arboretumMenu: "Mon arboretum",
     tracingsMenu: "Mes relevés",
+    language: "Langue",
+    logout: "Déconnexion",
 
     //HOME
 
@@ -84,6 +132,50 @@ export default {
     missionOverTitle: "Mission terminée",
     missionOverDesc: "Vous avez terminé votre mission",
     activityOverTitle: "Activité terminé",
-    activityOverDesc: "Vous avez terminé votre activité, place à l'activité suivante"
+    activityOverDesc: "Vous avez terminé votre activité, place à l'activité suivante",
+
+    //SCOREDETAILS
+
+    pointsObtained: "Points acquis",
+    pointsHelp: "Comment obtenir des points?",
+
+    //ADMIN
+
+    administratorTracings: "Relevés d'administrateur",
+    identificationTracings: "Relevés d'identification",
+    anonymousMode: "Mode création de relevé anonyme (les relevés seront vus comme ceux d'un autre joueur)",
+    deletionMode: "Mode suppression (EVITEZ DE SUPPRIMER DES RELEVES D'AUTRES ADMINS)",
+    expertIdentificationVerificationMode: "Mode vérification des identifications expertes",
+    tracingVerificationMode: "Mode vérification des relevés utilisateurs",
+    gamificationMode: "Mode gamification",
+    resetSession: "Réinitialiser la session",
+    resetButton: "Réinitialiser",
+    addButton: "Ajouter",
+    usersConnected: "Utilisateurs connectés",
+    VerificationDoneBy: "Vérifications effectuées par",
+    originTracing: "Relevé d'origine :",
+    userAction: "Action utilisateur :",
+    tracingValidation: "validation du relevé",
+    tracingModification: "modification du relevé par",
+    identificationDoneBy: "Identifications effectuées par",
+    userTracing: "Relevé utilisateur :",
+
+    //ARBORETUM
+
+    myArboretum: "Mon arboretum",
+    nbIdentification: "Nombre d'identification",
+
+    //RELEVES
+
+    tracingsList: "Liste des relevés",
+    unspecifiedTree: "Arbre non renseigné",
+
+    //FOLIA
+
+    identifyLeaf: "Identifier une feuille",
+    takePict: "Prenez une photo de feuille puis réalisez un tracé à l'intérieur de la feuille",
+    results: "Résultats",
+    circleLeaf: "Réalisez un tracé à l'intérieur de la feuille puis validez",
+    validate: "Valider"
   }
 }

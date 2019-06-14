@@ -103,6 +103,13 @@ let scorePlugin = store => {
                     root: true
                 })
                 break;
+
+            case 'releve/validate':
+                var actions = ["validate"]
+                store.dispatch("user/extractPoints", actions, {
+                    root: true
+                })
+                break;
         }
     })
     store.subscribeAction((action, state) => {

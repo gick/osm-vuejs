@@ -1,6 +1,6 @@
 <template>
   <v-ons-page>
-    <v-ons-list-header>Mon arboretum</v-ons-list-header>
+    <v-ons-list-header>{{ $t('myArboretum') }}</v-ons-list-header>
 
     <v-ons-list>
 
@@ -10,7 +10,7 @@
           <div class="title">{{specie}}</div>
           <div class="content">
             <p>
-              Nombre d'identification : {{getIdentificationNumber(specie)}}
+              {{ $t('nbIdentification')}} : {{getIdentificationNumber(specie) }}
             </p>
           </div>
         </v-ons-card>

@@ -268,7 +268,7 @@ export default {
   computed: {
     instruction() {
       if (this.currentMission) {
-        return this.currentMission.activities[this.indexActivite].instruction
+        return this.currentMission.activityList[this.indexActivite].instruction
           .short;
       }
     },
@@ -359,7 +359,7 @@ export default {
       return this.$store.state.user.indexActivite;
     },
     nbActivite() {
-      return this.$store.state.user.mission.activities.length;
+      return this.$store.state.user.mission.activityList.length;
     },
     completion() {
       return this.$store.state.user.completion;

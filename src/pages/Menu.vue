@@ -13,9 +13,9 @@
         </div>
         <div class="center">{{ item.title }}</div>
       </v-ons-list-item>
-      <v-ons-list-item @click="logout">Logout</v-ons-list-item>
+      <v-ons-list-item @click="logout">{{ $t('logout') }}</v-ons-list-item>
       <v-ons-list-item @click="admin">Admin</v-ons-list-item>
-      <v-ons-list-item>Langue &nbsp;
+      <v-ons-list-item>{{ $t('language') }} &nbsp;
         <select v-model="$i18n.locale">
           <option v-for="(lang, i) in langs" :key="`Lang${i}`" :value="lang">
             {{ lang }}

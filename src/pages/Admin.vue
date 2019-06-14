@@ -3,60 +3,59 @@
     <custom-toolbar backLabel="Retour"></custom-toolbar>
     <div class="content">
       <v-ons-list>
-        <v-ons-list-title>Relevé administrateur</v-ons-list-title>
+        <v-ons-list-title>{{ $t('administratorTracings') }}</v-ons-list-title>
         <v-ons-list-item>
-          <div class="center">Relevé d'identification</div>
+          <div class="center">{{ $t('identificationTracings') }}</div>
           <div class="right">
             <v-ons-switch v-model="identCheck" @change="setIdentificationMode"></v-ons-switch>
           </div>
         </v-ons-list-item>
         <v-ons-list-item>
-          <div
-            class="center"
-          >Mode création de relevé anonyme (les relevés seront vus comme ceux d'un autre joueur)</div>
+          <div class="center">{{ $t('anonymousMode') }}</div>
           <div class="right">
             <v-ons-switch v-model="$store.state.user.isAnon"></v-ons-switch>
           </div>
         </v-ons-list-item>
         <v-ons-list-item>
-          <div class="center">Mode suppression (EVITEZ DE SUPPRIMER DES RELEVES D'AUTRES ADMINS)</div>
+          <div class="center">{{ $t('deletionMode') }}</div>
           <div class="right">
             <v-ons-switch v-model="$store.state.user.isGod"></v-ons-switch>
           </div>
         </v-ons-list-item>
 
         <v-ons-list-item>
-          <div class="center">Mode vérification des identifications expertes</div>
+          <div class="center">{{ $t('expertIdentificationVerificationMode') }}</div>
           <div class="right">
             <v-ons-switch v-model="identificationMode"></v-ons-switch>
           </div>
         </v-ons-list-item>
         <v-ons-list-item>
-          <div class="center">Mode vérification des relevés utilisateurs</div>
+          <div class="center">{{ $t('tracingVerificationMode') }}</div>
           <div class="right">
             <v-ons-switch v-model="verificationMode"></v-ons-switch>
           </div>
         </v-ons-list-item>
 
         <v-ons-list-item>
-          <div class="center">Mode gamification</div>
+          <div class="center">{{ $t('gamificationMode') }}</div>
           <div class="right">
             <v-ons-switch v-model="$store.state.user.gamificationMode"></v-ons-switch>
           </div>
         </v-ons-list-item>
         <v-ons-list-item>
-          <div class="center">Reset session</div>
+          <div class="center">{{ $t('resetSession') }}</div>
           <div class="right">
             <v-ons-button @click="resetSession">Reset</v-ons-button>
           </div>
         </v-ons-list-item>
 
         <v-ons-list-item v-for="score in scores">
-          <div class="center">Add {{score.displayName}}</div>
+          <div class="center">{{ $t('addButton') }} {{score.displayName}}</div>
           <div class="right">
-            <v-ons-button @click="addPoints(score)">Add</v-ons-button>
+            <v-ons-button @click="addPoints(score)">{{ $t('addButton') }}</v-ons-button>
           </div>
         </v-ons-list-item>
+
         <v-ons-list-item>
           <div class="center">Upload</div>
           <div class="right">
@@ -80,7 +79,7 @@
       </v-ons-list>
       <v-ons-list></v-ons-list>
       <v-ons-list>
-        <v-ons-list-title>Utilisateurs connectés</v-ons-list-title>
+        <v-ons-list-title>{{ $t('usersConnected') }}</v-ons-list-title>
         <v-ons-list-item v-for="(user,index) in userList" v-bind:key="index">
           <div class="center">{{user.info.name}}</div>
         </v-ons-list-item>
@@ -90,7 +89,7 @@
         v-bind:key="index+'verifications'"
       >
         <v-ons-list-item expandable>
-          <v-ons-list-title>Vérifications effectuées par {{verifications.user}}</v-ons-list-title>
+          <v-ons-list-title>{{ $t('VerificationDoneBy') }} {{verifications.user}}</v-ons-list-title>
 
           <v-ons-list class="expandable-content">
             <v-ons-list-item
@@ -100,16 +99,16 @@
               v-bind:key="index+'verifs'"
             >
               <div class="center">
-                <b>Relevé d'origine :</b>
+                <b>{{ $t('originTracing') }}</b>
                 {{verif.specie}}
                 <v-ons-button @click="visualizeReleve(verif)" style="margin-left:40px;">Voir</v-ons-button>
               </div>
               <div class="left" style="display:block">
                 <span>
-                  <b>Action utilisateur :</b>
+                  <b>{{ $t('userAction') }}</b>
                 </span>
-                <span v-if="verif.validated">validation du relevé</span>
-                <span v-if="!verif.validated">modification du relevé par {{verif.userSpecie}}</span>
+                <span v-if="verif.validated">{{ $t('tracingValidation') }}</span>
+                <span v-if="!verif.validated">{{ $t('tracingModification') }} {{verif.userSpecie}}</span>
               </div>
             </v-ons-list-item>
           </v-ons-list>
@@ -120,7 +119,7 @@
         v-bind:key="index+'identification'"
       >
         <v-ons-list-item expandable>
-          <v-ons-list-title>Identification effectuées par {{identification.user}}</v-ons-list-title>
+          <v-ons-list-title>{{ $t('identificationDoneBy') }}  {{identification.user}}</v-ons-list-title>
 
           <v-ons-list class="expandable-content">
             <v-ons-list-item
@@ -130,13 +129,13 @@
               v-bind:key="index+'ident'"
             >
               <div class="center">
-                <b>Relevé d'origine :</b>
-                {{ident.specie}}
+                <b>{{ $t('originTracing') }}</b>
+                {{ident.specie}} 
                 <v-ons-button @click="visualizeReleve(ident)" style="margin-left:40px;">Voir</v-ons-button>
               </div>
               <div class="left" style="display:block">
                 <span>
-                  <b>Relevé utilisateur : {{ident.userSpecie}}</b>
+                  <b>{{ $t('userTracing') }} {{ident.userSpecie}}</b>
                 </span>
               </div>
             </v-ons-list-item>
